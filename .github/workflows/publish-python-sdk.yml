@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "python-sdk/**"
-      - ".github/workflows/publish-python-sdk.yaml"
+      - ".github/workflows/publish-python-sdk.yml"
 
 permissions:
   contents: read
