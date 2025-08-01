@@ -1,0 +1,640 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 14px;
+  --background: #1B1A3D;
+  --foreground: #e2e8f0;
+  --card: #2D3748;
+  --card-foreground: #e2e8f0;
+  --popover: #2D3748;
+  --popover-foreground: #e2e8f0;
+  --primary: #7DD3FC;
+  --primary-foreground: #1B1A3D;
+  --secondary: #4A5568;
+  --secondary-foreground: #cbd5e0;
+  --muted: #374151;
+  --muted-foreground: #9ca3af;
+  --accent: #6EE7B7;
+  --accent-foreground: #1B1A3D;
+  --destructive: #F472B6;
+  --destructive-foreground: #ffffff;
+  --border: rgba(125, 211, 252, 0.2);
+  --input: transparent;
+  --input-background: #374151;
+  --switch-background: #4A5568;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #7DD3FC;
+  --chart-1: #7DD3FC;
+  --chart-2: #6EE7B7;
+  --chart-3: #F472B6;
+  --chart-4: #FDE047;
+  --chart-5: #1E3A8A;
+  --radius: 0.75rem;
+  --sidebar: #2D3748;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-primary: #7DD3FC;
+  --sidebar-primary-foreground: #1B1A3D;
+  --sidebar-accent: #374151;
+  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-border: rgba(125, 211, 252, 0.15);
+  --sidebar-ring: #7DD3FC;
+  --accent-blue: 199 89% 75%;
+  --accent-green: 151 71% 67%;
+  --accent-pink: 330 85% 71%;
+  --accent-yellow: 56 100% 64%;
+  --deep-blue: 217 91% 33%;
+}
+
+.dark {
+  --background: #1B1A3D;
+  --foreground: #e2e8f0;
+  --card: #2D3748;
+  --card-foreground: #e2e8f0;
+  --popover: #2D3748;
+  --popover-foreground: #e2e8f0;
+  --primary: #7DD3FC;
+  --primary-foreground: #1B1A3D;
+  --secondary: #4A5568;
+  --secondary-foreground: #cbd5e0;
+  --muted: #374151;
+  --muted-foreground: #9ca3af;
+  --accent: #6EE7B7;
+  --accent-foreground: #1B1A3D;
+  --destructive: #F472B6;
+  --destructive-foreground: #ffffff;
+  --border: rgba(125, 211, 252, 0.2);
+  --input: #374151;
+  --ring: #7DD3FC;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: #7DD3FC;
+  --chart-2: #6EE7B7;
+  --chart-3: #F472B6;
+  --chart-4: #FDE047;
+  --chart-5: #1E3A8A;
+  --sidebar: #2D3748;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-primary: #7DD3FC;
+  --sidebar-primary-foreground: #1B1A3D;
+  --sidebar-accent: #374151;
+  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-border: rgba(125, 211, 252, 0.15);
+  --sidebar-ring: #7DD3FC;
+  --accent-blue: 199 89% 75%;
+  --accent-green: 151 71% 67%;
+  --accent-pink: 330 85% 71%;
+  --accent-yellow: 56 100% 64%;
+  --deep-blue: 217 91% 33%;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-green: var(--accent-green);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-yellow: var(--accent-yellow);
+  --color-deep-blue: var(--deep-blue);
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+}
+
+.subtle-glow {
+  box-shadow: 0 0 20px rgba(125, 211, 252, 0.1);
+}
+
+.glass-card {
+  background: rgba(45, 55, 72, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(125, 211, 252, 0.2);
+}
+
+.accent-border {
+  border: 1px solid rgba(125, 211, 252, 0.3);
+}
+
+.hover-accent {
+  transition: all 0.3s ease;
+}
+
+.hover-accent:hover {
+  border-color: rgba(125, 211, 252, 0.5);
+  box-shadow: 0 0 15px rgba(125, 211, 252, 0.2);
+}
+
+:where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+  h1 {
+    font-size: 2.25rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 2.25rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 2rem;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.75rem;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  label {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.25rem;
+  }
+
+  button {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.25rem;
+  }
+
+  input {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mission Control Dashboard Specific Styles */
+.glass-card {
+  background: rgba(45, 55, 72, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hover-accent {
+  transition: all 0.3s ease;
+}
+
+.hover-accent:hover {
+  border-color: rgba(125, 211, 252, 0.5);
+  box-shadow: 0 0 15px rgba(125, 211, 252, 0.2);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+}
+
+.status-badge.active {
+  background-color: var(--status-active);
+  color: var(--accent-foreground);
+}
+
+.status-badge.paused {
+  background-color: var(--status-paused);
+  color: var(--accent-foreground);
+}
+
+.status-badge.disabled {
+  background-color: var(--status-disabled);
+  color: var(--destructive-foreground);
+}
+
+/* Steps Badge */
+.steps-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Table Styles */
+.table-header {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  font-weight: var(--font-weight-medium);
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.table-row {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background-color: rgba(125, 211, 252, 0.05);
+}
+
+/* Create Workflow Button */
+.create-workflow-button {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  cursor: pointer;
+}
+
+.create-workflow-button:hover {
+  background-color: rgba(125, 211, 252, 0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(125, 211, 252, 0.3);
+}
+
+/* Metric Cards */
+.metric-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.metric-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 8px 25px rgba(125, 211, 252, 0.15);
+}
+
+.metric-title {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  color: var(--foreground);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.metric-change {
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.metric-change.positive {
+  color: var(--status-active);
+}
+
+.metric-change.negative {
+  color: var(--status-disabled);
+}
+
+/* Chart Containers */
+.chart-container {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart-title {
+  color: var(--foreground);
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-medium);
+  margin-bottom: 1rem;
+}
+
+/* Workflow Node Styles */
+.workflow-node {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  position: absolute;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  transition: all 0.2s ease-in-out;
+  min-width: 200px;
+}
+
+.workflow-node:hover {
+  border-color: var(--primary);
+  box-shadow: 0 8px 25px rgba(125, 211, 252, 0.15);
+}
+
+.workflow-node.dragging {
+  opacity: 0.7;
+  transform: scale(0.98);
+}
+
+.workflow-node-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.workflow-node-title {
+  color: var(--primary);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.875rem;
+}
+
+.workflow-node-status {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.workflow-node-description {
+  color: var(--foreground);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* Node Type Cards */
+.node-type-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  cursor: grab;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 0.5rem;
+}
+
+.node-type-card:hover {
+  transform: scale(1.02);
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(125, 211, 252, 0.2);
+}
+
+.node-type-card.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.node-type-title {
+  color: var(--foreground);
+  font-weight: var(--font-weight-medium);
+  font-size: 0.875rem;
+}
+
+.node-type-description {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* Sidebar Styles */
+.sidebar-item {
+  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-item.active {
+  background-color: rgba(125, 211, 252, 0.1);
+  border-right: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.sidebar-item:hover:not(.active) {
+  background-color: rgba(125, 211, 252, 0.05);
+}
+
+/* System Status Indicator */
+.system-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--status-online);
+}
+
+.system-status-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: var(--status-online);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Live Badge */
+.live-badge {
+  background-color: var(--status-disabled);
+  color: var(--destructive-foreground);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-title {
+  color: var(--foreground);
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+/* Summary Cards Grid */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Workflow Table */
+.workflow-table {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.workflow-table-header {
+  background-color: rgba(125, 211, 252, 0.05);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.workflow-table-row {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.workflow-table-row:last-child {
+  border-bottom: none;
+}
+
+.workflow-table-row:hover {
+  background-color: rgba(125, 211, 252, 0.05);
+}
+
+/* Action Buttons */
+.action-button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.action-button:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+/* Trigger Icons */
+.trigger-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.trigger-icon.scheduled {
+  color: var(--status-warning);
+}
+
+.trigger-icon.event {
+  color: var(--status-active);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .workflow-table {
+    overflow-x: auto;
+  }
+} 
