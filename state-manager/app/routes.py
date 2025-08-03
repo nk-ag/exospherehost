@@ -25,14 +25,15 @@ from .controller.upsert_graph_template import upsert_graph_template as upsert_gr
 
 logger = LogsManager().get_logger()
 
-router = APIRouter(prefix="/v0/namespace/{namespace_name}", tags=["state"])
+router = APIRouter(prefix="/v0/namespace/{namespace_name}")
 
 
 @router.post(
     "/states/enqueue",
     response_model=EnqueueResponseModel,
     status_code=status.HTTP_200_OK,
-    response_description="State enqueued on node queue successfully"
+    response_description="State enqueued on node queue successfully",
+    tags=["state"]
 )
 async def enqueue_state(namespace_name: str, body: EnqueueRequestModel, request: Request, api_key: str = Depends(check_api_key)):
 
@@ -51,7 +52,8 @@ async def enqueue_state(namespace_name: str, body: EnqueueRequestModel, request:
     "/states/create",
     response_model=CreateResponseModel,
     status_code=status.HTTP_200_OK,
-    response_description="States created successfully"
+    response_description="States created successfully",
+    tags=["state"]
 )
 async def create_state(namespace_name: str, body: CreateRequestModel, request: Request, api_key: str = Depends(check_api_key)):
 
@@ -70,7 +72,8 @@ async def create_state(namespace_name: str, body: CreateRequestModel, request: R
     "/states/{state_id}/executed",
     response_model=ExecutedResponseModel,
     status_code=status.HTTP_200_OK,
-    response_description="State executed successfully"
+    response_description="State executed successfully",
+    tags=["state"]
 )
 async def executed_state_route(namespace_name: str, state_id: str, body: ExecutedRequestModel, request: Request, api_key: str = Depends(check_api_key)):
 
@@ -89,7 +92,8 @@ async def executed_state_route(namespace_name: str, state_id: str, body: Execute
     "/states/{state_id}/errored",
     response_model=ErroredResponseModel,
     status_code=status.HTTP_200_OK,
-    response_description="State errored successfully"
+    response_description="State errored successfully",
+    tags=["state"]
 )
 async def errored_state_route(namespace_name: str, state_id: str, body: ErroredRequestModel, request: Request, api_key: str = Depends(check_api_key)):
 
@@ -108,7 +112,8 @@ async def errored_state_route(namespace_name: str, state_id: str, body: ErroredR
     "/graph-templates/{graph_name}",
     response_model=UpsertGraphTemplateResponse,
     status_code=status.HTTP_201_CREATED,
-    response_description="Graph template upserted successfully"
+    response_description="Graph template upserted successfully",
+    tags=["graph"]
 )   
 async def upsert_graph_template(namespace_name: str, graph_name: str, body: UpsertGraphTemplateRequest, request: Request, api_key: str = Depends(check_api_key)):
     x_exosphere_request_id = getattr(request.state, "x_exosphere_request_id", str(uuid4()))
