@@ -1,9 +1,13 @@
 'use client'
 
-import { DashboardPage } from "@/components/DashboardPage";
-import { FuturisticSidebar } from "@/components/FuturisticSidebar";
+import { DashboardPage } from "@/components/DashboardPage"
+import { useAuth } from '@/components/auth/AuthContext'
+import { FuturisticSidebar } from "@/components/FuturisticSidebar"
+import { Button } from '@/components/ui/button'
+import { LogOut } from 'lucide-react'
 
-export default function DashboardRoute() {
+export default function MetricsPage() {
+
   return (
     <div className="min-h-screen bg-background">
       {/* Background effects */}
@@ -14,10 +18,10 @@ export default function DashboardRoute() {
       
       {/* Main content */}
       <div className="ml-16 lg:ml-64 transition-all duration-300">
-        <div className="p-6 relative z-10">
-          <div className="max-w-7xl mx-auto">
-            <DashboardPage />
-          </div>
+        <div className="p-6 relative z-10 w-full">
+          {/* Header with logout button */}
+         
+          <DashboardPage />
         </div>
       </div>
       
@@ -37,5 +41,5 @@ export default function DashboardRoute() {
         ))}
       </div>
     </div>
-  );
+  )
 } 

@@ -1,32 +1,21 @@
 'use client'
 
-import { WorkflowsPage } from "@/components/WorkflowsPage";
+import { BillingPage } from "@/components/BillingPage";
 import { FuturisticSidebar } from "@/components/FuturisticSidebar";
-import { useRouter } from "next/navigation";
 
-export default function WorkflowsRoute() {
-  const router = useRouter();
-
-  const handleWorkflowSelect = (workflowId: string) => {
-    if (workflowId === 'new') {
-      router.push('/workflows/new');
-    } else {
-      router.push(`/workflows/${workflowId}`);
-    }
-  };
-
+export default function BillingRoute() {
   return (
     <div className="min-h-screen bg-background">
       {/* Background effects */}
       <div className="fixed inset-0 bg-gradient-to-br from-background via-card to-background opacity-95 pointer-events-none"></div>
       
       {/* Sidebar */}
-      <FuturisticSidebar />
+      <FuturisticSidebar currentPage="billing" />
       
       {/* Main content */}
       <div className="ml-16 lg:ml-64 transition-all duration-300">
         <div className="p-6 relative z-10 w-full">
-          <WorkflowsPage onWorkflowSelect={handleWorkflowSelect} />
+          <BillingPage />
         </div>
       </div>
       

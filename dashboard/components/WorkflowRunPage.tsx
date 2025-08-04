@@ -249,11 +249,7 @@ export function WorkflowRunPage({ runId, onBack }: WorkflowRunPageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={onBack}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
+        <div className="flex items-center gap-4">          
           <div>
             <h1 className="text-2xl font-bold">Workflow Run Details</h1>
             <p className="text-muted-foreground">Run ID: {run.id}</p>
@@ -276,8 +272,8 @@ export function WorkflowRunPage({ runId, onBack }: WorkflowRunPageProps) {
       </div>
 
       {/* Run Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <Card className="glass-card hover-accent transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -289,7 +285,7 @@ export function WorkflowRunPage({ runId, onBack }: WorkflowRunPageProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card hover-accent transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -301,7 +297,7 @@ export function WorkflowRunPage({ runId, onBack }: WorkflowRunPageProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card hover-accent transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -313,7 +309,7 @@ export function WorkflowRunPage({ runId, onBack }: WorkflowRunPageProps) {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card hover-accent transition-all duration-300">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -327,7 +323,7 @@ export function WorkflowRunPage({ runId, onBack }: WorkflowRunPageProps) {
       </div>
 
       {/* Progress Bar */}
-      <Card>
+      <Card className="glass-card hover-accent transition-all duration-300">
         <CardContent className="p-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -347,35 +343,35 @@ export function WorkflowRunPage({ runId, onBack }: WorkflowRunPageProps) {
         </CardContent>
       </Card>
 
-             {/* Workflow Canvas */}
-       <Card>
-         <CardHeader>
-           <CardTitle className="flex items-center gap-2">
-             <Activity className="w-5 h-5" />
-             Workflow Execution Map
-           </CardTitle>
-         </CardHeader>
-         <CardContent className="p-0">
-           <div className="h-96 relative">
-             <DndProvider backend={HTML5Backend}>
-               <WorkflowCanvas
-                 nodes={run.nodes}
-                 connections={connections}
-                 selectedNode={selectedNode}
-                 onAddNode={() => {}}
-                 onUpdateNode={() => {}}
-                 onSelectNode={setSelectedNode}
-                 onDeleteNode={() => {}}
-                 onConnect={() => {}}
-               />
-             </DndProvider>
-           </div>
-         </CardContent>
-       </Card>
+      {/* Workflow Canvas */}
+      <Card className="glass-card hover-accent transition-all duration-300">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="w-5 h-5" />
+            Workflow Execution Map
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="h-96 relative w-full">
+            <DndProvider backend={HTML5Backend}>
+              <WorkflowCanvas
+                nodes={run.nodes}
+                connections={connections}
+                selectedNode={selectedNode}
+                onAddNode={() => {}}
+                onUpdateNode={() => {}}
+                onSelectNode={setSelectedNode}
+                onDeleteNode={() => {}}
+                onConnect={() => {}}
+              />
+            </DndProvider>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Node Details */}
       {selectedNode && (
-        <Card>
+        <Card className="glass-card hover-accent transition-all duration-300">
           <CardHeader>
             <CardTitle>Node Details</CardTitle>
           </CardHeader>
@@ -386,12 +382,12 @@ export function WorkflowRunPage({ runId, onBack }: WorkflowRunPageProps) {
               
               return (
                 <div className="space-y-4">
-                                     <div className="flex items-center justify-between">
-                     <h4 className="text-lg font-semibold">{node.data.label}</h4>
-                     {getNodeStatusBadge(node.executionStatus)}
-                   </div>
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-semibold">{node.data.label}</h4>
+                    {getNodeStatusBadge(node.executionStatus)}
+                  </div>
                   
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                     <div>
                       <p className="text-muted-foreground">Type</p>
                       <p className="font-medium capitalize">{node.type}</p>

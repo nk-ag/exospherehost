@@ -1,19 +1,12 @@
 'use client'
 
-import { WorkflowsPage } from "@/components/WorkflowsPage";
-import { FuturisticSidebar } from "@/components/FuturisticSidebar";
-import { useRouter } from "next/navigation";
+import { RunningPage } from "@/components/RunningPage"
+import { useAuth } from '@/components/auth/AuthContext'
+import { FuturisticSidebar } from "@/components/FuturisticSidebar"
+import { Button } from '@/components/ui/button'
+import { LogOut } from 'lucide-react'
 
-export default function WorkflowsRoute() {
-  const router = useRouter();
-
-  const handleWorkflowSelect = (workflowId: string) => {
-    if (workflowId === 'new') {
-      router.push('/workflows/new');
-    } else {
-      router.push(`/workflows/${workflowId}`);
-    }
-  };
+export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,7 +19,8 @@ export default function WorkflowsRoute() {
       {/* Main content */}
       <div className="ml-16 lg:ml-64 transition-all duration-300">
         <div className="p-6 relative z-10 w-full">
-          <WorkflowsPage onWorkflowSelect={handleWorkflowSelect} />
+              
+                   <RunningPage />
         </div>
       </div>
       
@@ -46,5 +40,5 @@ export default function WorkflowsRoute() {
         ))}
       </div>
     </div>
-  );
+  )
 } 

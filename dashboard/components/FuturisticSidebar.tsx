@@ -1,16 +1,23 @@
 import { Button } from "./ui/button";
-import { Activity, Settings, Zap, Menu, X, Home } from "lucide-react";
+import { Activity, Settings, Zap, Menu, X, Home, CreditCard } from "lucide-react";
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "./auth/AuthContext";
+import { LogOut } from 'lucide-react'
 
 interface SidebarProps {
-  currentPage?: 'home' | 'dashboard' | 'workflows';
+  currentPage?: 'home' | 'dashboard' | 'workflows' | 'billing';
 }
 
 export function FuturisticSidebar({ currentPage }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { logout } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+  }
 
   const navItems = [
     {
@@ -18,7 +25,7 @@ export function FuturisticSidebar({ currentPage }: SidebarProps) {
       label: 'Home',
       icon: Home,
       description: 'Home',
-      href: '/'
+      href: '/home'
     },
     {
       id: 'dashboard' as const,
@@ -33,6 +40,13 @@ export function FuturisticSidebar({ currentPage }: SidebarProps) {
       icon: Settings,
       description: 'Configuration',
       href: '/workflows'
+    },
+    {
+      id: 'billing' as const,
+      label: 'Billing',
+      icon: CreditCard,
+      description: 'Usage & Plans',
+      href: '/billing'
     }
   ];
 
@@ -41,6 +55,7 @@ export function FuturisticSidebar({ currentPage }: SidebarProps) {
     if (pathname === '/') return 'home';
     if (pathname.startsWith('/dashboard')) return 'dashboard';
     if (pathname.startsWith('/workflows')) return 'workflows';
+    if (pathname.startsWith('/billing')) return 'billing';
     return 'home';
   };
 
@@ -110,6 +125,17 @@ export function FuturisticSidebar({ currentPage }: SidebarProps) {
           );
         })}
       </div>
+
+      
+        <Button
+          variant="ghost"
+          onClick={handleLogout}
+          className="w-full justify-start gap-3 p-3 h-auto transition-all duration-200 hover-accent"
+        >
+          <LogOut className="w-5 h-5" />
+          Logout
+        </Button>
+      
 
       {/* Status indicator */}
       {!isCollapsed && (

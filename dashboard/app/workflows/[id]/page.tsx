@@ -36,47 +36,45 @@ export default function WorkflowDetailsRoute({ params }: WorkflowDetailsPageProp
       
       {/* Main content */}
       <div className="ml-16 lg:ml-64 transition-all duration-300">
-        <div className="p-6 relative z-10">
-          <div className="max-w-7xl mx-auto">
-            {/* Breadcrumb Navigation */}
-            <div className="mb-6">
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink 
-                      href="/" 
-                      className="flex items-center gap-1 hover:text-primary transition-colors"
-                    >
-                      <Home className="w-4 h-4" />
-                      Home
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbLink 
-                      href="/workflows"
-                      className="flex items-center gap-1 hover:text-primary transition-colors"
-                    >
-                      <Settings className="w-4 h-4" />
-                      Workflows
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="flex items-center gap-1">
-                      <Settings className="w-4 h-4" />
-                      {params.id}
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-            </div>
-            
-            <WorkflowPage 
-              workflowId={params.id}
-              onBack={handleBack}
-            />
+        <div className="p-6 relative z-10 w-full">
+          {/* Breadcrumb Navigation */}
+          <div className="mb-6">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink 
+                    href="/" 
+                    className="flex items-center gap-1 hover:text-primary transition-colors"
+                  >
+                    <Home className="w-4 h-4" />
+                    Home
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink 
+                    href="/workflows"
+                    className="flex items-center gap-1 hover:text-primary transition-colors"
+                  >
+                    <Settings className="w-4 h-4" />
+                    Workflows
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="flex items-center gap-1">
+                    <Settings className="w-4 h-4" />
+                    {params.id}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
+          
+          <WorkflowPage 
+            workflowId={params.id}
+            onBack={handleBack}
+          />
         </div>
       </div>
       
