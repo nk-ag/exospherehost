@@ -134,8 +134,8 @@ Error handling is automatically handled by the runtime and the state manager.
 
 The Python SDK integrates seamlessly with the ExosphereHost platform, providing:
 
-- **Cost Optimization**: Leverage ExosphereHost's optimized infrastructure for significant cost savings
-- **Reliability**: Built-in fault tolerance and automatic recovery
+- **Performance**: Optimized execution with intelligent resource allocation and parallel processing
+- **Reliability**: Built-in fault tolerance, automatic recovery, and failover capabilities
 - **Scalability**: Automatic scaling based on workload demands
 - **Monitoring**: Integrated logging and monitoring capabilities
 
