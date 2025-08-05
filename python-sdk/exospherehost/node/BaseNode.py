@@ -42,17 +42,44 @@ class BaseNode(ABC):
         """
         pass
 
-    async def _execute(self, inputs: Inputs) -> Outputs | List[Outputs]:
+    class Secrets(BaseModel):
         """
-        Internal method to execute the node with validated inputs.
+        Secrets schema for the node.
+
+        This class defines the structure for sensitive configuration data that nodes may require
+        for their execution. Secrets typically include authentication credentials, API keys,
+        database connection strings, encryption keys, and other sensitive information that
+        should not be exposed in regular input parameters.
+
+        Subclasses should override this class to define the specific secret fields their node
+        requires. The secrets are validated against this schema before node execution and
+        are made available to the node via the `self.secrets` attribute during execution.
+
+        Examples of secrets that might be defined:
+        - API keys and tokens for external services
+        - Database credentials and connection strings
+        - Encryption/decryption keys
+        - Authentication tokens and certificates
+        - Private keys for cryptographic operations
+
+        Note: The actual secret values are managed securely by the Exosphere Runtime
+        and are injected into the node at execution time.
+        """
+        pass
+
+    async def _execute(self, inputs: Inputs, secrets: Secrets) -> Outputs | List[Outputs]:
+        """
+        Internal method to execute the node with validated inputs and secrets.
 
         Args:
             inputs (Inputs): The validated input data for this execution.
+            secrets (Secrets): The validated secrets data for this execution.
 
         Returns:
             Outputs | List[Outputs]: The output(s) produced by the node.
         """
         self.inputs = inputs
+        self.secrets = secrets
         return await self.execute()
 
     @abstractmethod

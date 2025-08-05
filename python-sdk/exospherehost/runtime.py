@@ -1,7 +1,7 @@
 import asyncio
 import os
 from asyncio import Queue, sleep
-from typing import List
+from typing import List, Dict
 
 from pydantic import BaseModel, ValidationError
 from .node.BaseNode import BaseNode
@@ -117,6 +117,12 @@ class Runtime:
         """
         return f"{self._state_manager_uri}/{str(self._state_manager_version)}/namespace/{self._namespace}/nodes/"
     
+    def _get_secrets_endpoint(self, state_id: str):
+        """
+        Construct the endpoint URL for getting secrets.
+        """
+        return f"{self._state_manager_uri}/{str(self._state_manager_version)}/namespace/{self._namespace}/state/{state_id}/secrets"
+
     async def _register(self):
         """
         Register node schemas and runtime metadata with the state manager.
@@ -135,6 +141,9 @@ class Runtime:
                         "namespace": self._namespace,
                         "inputs_schema": node.Inputs.model_json_schema(),
                         "outputs_schema": node.Outputs.model_json_schema(),
+                        "secrets": [
+                            secret_name for secret_name in node.Secrets.model_fields.keys()
+                        ]
                     } for node in self._nodes
                 ]
             }
@@ -223,6 +232,23 @@ class Runtime:
                 if response.status != 200:
                     logger.error(f"Failed to notify errored state {state_id}: {res}")
 
+    async def _get_secrets(self, state_id: str) -> Dict[str, str]:
+        """
+        Get secrets for a state.
+        """
+        async with ClientSession() as session:
+            endpoint = self._get_secrets_endpoint(state_id)
+            headers = {"x-api-key": self._key}
+
+            async with session.get(endpoint, headers=headers) as response: # type: ignore
+                res = await response.json()
+
+                if response.status != 200:
+                    logger.error(f"Failed to get secrets for state {state_id}: {res}")
+                    return {}
+                
+                return res
+
     def _validate_nodes(self):
         """
         Validate that all provided nodes are valid BaseNode subclasses.
@@ -246,9 +272,17 @@ class Runtime:
             if not hasattr(node, "Outputs"):
                 errors.append(f"{node.__name__} does not have an Outputs class")
             if not issubclass(node.Inputs, BaseModel):
-                errors.append(f"{node.__name__} does not have an Inputs class that inherits from pydantic.BaseModel")
+                errors.append(f"{node.__name__} does not have an Inputs class that inherits from pydantic.BaseModel")                                          
             if not issubclass(node.Outputs, BaseModel):
                 errors.append(f"{node.__name__} does not have an Outputs class that inherits from pydantic.BaseModel")
+            if not hasattr(node, "Secrets"):
+                errors.append(f"{node.__name__} does not have an Secrets class")
+            if not issubclass(node.Secrets, BaseModel):
+                errors.append(f"{node.__name__} does not have an Secrets class that inherits from pydantic.BaseModel")
+            
+            for field_name, field_info in node.Secrets.model_fields.items():
+                if field_info.annotation is not str:
+                    errors.append(f"{node.__name__}.Secrets field '{field_name}' must be of type str, got {field_info.annotation}")
         
         # Find nodes with the same __class__.__name__
         class_names = [node.__name__ for node in self._nodes]
@@ -271,7 +305,8 @@ class Runtime:
 
             try:
                 node = self._node_mapping[state["node_name"]]
-                outputs = await node()._execute(node.Inputs(**state["inputs"]))
+                secrets = await self._get_secrets(state["state_id"])
+                outputs = await node()._execute(node.Inputs(**state["inputs"]), node.Secrets(**secrets))
 
                 if outputs is None:
                     outputs = []
