@@ -9,6 +9,7 @@ from pymongo import IndexModel
 from typing import Dict
 from app.utils.encrypter import get_encrypter
 
+
 class GraphTemplate(BaseDatabaseModel):
     name: str = Field(..., description="Name of the graph")
     namespace: str = Field(..., description="Namespace of the graph")
@@ -25,6 +26,13 @@ class GraphTemplate(BaseDatabaseModel):
                 name="unique_name_namespace"
             )
         ]
+
+    def get_node_by_identifier(self, identifier: str) -> NodeTemplate | None:
+        """Get a node by its identifier using O(1) dictionary lookup."""
+        for node in self.nodes:
+            if node.identifier == identifier:
+                return node
+        return None
 
     @field_validator('secrets')
     @classmethod
