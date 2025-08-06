@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Request, Depends, HTTPException
+from fastapi import APIRouter, status, Request, Depends, HTTPException, BackgroundTasks
 from uuid import uuid4
 from bson import ObjectId
 
@@ -27,7 +27,6 @@ from .controller.register_nodes import register_nodes
 
 from .models.secrets_response import SecretsResponseModel
 from .controller.get_secrets import get_secrets
-
 
 logger = LogsManager().get_logger()
 
@@ -121,7 +120,7 @@ async def errored_state_route(namespace_name: str, state_id: str, body: ErroredR
     response_description="Graph template upserted successfully",
     tags=["graph"]
 )   
-async def upsert_graph_template(namespace_name: str, graph_name: str, body: UpsertGraphTemplateRequest, request: Request, api_key: str = Depends(check_api_key)):
+async def upsert_graph_template(namespace_name: str, graph_name: str, body: UpsertGraphTemplateRequest, request: Request, background_tasks: BackgroundTasks, api_key: str = Depends(check_api_key)):
     x_exosphere_request_id = getattr(request.state, "x_exosphere_request_id", str(uuid4()))
 
     if api_key:
@@ -130,7 +129,7 @@ async def upsert_graph_template(namespace_name: str, graph_name: str, body: Upse
         logger.error(f"API key is invalid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
 
-    return await upsert_graph_template_controller(namespace_name, graph_name, body, x_exosphere_request_id)
+    return await upsert_graph_template_controller(namespace_name, graph_name, body, x_exosphere_request_id, background_tasks)
 
 
 @router.put(
