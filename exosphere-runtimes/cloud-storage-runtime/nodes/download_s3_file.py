@@ -1,26 +1,23 @@
 import boto3
 from exospherehost import BaseNode
-from typing import List
 from pydantic import BaseModel
 
 
-class ListS3FilesNode(BaseNode):
+class DownloadS3FileNode(BaseNode):
 
     class Inputs(BaseModel):
         bucket_name: str
-        prefix: str = ''
-        files_only: bool = False
-        recursive: bool = False
+        key: str
 
     class Outputs(BaseModel):
-        key: str
+        file_path: str
 
     class Secrets(BaseModel):
         aws_access_key_id: str
         aws_secret_access_key: str
         aws_region: str
 
-    async def execute(self) -> List[Outputs]:
+    async def execute(self) -> Outputs:
 
         s3_client = boto3.client(
             's3',
@@ -28,9 +25,9 @@ class ListS3FilesNode(BaseNode):
             aws_secret_access_key=self.secrets.aws_secret_access_key,
             region_name=self.secrets.aws_region
         )
-        response = s3_client.list_objects_v2(Bucket=self.inputs.bucket_name, Prefix=self.inputs.prefix)
 
-        return [
-            self.Outputs(key=data['Key'])
-            for data in response['Contents']
-        ]
+        file_name = self.inputs.key.split('/')[-1]
+
+        s3_client.download_file(self.inputs.bucket_name, self.inputs.key, file_name)
+
+        return self.Outputs(file_path=self.outputs.file_path)

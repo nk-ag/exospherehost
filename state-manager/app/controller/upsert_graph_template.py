@@ -2,11 +2,14 @@ from app.singletons.logs_manager import LogsManager
 from app.models.graph_models import UpsertGraphTemplateRequest, UpsertGraphTemplateResponse
 from app.models.db.graph_template_model import GraphTemplate
 from app.models.graph_template_validation_status import GraphTemplateValidationStatus
+from app.tasks.verify_graph import verify_graph
+
+from fastapi import BackgroundTasks
 from beanie.operators import Set
 
 logger = LogsManager().get_logger()
 
-async def upsert_graph_template(namespace_name: str, graph_name: str, body: UpsertGraphTemplateRequest, x_exosphere_request_id: str) -> UpsertGraphTemplateResponse:
+async def upsert_graph_template(namespace_name: str, graph_name: str, body: UpsertGraphTemplateRequest, x_exosphere_request_id: str, background_tasks: BackgroundTasks) -> UpsertGraphTemplateResponse:
     try:
         graph_template = await GraphTemplate.find_one(
             GraphTemplate.name == graph_name,
@@ -18,7 +21,7 @@ async def upsert_graph_template(namespace_name: str, graph_name: str, body: Upse
                 namespace_name=namespace_name,
                 x_exosphere_request_id=x_exosphere_request_id)
             
-            await graph_template.update(
+            await graph_template.set_secrets(body.secrets).update(
                 Set({
                     GraphTemplate.nodes: body.nodes, # type: ignore
                     GraphTemplate.validation_status: GraphTemplateValidationStatus.PENDING, # type: ignore
@@ -40,15 +43,16 @@ async def upsert_graph_template(namespace_name: str, graph_name: str, body: Upse
                     nodes=body.nodes,
                     validation_status=GraphTemplateValidationStatus.PENDING,
                     validation_errors=[]
-                )
+                ).set_secrets(body.secrets)
             )
 
+        background_tasks.add_task(verify_graph, graph_template)
+
         return UpsertGraphTemplateResponse(
-            name=graph_template.name,
-            namespace=graph_template.namespace,
             nodes=graph_template.nodes,
             validation_status=graph_template.validation_status,
             validation_errors=graph_template.validation_errors,
+            secrets={secret_name: True for secret_name in graph_template.get_secrets().keys()},
             created_at=graph_template.created_at,
             updated_at=graph_template.updated_at
         )

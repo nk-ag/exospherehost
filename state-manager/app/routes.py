@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Request, Depends, HTTPException
+from fastapi import APIRouter, status, Request, Depends, HTTPException, BackgroundTasks
 from uuid import uuid4
 from bson import ObjectId
 
@@ -20,12 +20,14 @@ from .controller.errored_state import errored_state
 
 from .models.graph_models import UpsertGraphTemplateRequest, UpsertGraphTemplateResponse
 from .controller.upsert_graph_template import upsert_graph_template as upsert_graph_template_controller
+from .controller.get_graph_template import get_graph_template as get_graph_template_controller
 
 from .models.register_nodes_request import RegisterNodesRequestModel
 from .models.register_nodes_response import RegisterNodesResponseModel
 from .controller.register_nodes import register_nodes
 
-
+from .models.secrets_response import SecretsResponseModel
+from .controller.get_secrets import get_secrets
 
 logger = LogsManager().get_logger()
 
@@ -53,13 +55,13 @@ async def enqueue_state(namespace_name: str, body: EnqueueRequestModel, request:
 
 
 @router.post(
-    "/states/create",
+    "/graph/{graph_name}/states/create",
     response_model=CreateResponseModel,
     status_code=status.HTTP_200_OK,
     response_description="States created successfully",
     tags=["state"]
 )
-async def create_state(namespace_name: str, body: CreateRequestModel, request: Request, api_key: str = Depends(check_api_key)):
+async def create_state(namespace_name: str, graph_name: str, body: CreateRequestModel, request: Request, api_key: str = Depends(check_api_key)):
 
     x_exosphere_request_id = getattr(request.state, "x_exosphere_request_id", str(uuid4()))
 
@@ -69,7 +71,7 @@ async def create_state(namespace_name: str, body: CreateRequestModel, request: R
         logger.error(f"API key is invalid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
 
-    return await create_states(namespace_name, body, x_exosphere_request_id)
+    return await create_states(namespace_name, graph_name, body, x_exosphere_request_id)
 
 
 @router.post(
@@ -113,13 +115,13 @@ async def errored_state_route(namespace_name: str, state_id: str, body: ErroredR
 
 
 @router.put(
-    "/graph-templates/{graph_name}",
+    "/graph/{graph_name}",
     response_model=UpsertGraphTemplateResponse,
     status_code=status.HTTP_201_CREATED,
     response_description="Graph template upserted successfully",
     tags=["graph"]
 )   
-async def upsert_graph_template(namespace_name: str, graph_name: str, body: UpsertGraphTemplateRequest, request: Request, api_key: str = Depends(check_api_key)):
+async def upsert_graph_template(namespace_name: str, graph_name: str, body: UpsertGraphTemplateRequest, request: Request, background_tasks: BackgroundTasks, api_key: str = Depends(check_api_key)):
     x_exosphere_request_id = getattr(request.state, "x_exosphere_request_id", str(uuid4()))
 
     if api_key:
@@ -128,7 +130,26 @@ async def upsert_graph_template(namespace_name: str, graph_name: str, body: Upse
         logger.error(f"API key is invalid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
 
-    return await upsert_graph_template_controller(namespace_name, graph_name, body, x_exosphere_request_id)
+    return await upsert_graph_template_controller(namespace_name, graph_name, body, x_exosphere_request_id, background_tasks)
+
+
+@router.get(
+    "/graph/{graph_name}",
+    response_model=UpsertGraphTemplateResponse,
+    status_code=status.HTTP_200_OK,
+    response_description="Graph template retrieved successfully",
+    tags=["graph"]
+)
+async def get_graph_template(namespace_name: str, graph_name: str, request: Request, api_key: str = Depends(check_api_key)):
+    x_exosphere_request_id = getattr(request.state, "x_exosphere_request_id", str(uuid4()))
+
+    if api_key:
+        logger.info(f"API key is valid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
+    else:
+        logger.error(f"API key is invalid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+
+    return await get_graph_template_controller(namespace_name, graph_name, x_exosphere_request_id)
 
 
 @router.put(
@@ -148,3 +169,23 @@ async def register_nodes_route(namespace_name: str, body: RegisterNodesRequestMo
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
 
     return await register_nodes(namespace_name, body, x_exosphere_request_id)
+
+
+@router.get(
+    "/state/{state_id}/secrets",
+    response_model=SecretsResponseModel,
+    status_code=status.HTTP_200_OK,
+    response_description="Secrets retrieved successfully",
+    tags=["state"]
+)
+async def get_secrets_route(namespace_name: str, state_id: str, request: Request, api_key: str = Depends(check_api_key)):
+    x_exosphere_request_id = getattr(request.state, "x_exosphere_request_id", str(uuid4()))
+
+    if api_key:
+        logger.info("API key is valid", x_exosphere_request_id=x_exosphere_request_id)
+    else:
+        logger.error("API key is invalid", x_exosphere_request_id=x_exosphere_request_id)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+
+    
+    return await get_secrets(namespace_name, state_id, x_exosphere_request_id)
