@@ -4,7 +4,6 @@ from app.models.db.registered_node import RegisteredNode
 from app.singletons.logs_manager import LogsManager
 from beanie.operators import In
 from json_schema_to_pydantic import create_model
-from collections import deque
 
 logger = LogsManager().get_logger()
 
@@ -92,7 +91,7 @@ async def get_database_nodes(nodes: list[NodeTemplate], graph_namespace: str):
     return graph_namespace_database_nodes + exospherehost_database_nodes
 
 
-async def verify_inputs(graph_nodes: list[NodeTemplate], database_nodes: list[RegisteredNode], dependencies_graph: dict[str, set[str]], errors: list[str]):
+async def verify_inputs(graph_nodes: list[NodeTemplate], database_nodes: list[RegisteredNode], dependency_graph: dict[str, list[str]], errors: list[str]):
     look_up_table = {}
     for node in graph_nodes:
         look_up_table[node.identifier] = {"graph_node": node}
@@ -101,7 +100,7 @@ async def verify_inputs(graph_nodes: list[NodeTemplate], database_nodes: list[Re
             if database_node.name == node.node_name and database_node.namespace == node.namespace:
                 look_up_table[node.identifier]["database_node"] = database_node
                 break
-    
+
     for node in graph_nodes:
         try:
             model_class = create_model(look_up_table[node.identifier]["database_node"].inputs_schema)
@@ -125,9 +124,9 @@ async def verify_inputs(graph_nodes: list[NodeTemplate], database_nodes: list[Re
 
                         syntax_string = split.split("}}")[0].strip()
 
-                        if syntax_string.startswith("identifier.") and len(syntax_string.split(".")) == 3:
-                            identifier = syntax_string.split(".")[1].strip()
-                            field = syntax_string.split(".")[2].strip()
+                        parts = syntax_string.split(".")
+                        if len(parts) == 3 and parts[1].strip() == "outputs":
+                            identifier, field = parts[0].strip(), parts[2].strip()
                         else:
                             errors.append(f"{node.node_name}.Inputs field '{field_name}' references field {syntax_string} which is not a valid output field")
                             continue
@@ -136,7 +135,7 @@ async def verify_inputs(graph_nodes: list[NodeTemplate], database_nodes: list[Re
                             errors.append(f"{node.node_name}.Inputs field '{field_name}' references field {syntax_string} which is not a valid output field")
                             continue
 
-                        if identifier not in dependencies_graph[node.identifier]:
+                        if identifier not in dependency_graph[node.identifier]:
                             errors.append(f"{node.node_name}.Inputs field '{field_name}' references node {identifier} which is not a dependency of {node.identifier}")
                             continue
                         
@@ -165,6 +164,7 @@ async def verify_topology(graph_nodes: list[NodeTemplate], errors: list[str]):
     dependencies = {}
     identifier_to_node = {}
     visited = {}
+    dependency_graph = {}
 
     for node in graph_nodes:
         if node.identifier in dependencies.keys():
@@ -187,25 +187,37 @@ async def verify_topology(graph_nodes: list[NodeTemplate], errors: list[str]):
         errors.append(f"Graph has {len(root_nodes)} root nodes, expected 1")
         return
     
-    # verify that the graph is a tree
-    to_visit = deque([root_nodes[0].identifier])
+    
+    # verify that the graph is a tree using recursive DFS and store the dependency graph
+    def dfs_visit(current_node: str, parent_node: str | None = None, current_path: list[str] = []):
 
-    while len(to_visit) > 0:
-        current_node = to_visit.popleft()
+        if visited[current_node]:
+            if parent_node is not None:
+                errors.append(f"Graph is not a tree at {parent_node} -> {current_node}")
+            return
+        
         visited[current_node] = True
+        dependency_graph[current_node] = current_path.copy()       
 
         if identifier_to_node[current_node].next_nodes is None:
-            continue
-
+            return
+        
+        current_path.append(current_node)
+            
         for next_node in identifier_to_node[current_node].next_nodes:
-            if visited[next_node]:
-                errors.append(f"Graph is not a tree at {current_node} -> {next_node}")
-            else:
-                to_visit.append(next_node)
+            dfs_visit(next_node, current_node, current_path)
 
+        current_path.pop()        
+    
+    # Start DFS from root node
+    dfs_visit(root_nodes[0].identifier)
+    
+    # Check connectivity
     for identifier, visited_value in visited.items():
         if not visited_value:
             errors.append(f"Graph is not connected at {identifier}")
+    
+    return dependency_graph
 
 async def verify_graph(graph_template: GraphTemplate):
     try:
@@ -217,17 +229,16 @@ async def verify_graph(graph_template: GraphTemplate):
         await verify_node_exists(graph_template.nodes, database_nodes, errors)
         await verify_node_identifiers(graph_template.nodes, errors)
         await verify_secrets(graph_template, database_nodes, errors)
-        await verify_topology(graph_template.nodes, errors)
+        dependency_graph = await verify_topology(graph_template.nodes, errors)   
 
-        if errors:
+        if dependency_graph is not None and len(errors) == 0:        
+            await verify_inputs(graph_template.nodes, database_nodes, dependency_graph, errors)
+
+        if errors or dependency_graph is None:
             graph_template.validation_status = GraphTemplateValidationStatus.INVALID
             graph_template.validation_errors = errors
             await graph_template.save()
             return
-        
-        dependencies_graph = await build_dependencies_graph(graph_template.nodes)
-        await verify_inputs(graph_template.nodes, database_nodes, dependencies_graph, errors)
-        
         graph_template.validation_status = GraphTemplateValidationStatus.VALID
         graph_template.validation_errors = None
         await graph_template.save()
