@@ -125,9 +125,9 @@ async def verify_inputs(graph_nodes: list[NodeTemplate], database_nodes: list[Re
 
                         syntax_string = split.split("}}")[0].strip()
 
-                        if len(syntax_string.split(".")) == 3 and syntax_string.split(".")[1].strip() == "outputs":
-                            identifier = syntax_string.split(".")[0].strip()
-                            field = syntax_string.split(".")[2].strip()
+                        parts = syntax_string.split(".")
+                        if len(parts) == 3 and parts[1].strip() == "outputs":
+                            identifier, field = parts[0].strip(), parts[2].strip()
                         else:
                             errors.append(f"{node.node_name}.Inputs field '{field_name}' references field {syntax_string} which is not a valid output field")
                             continue
