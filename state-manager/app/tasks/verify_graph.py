@@ -4,7 +4,6 @@ from app.models.db.registered_node import RegisteredNode
 from app.singletons.logs_manager import LogsManager
 from beanie.operators import In
 from json_schema_to_pydantic import create_model
-from collections import deque
 
 logger = LogsManager().get_logger()
 
@@ -232,7 +231,7 @@ async def verify_graph(graph_template: GraphTemplate):
         await verify_secrets(graph_template, database_nodes, errors)
         dependency_graph = await verify_topology(graph_template.nodes, errors)   
 
-        if dependency_graph is not None:        
+        if dependency_graph is not None and len(errors) == 0:        
             await verify_inputs(graph_template.nodes, database_nodes, dependency_graph, errors)
 
         if errors or dependency_graph is None:
