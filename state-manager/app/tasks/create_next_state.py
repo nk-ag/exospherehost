@@ -39,7 +39,9 @@ async def create_next_state(state: State):
         if not next_node_identifier:
             raise Exception(f"Node template {state.identifier} has no next nodes")
         
-        cache_states = {}         
+        cache_states = {}      
+
+        parents = state.parents | {state.identifier: ObjectId(state.id)}
 
         for identifier in next_node_identifier:
             next_node_template = graph_template.get_node_by_identifier(identifier)
@@ -72,9 +74,9 @@ async def create_next_state(state: State):
                             raise Exception(f"Invalid input placeholder format: '{placeholder_content}' for field {field_name}")
                             
                         input_identifier = parts[0]
-                        input_field = parts[2]
+                        input_field = parts[2]                        
 
-                        parent_id = state.parents.get(input_identifier)
+                        parent_id = parents.get(input_identifier)
                             
                         if not parent_id:
                             raise Exception(f"Parent identifier '{input_identifier}' not found in state parents.")
@@ -106,10 +108,8 @@ async def create_next_state(state: State):
                 inputs=next_node_input_data,
                 outputs={},
                 error=None,
-                parents={
-                    **state.parents,
-                    next_node_template.identifier: ObjectId(state.id)
-                }
+                parents=parents
+                
             )
 
             await new_state.save()
