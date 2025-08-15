@@ -1,11 +1,12 @@
 from bson import ObjectId
 from .base import BaseDatabaseModel
 from ..state_status_enum import StateStatusEnum
-from pydantic import Field
+from pydantic import Field, ConfigDict
 from typing import Any, Optional
 
 
 class State(BaseDatabaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     node_name: str = Field(..., description="Name of the node of the state")
     namespace_name: str = Field(..., description="Name of the namespace of the state")
