@@ -1,8 +1,6 @@
 import asyncio
 import time
 
-from bson import ObjectId
-
 from app.models.db.state import State
 from app.models.db.graph_template_model import GraphTemplate
 from app.models.graph_template_validation_status import GraphTemplateValidationStatus

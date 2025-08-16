@@ -2,7 +2,6 @@ from app.singletons.logs_manager import LogsManager
 from app.models.secrets_response import SecretsResponseModel
 from app.models.db.state import State
 from app.models.db.graph_template_model import GraphTemplate
-from bson import ObjectId
 
 logger = LogsManager().get_logger()
 
