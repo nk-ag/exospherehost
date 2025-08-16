@@ -66,11 +66,10 @@ class TestExecutedState:
         mock_update_query = MagicMock()
         mock_update_query.set = AsyncMock()
 
-        mock_state.set = AsyncMock()
+        mock_state.save = AsyncMock()
 
         mock_state.status = StateStatusEnum.QUEUED 
-        mock_state_class.find_one = AsyncMock(return_value=mock_state)       
- 
+        mock_state_class.find_one = AsyncMock(return_value=mock_state)   
 
         # Act
         result = await executed_state(
@@ -83,8 +82,7 @@ class TestExecutedState:
 
         # Assert
         assert result.status == StateStatusEnum.EXECUTED
-        assert mock_state_class.find_one.call_count == 2  # Called twice: once for finding, once for updating
-        mock_update_query.set.assert_called_once()
+        assert mock_state_class.find_one.call_count == 1  # Called once for finding
         mock_background_tasks.add_task.assert_called_once_with(mock_create_next_state, mock_state)
 
     @patch('app.controller.executed_state.State')

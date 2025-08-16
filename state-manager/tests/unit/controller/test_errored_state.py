@@ -114,7 +114,7 @@ class TestErroredState:
     ):
         """Test when state is not found"""
         # Arrange
-        mock_state_class.find_one = MagicMock(return_value=None)
+        mock_state_class.find_one = AsyncMock(return_value=None)
 
         # Act & Assert
         with pytest.raises(HTTPException) as exc_info:
@@ -141,7 +141,7 @@ class TestErroredState:
         # Arrange
         mock_state = MagicMock()
         mock_state.status = StateStatusEnum.CREATED
-        mock_state_class.find_one = MagicMock(return_value=mock_state)
+        mock_state_class.find_one = AsyncMock(return_value=mock_state)
 
         # Act & Assert
         with pytest.raises(HTTPException) as exc_info:
@@ -168,7 +168,7 @@ class TestErroredState:
         # Arrange
         mock_state = MagicMock()
         mock_state.status = StateStatusEnum.ERRORED
-        mock_state_class.find_one = MagicMock(return_value=mock_state)
+        mock_state_class.find_one = AsyncMock(return_value=mock_state)
 
         # Act & Assert
         with pytest.raises(HTTPException) as exc_info:
@@ -195,7 +195,7 @@ class TestErroredState:
         # Arrange
         mock_state = MagicMock()
         mock_state.status = StateStatusEnum.EXECUTED
-        mock_state_class.find_one = MagicMock(return_value=mock_state)
+        mock_state_class.find_one = AsyncMock(return_value=mock_state)
 
         # Act & Assert
         with pytest.raises(HTTPException) as exc_info:
