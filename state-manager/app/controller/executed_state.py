@@ -31,8 +31,10 @@ async def executed_state(namespace_name: str, state_id: ObjectId, body: Executed
         else:
             await State.find_one(State.id == state_id).set(
                 {"status": StateStatusEnum.EXECUTED, "outputs": body.outputs[0], "parents": {**state.parents, state.identifier: ObjectId(state.id)}}
-            )
-            background_tasks.add_task(create_next_state, state)
+            )   
+            new_state = await State.find_one(State.id == state_id)
+
+            background_tasks.add_task(create_next_state, new_state)
 
             for output in body.outputs[1:]:
                 new_state = State(
