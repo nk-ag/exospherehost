@@ -86,6 +86,7 @@ class TestCreateStates:
     @pytest.fixture
     def mock_create_request(self):
         return CreateRequestModel(
+            run_id="test_run_id",
             states=[
                 RequestStateModel(
                     identifier="test_identifier",
@@ -131,7 +132,7 @@ class TestCreateStates:
         # Mock State.find().to_list()
         mock_state_find = MagicMock()
         mock_state_find.to_list = AsyncMock(return_value=[mock_state])
-        mock_state_class.find = AsyncMock(return_value=mock_state_find)
+        mock_state_class.find = AsyncMock(return_value=mock_state_find)        
 
         # Act
         result = await create_states(

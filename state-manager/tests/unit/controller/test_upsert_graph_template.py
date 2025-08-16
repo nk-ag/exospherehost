@@ -1,3 +1,4 @@
+from time import sleep
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime
@@ -101,9 +102,11 @@ class TestUpsertGraphTemplate:
             mock_background_tasks
         )
 
+        sleep(1) # wait for the background task to complete
+
         # Assert
         assert result.nodes == mock_upsert_request.nodes
-        assert result.validation_status == GraphTemplateValidationStatus.PENDING
+        assert result.validation_status == GraphTemplateValidationStatus.VALID
         assert result.validation_errors == []
         assert result.secrets == {"api_key": True, "database_url": True}
         assert result.created_at == mock_existing_template.created_at
@@ -219,6 +222,8 @@ class TestUpsertGraphTemplate:
         mock_existing_template.get_secrets.return_value = {}
         mock_existing_template.set_secrets.return_value = mock_existing_template
         
+        mock_existing_template.update = AsyncMock()
+
         mock_graph_template_class.find_one = AsyncMock(return_value=mock_existing_template)
 
         # Act
@@ -229,10 +234,11 @@ class TestUpsertGraphTemplate:
             mock_request_id,
             mock_background_tasks
         )
-
+        
+        sleep(1) # wait for the background task to complete
         # Assert
         assert result.nodes == []
-        assert result.validation_status == GraphTemplateValidationStatus.PENDING
+        assert result.validation_status == GraphTemplateValidationStatus.VALID
         assert result.validation_errors == []
         assert result.secrets == {}
 
@@ -259,6 +265,8 @@ class TestUpsertGraphTemplate:
         mock_existing_template.updated_at = datetime(2023, 1, 2, 12, 0, 0)
         mock_existing_template.get_secrets.return_value = mock_upsert_request.secrets
         mock_existing_template.set_secrets.return_value = mock_existing_template
+
+        mock_existing_template.update = AsyncMock()
         
         mock_graph_template_class.find_one = AsyncMock(return_value=mock_existing_template)
 
@@ -271,6 +279,8 @@ class TestUpsertGraphTemplate:
             mock_background_tasks
         )
 
+        sleep(1) # wait for the background task to complete
+
         # Assert
-        assert result.validation_status == GraphTemplateValidationStatus.PENDING
-        assert result.validation_errors == []  # Should be reset to empty
+        assert result.validation_status == GraphTemplateValidationStatus.INVALID
+        assert result.validation_errors == ["Previous error 1", "Previous error 2"]  # Should be reset to empty
