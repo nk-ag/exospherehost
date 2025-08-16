@@ -12,8 +12,8 @@ from json_schema_to_pydantic import create_model
 async def create_next_state(state: State):
     graph_template = None
 
-    assert state is not None and state.id is not None, "State is not valid"
-
+    if state is None or state.id is None:
+        raise ValueError("State is not valid")
     try:
         start_time = time.time()
         timeout_seconds = 300  # 5 minutes
