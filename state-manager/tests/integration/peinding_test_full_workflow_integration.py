@@ -16,11 +16,8 @@ Prerequisites:
 import sys
 import os
 import pytest
-import asyncio
-import httpx
-import json
-from typing import Dict, Any, List
-from datetime import datetime
+import httpx    
+from typing import List
 import uuid
 
 # Add the state-manager app to the path
@@ -101,7 +98,8 @@ class TestFullWorkflowIntegration:
                     "input1": "test_value",
                     "input2": 42
                 },
-                next_nodes=["node2"]
+                next_nodes=["node2"],
+                unites=None
             ),
             NodeTemplate(
                 node_name="TestNode",
@@ -111,7 +109,8 @@ class TestFullWorkflowIntegration:
                     "input1": "{{node1.output1}}",
                     "input2": "{{node1.output2}}"
                 },
-                next_nodes=[]
+                next_nodes=[],
+                unites=None
             )
         ]
     
@@ -196,6 +195,7 @@ class TestFullWorkflowIntegration:
         
         # Prepare the request
         request_data = CreateRequestModel(
+            run_id=str(uuid.uuid4()),
             states=[
                 RequestStateModel(
                     identifier="node1",

@@ -7,10 +7,7 @@ from datetime import datetime
 from app.controller.create_states import create_states, get_node_template
 from app.models.create_models import CreateRequestModel, RequestStateModel
 from app.models.state_status_enum import StateStatusEnum
-from app.models.db.state import State
-from app.models.db.graph_template_model import GraphTemplate
 from app.models.node_template_model import NodeTemplate
-from app.models.graph_template_validation_status import GraphTemplateValidationStatus
 
 
 class TestGetNodeTemplate:
@@ -24,7 +21,8 @@ class TestGetNodeTemplate:
             namespace="test_namespace",
             identifier="test_identifier",
             inputs={},
-            next_nodes=[]
+            next_nodes=[],
+            unites=None
         )
         mock_graph_template = MagicMock()
         mock_graph_template.get_node_by_identifier.return_value = mock_node
@@ -72,7 +70,8 @@ class TestCreateStates:
             namespace="test_namespace",
             identifier="test_identifier",
             inputs={},
-            next_nodes=[]
+            next_nodes=[],
+            unites=None
         )
 
     @pytest.fixture

@@ -32,14 +32,16 @@ class TestGetGraphTemplate:
                 node_name="Test Node 1",
                 namespace="test_namespace",
                 inputs={},
-                next_nodes=[]
+                next_nodes=[],
+                unites=None
             ),
             NodeTemplate(
                 identifier="node2",
                 node_name="Test Node 2",
                 namespace="test_namespace",
                 inputs={},
-                next_nodes=[]
+                next_nodes=[],
+                unites=None
             )
         ]
         template.validation_status = GraphTemplateValidationStatus.VALID
@@ -118,7 +120,8 @@ class TestGetGraphTemplate:
             node_name="Test Node",
             namespace="test_namespace",
             inputs={},
-            next_nodes=[]
+            next_nodes=[],
+            unites=None
         )]
         template.validation_status = GraphTemplateValidationStatus.INVALID
         template.validation_errors = ["Error 1", "Error 2"]
@@ -157,7 +160,8 @@ class TestGetGraphTemplate:
             node_name="Test Node",
             namespace="test_namespace",
             inputs={},
-            next_nodes=[]
+            next_nodes=[],
+            unites=None
         )]
         template.validation_status = GraphTemplateValidationStatus.PENDING
         template.validation_errors = []
@@ -251,7 +255,8 @@ class TestGetGraphTemplate:
             node_name="Test Node",
             namespace="test_namespace",
             inputs={},
-            next_nodes=[]
+            next_nodes=[],
+            unites=None
         )]
         template.validation_status = GraphTemplateValidationStatus.VALID
         template.validation_errors = []

@@ -2,7 +2,6 @@
 Controller for listing graph templates by namespace
 """
 from typing import List
-from beanie import PydanticObjectId
 
 from ..models.db.graph_template_model import GraphTemplate
 from ..singletons.logs_manager import LogsManager
