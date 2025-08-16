@@ -37,7 +37,9 @@ async def create_next_state(state: State):
         
         next_node_identifier = node_template.next_nodes
         if not next_node_identifier:
-            raise Exception(f"Node template {state.identifier} has no next nodes")
+            state.status = StateStatusEnum.SUCCESS
+            await state.save()
+            return
         
         cache_states = {}      
 
