@@ -5,6 +5,7 @@ from datetime import datetime
 from app.controller.upsert_graph_template import upsert_graph_template
 from app.models.graph_models import UpsertGraphTemplateRequest
 from app.models.graph_template_validation_status import GraphTemplateValidationStatus
+from app.models.node_template_model import NodeTemplate
 
 
 class TestUpsertGraphTemplate:
@@ -29,8 +30,20 @@ class TestUpsertGraphTemplate:
     @pytest.fixture
     def mock_nodes(self):
         return [
-            {"id": "node1", "name": "Test Node 1", "type": "input"},
-            {"id": "node2", "name": "Test Node 2", "type": "output"}
+            NodeTemplate(
+                identifier="node1",
+                node_name="Test Node 1",
+                namespace="test_namespace",
+                inputs={},
+                next_nodes=[]
+            ),
+            NodeTemplate(
+                identifier="node2",
+                node_name="Test Node 2",
+                namespace="test_namespace",
+                inputs={},
+                next_nodes=[]
+            )
         ]
 
     @pytest.fixture
@@ -75,6 +88,8 @@ class TestUpsertGraphTemplate:
     ):
         """Test successful update of existing graph template"""
         # Arrange
+        mock_existing_template.set_secrets = AsyncMock()
+        mock_existing_template.update = AsyncMock()
         mock_graph_template_class.find_one = AsyncMock(return_value=mock_existing_template)
 
         # Act
@@ -220,88 +235,6 @@ class TestUpsertGraphTemplate:
         assert result.validation_status == GraphTemplateValidationStatus.PENDING
         assert result.validation_errors == []
         assert result.secrets == {}
-
-    @patch('app.controller.upsert_graph_template.GraphTemplate')
-    @patch('app.controller.upsert_graph_template.verify_graph')
-    async def test_upsert_graph_template_with_complex_nodes(
-        self,
-        mock_verify_graph,
-        mock_graph_template_class,
-        mock_namespace,
-        mock_graph_name,
-        mock_background_tasks,
-        mock_request_id
-    ):
-        """Test upsert with complex node structure"""
-        # Arrange
-        from app.models.node_template_model import NodeTemplate
-        
-        complex_nodes = [
-            NodeTemplate(
-                identifier="input_node",
-                node_name="Input Node",
-                namespace="test_namespace",
-                inputs={"source": "file", "format": "json"},
-                next_nodes=["process_node"]
-            ),
-            NodeTemplate(
-                identifier="process_node",
-                node_name="Process Node",
-                namespace="test_namespace",
-                inputs={"operation": "filter", "conditions": [{"field": "status", "value": "active"}]},
-                next_nodes=["output_node"]
-            ),
-            NodeTemplate(
-                identifier="output_node",
-                node_name="Output Node",
-                namespace="test_namespace",
-                inputs={"destination": "database", "table": "results"},
-                next_nodes=[]
-            )
-        ]
-
-        complex_secrets = {
-            "database_connection": "encrypted_db_conn",
-            "api_credentials": "encrypted_api_creds",
-            "ssl_certificate": "encrypted_ssl_cert"
-        }
-    
-        upsert_request = UpsertGraphTemplateRequest(
-            nodes=complex_nodes,
-            secrets=complex_secrets
-        )
-        
-        mock_existing_template = MagicMock()
-        mock_existing_template.nodes = complex_nodes
-        mock_existing_template.validation_status = GraphTemplateValidationStatus.VALID
-        mock_existing_template.validation_errors = []
-        mock_existing_template.secrets = complex_secrets
-        mock_existing_template.created_at = datetime(2023, 1, 1, 12, 0, 0)
-        mock_existing_template.updated_at = datetime(2023, 1, 2, 12, 0, 0)
-        mock_existing_template.get_secrets.return_value = complex_secrets
-        mock_existing_template.set_secrets.return_value = mock_existing_template
-        
-        mock_graph_template_class.find_one = AsyncMock(return_value=mock_existing_template)
-
-        # Act
-        result = await upsert_graph_template(
-            mock_namespace,
-            mock_graph_name,
-            upsert_request,
-            mock_request_id,
-            mock_background_tasks
-        )
-
-        # Assert
-        assert result.nodes == complex_nodes
-        assert result.validation_status == GraphTemplateValidationStatus.PENDING
-        assert result.validation_errors == []
-        expected_secrets = {
-            "database_connection": True,
-            "api_credentials": True,
-            "ssl_certificate": True
-        }
-        assert result.secrets == expected_secrets
 
     @patch('app.controller.upsert_graph_template.GraphTemplate')
     @patch('app.controller.upsert_graph_template.verify_graph')

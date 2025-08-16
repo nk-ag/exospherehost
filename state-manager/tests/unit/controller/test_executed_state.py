@@ -65,11 +65,12 @@ class TestExecutedState:
         # Mock State.find_one().set() for updating the state
         mock_update_query = MagicMock()
         mock_update_query.set = AsyncMock()
-        
-        # Configure State.find_one to return different values based on call
-        # First call returns the state object, second call returns a query object with set method
-        mock_state_class.find_one = AsyncMock(return_value=mock_state)
-        mock_state_class.find_one.side_effect = [mock_state, mock_update_query]
+
+        mock_state.set = AsyncMock()
+
+        mock_state.status = StateStatusEnum.QUEUED 
+        mock_state_class.find_one = AsyncMock(return_value=mock_state)       
+ 
 
         # Act
         result = await executed_state(

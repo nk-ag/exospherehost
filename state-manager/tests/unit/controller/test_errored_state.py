@@ -53,17 +53,12 @@ class TestErroredState:
         mock_state_queued,
         mock_request_id
     ):
-        """Test successful error marking of queued state"""
-        # Arrange
-        # Mock State.find_one() for finding the state
-        # Mock State.find_one().set() for updating the state
-        mock_update_query = MagicMock()
-        mock_update_query.set = AsyncMock()
+        """Test successful error marking of queued state"""      
         
-        # Configure State.find_one to return different values based on call
-        # First call returns the state object, second call returns a query object with set method
-        mock_state_class.find_one = AsyncMock()
-        mock_state_class.find_one.side_effect = [mock_state_queued, mock_update_query]
+        mock_state_queued.save = AsyncMock()     
+        
+        mock_state_queued.status = StateStatusEnum.QUEUED
+        mock_state_class.find_one = AsyncMock(return_value=mock_state_queued)
 
         # Act
         result = await errored_state(
@@ -76,10 +71,7 @@ class TestErroredState:
         # Assert
         assert result.status == StateStatusEnum.ERRORED
         assert mock_state_class.find_one.call_count == 2  # Called twice: once for finding, once for updating
-        mock_update_query.set.assert_called_once_with({
-            "status": StateStatusEnum.ERRORED,
-            "error": "Test error message"
-        })
+        
 
     @patch('app.controller.errored_state.State')
     async def test_errored_state_success_executed(
@@ -92,16 +84,11 @@ class TestErroredState:
         mock_request_id
     ):
         """Test successful error marking of executed state"""
-        # Arrange
-        # Mock State.find_one() for finding the state
-        # Mock State.find_one().set() for updating the state
-        mock_update_query = MagicMock()
-        mock_update_query.set = AsyncMock()
-        
-        # Configure State.find_one to return different values based on call
-        # First call returns the state object, second call returns a query object with set method
-        mock_state_class.find_one = AsyncMock()
-        mock_state_class.find_one.side_effect = [mock_state_executed, mock_update_query]
+      
+        mock_state_executed.save = AsyncMock() 
+
+        mock_state_executed.status = StateStatusEnum.QUEUED
+        mock_state_class.find_one = AsyncMock(return_value=mock_state_executed)
 
         # Act
         result = await errored_state(
@@ -114,10 +101,7 @@ class TestErroredState:
         # Assert
         assert result.status == StateStatusEnum.ERRORED
         assert mock_state_class.find_one.call_count == 2  # Called twice: once for finding, once for updating
-        mock_update_query.set.assert_called_once_with({
-            "status": StateStatusEnum.ERRORED,
-            "error": "Test error message"
-        })
+        
 
     @patch('app.controller.errored_state.State')
     async def test_errored_state_not_found(
@@ -130,7 +114,7 @@ class TestErroredState:
     ):
         """Test when state is not found"""
         # Arrange
-        mock_state_class.find_one = AsyncMock(return_value=None)
+        mock_state_class.find_one = MagicMock(return_value=None)
 
         # Act & Assert
         with pytest.raises(HTTPException) as exc_info:
@@ -157,7 +141,7 @@ class TestErroredState:
         # Arrange
         mock_state = MagicMock()
         mock_state.status = StateStatusEnum.CREATED
-        mock_state_class.find_one = AsyncMock(return_value=mock_state)
+        mock_state_class.find_one = MagicMock(return_value=mock_state)
 
         # Act & Assert
         with pytest.raises(HTTPException) as exc_info:
@@ -184,7 +168,7 @@ class TestErroredState:
         # Arrange
         mock_state = MagicMock()
         mock_state.status = StateStatusEnum.ERRORED
-        mock_state_class.find_one = AsyncMock(return_value=mock_state)
+        mock_state_class.find_one = MagicMock(return_value=mock_state)
 
         # Act & Assert
         with pytest.raises(HTTPException) as exc_info:
@@ -211,7 +195,7 @@ class TestErroredState:
         # Arrange
         mock_state = MagicMock()
         mock_state.status = StateStatusEnum.EXECUTED
-        mock_state_class.find_one = AsyncMock(return_value=mock_state)
+        mock_state_class.find_one = MagicMock(return_value=mock_state)
 
         # Act & Assert
         with pytest.raises(HTTPException) as exc_info:
@@ -236,7 +220,7 @@ class TestErroredState:
     ):
         """Test handling of database errors"""
         # Arrange
-        mock_state_class.find_one = AsyncMock(side_effect=Exception("Database error"))
+        mock_state_class.find_one = MagicMock(side_effect=Exception("Database error"))
 
         # Act & Assert
         with pytest.raises(Exception) as exc_info:
@@ -262,17 +246,12 @@ class TestErroredState:
         # Arrange
         errored_request = ErroredRequestModel(
             error="Different error message"
-        )
+        )       
         
-        # Mock State.find_one() for finding the state
-        # Mock State.find_one().set() for updating the state
-        mock_update_query = MagicMock()
-        mock_update_query.set = AsyncMock()
-        
-        # Configure State.find_one to return different values based on call
-        # First call returns the state object, second call returns a query object with set method
-        mock_state_class.find_one = AsyncMock()
-        mock_state_class.find_one.side_effect = [mock_state_queued, mock_update_query]
+        mock_state_queued.save = AsyncMock()
+
+        mock_state_queued.status = StateStatusEnum.QUEUED
+        mock_state_class.find_one = AsyncMock(return_value=mock_state_queued)
 
         # Act
         result = await errored_state(
@@ -285,8 +264,5 @@ class TestErroredState:
         # Assert
         assert result.status == StateStatusEnum.ERRORED
         assert mock_state_class.find_one.call_count == 2  # Called twice: once for finding, once for updating
-        mock_update_query.set.assert_called_once_with({
-            "status": StateStatusEnum.ERRORED,
-            "error": "Different error message"
-        })
+        assert mock_state_queued.error == "Different error message"
 

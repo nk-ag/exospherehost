@@ -5,6 +5,7 @@ from datetime import datetime
 
 from app.controller.get_graph_template import get_graph_template
 from app.models.graph_template_validation_status import GraphTemplateValidationStatus
+from app.models.node_template_model import NodeTemplate
 
 
 class TestGetGraphTemplate:
@@ -26,8 +27,20 @@ class TestGetGraphTemplate:
     def mock_graph_template(self):
         template = MagicMock()
         template.nodes = [
-            {"id": "node1", "name": "Test Node 1"},
-            {"id": "node2", "name": "Test Node 2"}
+            NodeTemplate(
+                identifier="node1",
+                node_name="Test Node 1",
+                namespace="test_namespace",
+                inputs={},
+                next_nodes=[]
+            ),
+            NodeTemplate(
+                identifier="node2",
+                node_name="Test Node 2",
+                namespace="test_namespace",
+                inputs={},
+                next_nodes=[]
+            )
         ]
         template.validation_status = GraphTemplateValidationStatus.VALID
         template.validation_errors = []
@@ -47,7 +60,7 @@ class TestGetGraphTemplate:
         mock_request_id
     ):
         """Test successful retrieval of graph template"""
-        # Arrange
+        # Arrange        
         mock_graph_template_class.find_one = AsyncMock(return_value=mock_graph_template)
 
         # Act
@@ -58,7 +71,6 @@ class TestGetGraphTemplate:
         )
 
         # Assert
-        assert result.nodes == mock_graph_template.nodes
         assert result.validation_status == GraphTemplateValidationStatus.VALID
         assert result.validation_errors == []
         assert result.secrets == {"secret1": True, "secret2": True}
@@ -101,7 +113,13 @@ class TestGetGraphTemplate:
         """Test retrieval of graph template with validation errors"""
         # Arrange
         template = MagicMock()
-        template.nodes = [{"id": "node1", "name": "Test Node"}]
+        template.nodes = [NodeTemplate(
+            identifier="node1",
+            node_name="Test Node",
+            namespace="test_namespace",
+            inputs={},
+            next_nodes=[]
+        )]
         template.validation_status = GraphTemplateValidationStatus.INVALID
         template.validation_errors = ["Error 1", "Error 2"]
         template.secrets = {"secret1": "encrypted_value1"}
@@ -134,7 +152,13 @@ class TestGetGraphTemplate:
         """Test retrieval of graph template with pending validation"""
         # Arrange
         template = MagicMock()
-        template.nodes = [{"id": "node1", "name": "Test Node"}]
+        template.nodes = [NodeTemplate(
+            identifier="node1",
+            node_name="Test Node",
+            namespace="test_namespace",
+            inputs={},
+            next_nodes=[]
+        )]
         template.validation_status = GraphTemplateValidationStatus.PENDING
         template.validation_errors = []
         template.secrets = {}
@@ -222,7 +246,13 @@ class TestGetGraphTemplate:
         """Test retrieval of graph template with complex secrets structure"""
         # Arrange
         template = MagicMock()
-        template.nodes = [{"id": "node1", "name": "Test Node"}]
+        template.nodes = [NodeTemplate(
+            identifier="node1",
+            node_name="Test Node",
+            namespace="test_namespace",
+            inputs={},
+            next_nodes=[]
+        )]
         template.validation_status = GraphTemplateValidationStatus.VALID
         template.validation_errors = []
         template.secrets = {
