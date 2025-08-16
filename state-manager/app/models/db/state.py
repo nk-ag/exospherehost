@@ -1,13 +1,11 @@
-from bson import ObjectId
 from .base import BaseDatabaseModel
 from ..state_status_enum import StateStatusEnum
-from pydantic import Field, ConfigDict
+from pydantic import Field
+from beanie import PydanticObjectId
 from typing import Any, Optional
 
 
 class State(BaseDatabaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
     node_name: str = Field(..., description="Name of the node of the state")
     namespace_name: str = Field(..., description="Name of the namespace of the state")
     identifier: str = Field(..., description="Identifier of the node for which state is created")
@@ -17,4 +15,4 @@ class State(BaseDatabaseModel):
     inputs: dict[str, Any] = Field(..., description="Inputs of the state")
     outputs: dict[str, Any] = Field(..., description="Outputs of the state")
     error: Optional[str] = Field(None, description="Error message")
-    parents: dict[str, ObjectId] = Field(default_factory=dict, description="Parents of the state")
+    parents: dict[str, PydanticObjectId] = Field(default_factory=dict, description="Parents of the state")

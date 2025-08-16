@@ -15,7 +15,7 @@ async def executed_state(namespace_name: str, state_id: ObjectId, body: Executed
         logger.info(f"Executed state {state_id} for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
 
         state = await State.find_one(State.id == state_id)
-        if not state:
+        if not state or not state.id:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="State not found")
 
         if state.status != StateStatusEnum.QUEUED:
@@ -29,10 +29,11 @@ async def executed_state(namespace_name: str, state_id: ObjectId, body: Executed
 
             background_tasks.add_task(create_next_state, state)
 
-        else:
-            state.status = StateStatusEnum.EXECUTED
+        else:            
             state.outputs = body.outputs[0]
-            state.parents = {**state.parents, state.identifier: ObjectId(state.id)}
+            state.status = StateStatusEnum.EXECUTED
+            state.parents = {**state.parents, state.identifier: state.id}
+
             await state.save()
 
             background_tasks.add_task(create_next_state, state)
@@ -50,7 +51,7 @@ async def executed_state(namespace_name: str, state_id: ObjectId, body: Executed
                     error=None,
                     parents={
                         **state.parents,
-                        state.identifier: ObjectId(state.id)
+                        state.identifier: state.id
                     }
                 )
                 await new_state.save()
