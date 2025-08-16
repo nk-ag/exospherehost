@@ -54,7 +54,7 @@ class TestFullWorkflowIntegration:
     @pytest.fixture
     def test_api_key(self) -> str:
         """Get the test API key from environment."""
-        return "API-KEY"
+        return "niki"
     
     @pytest.fixture
     def test_graph_name(self) -> str:
@@ -277,7 +277,8 @@ class TestFullWorkflowIntegration:
         assert response.status_code == 200
         response_data = response.json()
         assert "status" in response_data
-        assert response_data["status"] == StateStatusEnum.EXECUTED
+        assert response_data["status"] == StateStatusEnum.EXECUTED      
+
     
     async def test_get_secrets(self, state_manager_client, test_namespace: str,
                              test_api_key: str, state_id: str):

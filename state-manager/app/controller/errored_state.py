@@ -23,10 +23,11 @@ async def errored_state(namespace_name: str, state_id: ObjectId, body: ErroredRe
         if state.status == StateStatusEnum.EXECUTED:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="State is already executed")
         
-        await State.find_one(State.id == state_id).set(
-            {"status": StateStatusEnum.ERRORED, "error": body.error}
-        )
-
+        state = await State.find_one(State.id == state_id)
+        state.status = StateStatusEnum.ERRORED
+        state.error = body.error
+        await state.save()
+        
         return ErroredResponseModel(status=StateStatusEnum.ERRORED)
 
     except Exception as e:

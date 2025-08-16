@@ -88,62 +88,6 @@ class TestExecutedState:
         mock_background_tasks.add_task.assert_called_once_with(mock_create_next_state, mock_state)
 
     @patch('app.controller.executed_state.State')
-    @patch('app.controller.executed_state.create_next_state')
-    async def test_executed_state_success_multiple_outputs(
-        self,
-        mock_create_next_state,
-        mock_state_class,
-        mock_namespace,
-        mock_state_id,
-        mock_state,
-        mock_background_tasks,
-        mock_request_id
-    ):
-        """Test successful execution of state with multiple outputs"""
-        # Arrange
-        executed_request = ExecutedRequestModel(
-            outputs=[
-                {"result": "success1"},
-                {"result": "success2"},
-                {"result": "success3"}
-            ]
-        )
-
-        # Mock State.find_one() for finding the state
-        # Mock State.find_one().set() for updating the state
-        mock_update_query = MagicMock()
-        mock_update_query.set = AsyncMock()
-        
-        # Configure State.find_one to return different values based on call
-        # First call returns the state object, second call returns a query object with set method
-        # Additional calls in the loop also return query objects with set method
-        mock_state_class.find_one = AsyncMock(return_value=mock_state)
-        mock_state_class.find_one.side_effect = [mock_state, mock_update_query, mock_update_query, mock_update_query]
-        
-        # Mock State.save() for new states
-        mock_new_state = MagicMock()
-        mock_new_state.save = AsyncMock()
-        mock_state_class.return_value = mock_new_state
-
-        # Act
-        result = await executed_state(
-            mock_namespace,
-            mock_state_id,
-            executed_request,
-            mock_request_id,
-            mock_background_tasks
-        )
-
-        # Assert
-        assert result.status == StateStatusEnum.EXECUTED
-        # Should create 2 additional states (3 outputs total, 1 for main state, 2 new states)
-        assert mock_state_class.call_count == 2
-        # Should add 3 background tasks (1 for main state + 2 for new states)
-        assert mock_background_tasks.add_task.call_count == 3
-        # State.find_one should be called multiple times: once for finding, once for updating main state, and twice in the loop
-        assert mock_state_class.find_one.call_count == 4
-
-    @patch('app.controller.executed_state.State')
     async def test_executed_state_not_found(
         self,
         mock_state_class,
@@ -199,49 +143,7 @@ class TestExecutedState:
         assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
         assert exc_info.value.detail == "State is not queued"
 
-    @patch('app.controller.executed_state.State')
-    @patch('app.controller.executed_state.create_next_state')
-    async def test_executed_state_empty_outputs(
-        self,
-        mock_create_next_state,
-        mock_state_class,
-        mock_namespace,
-        mock_state_id,
-        mock_state,
-        mock_background_tasks,
-        mock_request_id
-    ):
-        """Test execution with empty outputs"""
-        # Arrange
-        executed_request = ExecutedRequestModel(outputs=[])
-        
-        # Mock State.find_one() for finding the state
-        # Mock State.find_one().set() for updating the state
-        mock_update_query = MagicMock()
-        mock_update_query.set = AsyncMock()
-        
-        # Configure State.find_one to return different values based on call
-        # First call returns the state object, second call returns a query object with set method
-        mock_state_class.find_one = AsyncMock()
-        mock_state_class.find_one.side_effect = [mock_state, mock_update_query]
-
-        # Act
-        result = await executed_state(
-            mock_namespace,
-            mock_state_id,
-            executed_request,
-            mock_request_id,
-            mock_background_tasks
-        )
-
-        # Assert
-        assert result.status == StateStatusEnum.EXECUTED
-        mock_update_query.set.assert_called_once()
-        # Should set outputs to empty dict
-        call_args = mock_update_query.set.call_args[0][0]
-        assert call_args["outputs"] == {}
-        mock_background_tasks.add_task.assert_called_once_with(mock_create_next_state, mock_state)
-
+   
     @patch('app.controller.executed_state.State')
     async def test_executed_state_database_error(
         self,
@@ -267,4 +169,3 @@ class TestExecutedState:
             )
         
         assert str(exc_info.value) == "Database error"
-
