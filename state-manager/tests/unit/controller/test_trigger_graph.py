@@ -1,6 +1,6 @@
 from datetime import datetime
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import patch, MagicMock
 from fastapi import HTTPException
 
 from app.controller.create_states import trigger_graph
