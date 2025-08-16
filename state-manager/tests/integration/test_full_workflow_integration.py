@@ -54,7 +54,7 @@ class TestFullWorkflowIntegration:
     @pytest.fixture
     def test_api_key(self) -> str:
         """Get the test API key from environment."""
-        return "API-KEY"
+        return os.environ.get("TEST_API_KEY", "API-KEY")
     
     @pytest.fixture
     def test_graph_name(self) -> str:
