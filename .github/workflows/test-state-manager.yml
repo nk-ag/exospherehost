@@ -46,7 +46,7 @@ jobs:
       - name: Run unit tests with pytest and coverage
         working-directory: state-manager
         run: |
-          uv run pytest tests/unit/ --cov=app --cov-report=xml --cov-report=term-missing -v --junitxml=pytest-report.xml -m "unit"
+          uv run pytest tests/unit/ --cov=app --cov-report=xml --cov-report=term-missing -v --junitxml=pytest-report.xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
