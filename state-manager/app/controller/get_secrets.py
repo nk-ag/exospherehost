@@ -24,7 +24,7 @@ async def get_secrets(namespace_name: str, state_id: str, x_exosphere_request_id
     """
     try:
         # Get the state
-        state = await State.get(ObjectId(state_id))
+        state = await State.get(state_id)
         if not state:
             logger.error(f"State {state_id} not found", x_exosphere_request_id=x_exosphere_request_id)
             raise ValueError(f"State {state_id} not found")

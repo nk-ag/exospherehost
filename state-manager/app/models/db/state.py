@@ -1,4 +1,3 @@
-from bson import ObjectId
 from .base import BaseDatabaseModel
 from ..state_status_enum import StateStatusEnum
 from pydantic import Field

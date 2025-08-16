@@ -14,6 +14,8 @@ from json_schema_to_pydantic import create_model
 async def create_next_state(state: State):
     graph_template = None
 
+    assert state is not None and state.id is not None, "State is not valid"
+
     try:
         start_time = time.time()
         timeout_seconds = 300  # 5 minutes
@@ -41,9 +43,9 @@ async def create_next_state(state: State):
             await state.save()
             return
         
-        cache_states = {}      
+        cache_states = {}   
 
-        parents = state.parents | {state.identifier: ObjectId(state.id)}
+        parents = state.parents | {state.identifier: state.id}
 
         for identifier in next_node_identifier:
             next_node_template = graph_template.get_node_by_identifier(identifier)
@@ -84,7 +86,7 @@ async def create_next_state(state: State):
                             raise Exception(f"Parent identifier '{input_identifier}' not found in state parents.")
 
                         if parent_id not in cache_states:
-                            dependent_state = await State.get(ObjectId(parent_id))
+                            dependent_state = await State.get(parent_id)
                             if not dependent_state:
                                 raise Exception(f"Dependent state {input_identifier} not found")
                             cache_states[parent_id] = dependent_state
@@ -111,7 +113,6 @@ async def create_next_state(state: State):
                 outputs={},
                 error=None,
                 parents=parents
-                
             )
 
             await new_state.save()
