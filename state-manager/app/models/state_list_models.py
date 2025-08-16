@@ -4,14 +4,14 @@ Response models for state listing operations
 from pydantic import BaseModel, Field
 from typing import List, Optional, Any
 from datetime import datetime
-from bson import ObjectId
+from beanie import PydanticObjectId
 
 from .state_status_enum import StateStatusEnum
 
 
 class StateListItem(BaseModel):
     """Model for a single state in a list"""
-    id: str = Field(..., description="State ID")
+    id: PydanticObjectId = Field(..., description="State ID")
     node_name: str = Field(..., description="Name of the node")
     namespace_name: str = Field(..., description="Namespace name")
     identifier: str = Field(..., description="Node identifier")
@@ -21,7 +21,7 @@ class StateListItem(BaseModel):
     inputs: dict[str, Any] = Field(..., description="State inputs")
     outputs: dict[str, Any] = Field(..., description="State outputs")
     error: Optional[str] = Field(None, description="Error message")
-    parents: dict[str, str] = Field(default_factory=dict, description="Parent state IDs")
+    parents: dict[str, PydanticObjectId] = Field(default_factory=dict, description="Parent state IDs")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
 

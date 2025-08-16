@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, Request, Depends, HTTPException, BackgroundTasks
 from uuid import uuid4
-from bson import ObjectId
+from beanie import PydanticObjectId
 
 from app.utils.check_secret import check_api_key
 from app.singletons.logs_manager import LogsManager
@@ -119,7 +119,7 @@ async def executed_state_route(namespace_name: str, state_id: str, body: Execute
         logger.error(f"API key is invalid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
 
-    return await executed_state(namespace_name, ObjectId(state_id), body, x_exosphere_request_id, background_tasks)
+    return await executed_state(namespace_name, PydanticObjectId(state_id), body, x_exosphere_request_id, background_tasks)
 
 
 @router.post(
@@ -139,7 +139,7 @@ async def errored_state_route(namespace_name: str, state_id: str, body: ErroredR
         logger.error(f"API key is invalid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
 
-    return await errored_state(namespace_name, ObjectId(state_id), body, x_exosphere_request_id)
+    return await errored_state(namespace_name, PydanticObjectId(state_id), body, x_exosphere_request_id)
 
 
 @router.put(

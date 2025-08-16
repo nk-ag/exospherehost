@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from fastapi import HTTPException, status
-from bson import ObjectId
+from beanie import PydanticObjectId
 
 from app.controller.errored_state import errored_state
 from app.models.errored_models import ErroredRequestModel
@@ -21,7 +21,7 @@ class TestErroredState:
 
     @pytest.fixture
     def mock_state_id(self):
-        return ObjectId()
+        return PydanticObjectId()
 
     @pytest.fixture
     def mock_errored_request(self):
@@ -32,14 +32,14 @@ class TestErroredState:
     @pytest.fixture
     def mock_state_queued(self):
         state = MagicMock()
-        state.id = ObjectId()
+        state.id = PydanticObjectId()
         state.status = StateStatusEnum.QUEUED
         return state
 
     @pytest.fixture
     def mock_state_executed(self):
         state = MagicMock()
-        state.id = ObjectId()
+        state.id = PydanticObjectId()
         state.status = StateStatusEnum.EXECUTED
         return state
 

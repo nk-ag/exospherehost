@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from fastapi import HTTPException, status
-from bson import ObjectId
+from beanie import PydanticObjectId
 
 from app.controller.executed_state import executed_state
 from app.models.executed_models import ExecutedRequestModel
@@ -21,7 +21,7 @@ class TestExecutedState:
 
     @pytest.fixture
     def mock_state_id(self):
-        return ObjectId()
+        return PydanticObjectId()
 
     @pytest.fixture
     def mock_background_tasks(self):
@@ -30,7 +30,7 @@ class TestExecutedState:
     @pytest.fixture
     def mock_state(self):
         state = MagicMock()
-        state.id = ObjectId()
+        state.id = PydanticObjectId()
         state.status = StateStatusEnum.QUEUED
         state.node_name = "test_node"
         state.namespace_name = "test_namespace"

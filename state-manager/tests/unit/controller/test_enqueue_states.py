@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from bson import ObjectId
+from beanie import PydanticObjectId
 from datetime import datetime
 
 from app.controller.enqueue_states import enqueue_states
@@ -29,7 +29,7 @@ class TestEnqueueStates:
     @pytest.fixture
     def mock_state(self):
         state = MagicMock()
-        state.id = ObjectId()
+        state.id = PydanticObjectId()
         state.node_name = "node1"
         state.identifier = "test_identifier"
         state.inputs = {"key": "value"}
@@ -123,14 +123,14 @@ class TestEnqueueStates:
         """Test enqueuing multiple states"""
         # Arrange
         state1 = MagicMock()
-        state1.id = ObjectId()
+        state1.id = PydanticObjectId()
         state1.node_name = "node1"
         state1.identifier = "identifier1"
         state1.inputs = {"input1": "value1"}
         state1.created_at = datetime.now()
 
         state2 = MagicMock()
-        state2.id = ObjectId()
+        state2.id = PydanticObjectId()
         state2.node_name = "node2"
         state2.identifier = "identifier2"
         state2.inputs = {"input2": "value2"}

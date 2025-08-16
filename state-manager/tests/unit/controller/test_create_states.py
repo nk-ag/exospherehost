@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from fastapi import HTTPException
-from bson import ObjectId
+from beanie import PydanticObjectId
 from datetime import datetime
 
 from app.controller.create_states import create_states, get_node_template
@@ -98,7 +98,7 @@ class TestCreateStates:
     @pytest.fixture
     def mock_state(self):
         state = MagicMock()
-        state.id = ObjectId()
+        state.id = PydanticObjectId()
         state.identifier = "test_identifier"
         state.node_name = "test_node"
         state.run_id = "test_run_id"
@@ -127,7 +127,7 @@ class TestCreateStates:
         
         # Mock State.insert_many
         mock_insert_result = MagicMock()
-        mock_insert_result.inserted_ids = [ObjectId()]
+        mock_insert_result.inserted_ids = [PydanticObjectId()]
         mock_state_class.insert_many = AsyncMock(return_value=mock_insert_result)
         
         # Mock State.find().to_list()
@@ -251,12 +251,12 @@ class TestCreateStates:
         mock_graph_template_class.find_one = AsyncMock(return_value=mock_graph_template)
         
         mock_insert_result = MagicMock()
-        mock_insert_result.inserted_ids = [ObjectId(), ObjectId()]
+        mock_insert_result.inserted_ids = [PydanticObjectId(), PydanticObjectId()]
         mock_state_class.insert_many = AsyncMock(return_value=mock_insert_result)
         
         # Mock State.find().to_list() for multiple states
         mock_state1 = MagicMock()
-        mock_state1.id = ObjectId()
+        mock_state1.id = PydanticObjectId()
         mock_state1.identifier = "node1"
         mock_state1.node_name = "test_node"
         mock_state1.run_id = "test_run_id"
@@ -265,7 +265,7 @@ class TestCreateStates:
         mock_state1.created_at = datetime.now()
         
         mock_state2 = MagicMock()
-        mock_state2.id = ObjectId()
+        mock_state2.id = PydanticObjectId()
         mock_state2.identifier = "node2"
         mock_state2.node_name = "test_node"
         mock_state2.run_id = "test_run_id"
