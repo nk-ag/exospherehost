@@ -6,8 +6,12 @@ from app.models.db.graph_template_model import GraphTemplate
 from app.models.graph_template_validation_status import GraphTemplateValidationStatus
 from app.models.db.registered_node import RegisteredNode
 from app.models.state_status_enum import StateStatusEnum
+from beanie.operators import NE
+from app.singletons.logs_manager import LogsManager
 
 from json_schema_to_pydantic import create_model
+
+logger = LogsManager().get_logger()
 
 async def create_next_state(state: State):
     graph_template = None
@@ -48,6 +52,32 @@ async def create_next_state(state: State):
         for identifier in next_node_identifier:
             next_node_template = graph_template.get_node_by_identifier(identifier)
             if not next_node_template:
+                continue
+
+            depends_satisfied = True
+            if next_node_template.unites is not None and len(next_node_template.unites) > 0:
+                pending_count = 0
+                for depend in next_node_template.unites:
+                    if depend.identifier == state.identifier:
+                        continue
+                    else:
+                        root_parent = state.parents.get(depend.identifier)
+                        if root_parent is None:
+                            raise Exception(f"Root parent of {depend.identifier} not found")
+                        
+                        pending_count = await State.find(
+                            State.identifier == depend.identifier,
+                            State.namespace_name == state.namespace_name,
+                            State.graph_name == state.graph_name,
+                            NE(State.status, StateStatusEnum.SUCCESS),
+                            {f"parents.{depend.identifier}": parents[depend.identifier]}
+                        ).count()
+                    if pending_count > 0:
+                        logger.info(f"Node {next_node_template.identifier} depends on {depend.identifier} but it is not satisfied")
+                        depends_satisfied = False
+                        break
+            
+            if not depends_satisfied:
                 continue
 
             registered_node = await RegisteredNode.find_one(RegisteredNode.name == next_node_template.node_name, RegisteredNode.namespace == next_node_template.namespace)
