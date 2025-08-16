@@ -1,7 +1,7 @@
-from bson import ObjectId
 from .base import BaseDatabaseModel
 from ..state_status_enum import StateStatusEnum
 from pydantic import Field
+from beanie import PydanticObjectId
 from typing import Any, Optional
 
 
@@ -15,4 +15,4 @@ class State(BaseDatabaseModel):
     inputs: dict[str, Any] = Field(..., description="Inputs of the state")
     outputs: dict[str, Any] = Field(..., description="Outputs of the state")
     error: Optional[str] = Field(None, description="Error message")
-    parents: dict[str, ObjectId] = Field(default_factory=dict, description="Parents of the state")
+    parents: dict[str, PydanticObjectId] = Field(default_factory=dict, description="Parents of the state")
