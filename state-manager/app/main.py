@@ -4,6 +4,7 @@ main file for exosphere apis
 import os
 from beanie import init_beanie
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from pymongo import AsyncMongoClient
@@ -25,6 +26,9 @@ from .models.db.registered_node import RegisteredNode
 
 # injecting routes
 from .routes import router
+
+# importing CORS config
+from .config.cors import get_cors_config
  
 load_dotenv()
 
@@ -66,6 +70,12 @@ app = FastAPI(
         "name": "Elastic License 2.0 (ELv2)",
         "url": "https://github.com/exospherehost/exosphere-api-server/blob/main/LICENSE",
     },
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    **get_cors_config()
 )
 
 # this middleware should be the first one

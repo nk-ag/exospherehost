@@ -67,13 +67,13 @@ async def create_graph_template(graph_name: str):
             print(f"❌ Error creating graph template: {e}")
             return None
 
-async def trigger_first_node(graph_name: str):
-    """Trigger the first node using the state/create API endpoint"""
+async def trigger_graph_execution(graph_name: str):
+    """Trigger the first node using the new trigger graph API endpoint"""
     namespace = "testnamespace"
     api_key = "niki"
     
-    # Create state for the first node
-    state_request = {
+    # Trigger graph with the first node
+    trigger_request = {
         "states": [
             {
                 "identifier": "node1",
@@ -86,26 +86,27 @@ async def trigger_first_node(graph_name: str):
     }
     
     async with aiohttp.ClientSession() as session:
-        url = f"http://localhost:8000/v0/namespace/{namespace}/graph/{graph_name}/states/create"
+        url = f"http://localhost:8000/v0/namespace/{namespace}/graph/{graph_name}/trigger"
         headers = {"X-API-Key": api_key, "Content-Type": "application/json"}
         
         try:
-            async with session.post(url, json=state_request, headers=headers) as response:
+            async with session.post(url, json=trigger_request, headers=headers) as response:
                 if response.status == 200:
                     response_data = await response.json()
-                    print(f"✅ State created successfully!")
+                    print(f"✅ Graph triggered successfully!")
                     print(f"   - Graph: {graph_name}")
+                    print(f"   - Run ID: {response_data['run_id']}")
                     print(f"   - State ID: {response_data['states'][0]['state_id']}")
                     print(f"   - Node: {response_data['states'][0]['node_name']}")
                     print(f"   - Status: {response_data['status']}")
-                    return response_data['states'][0]['state_id']
+                    return response_data['states'][0]['state_id'], response_data['run_id']
                 else:
-                    print(f"❌ Failed to create state: {response.status}")
+                    print(f"❌ Failed to trigger graph: {response.status}")
                     print(await response.text())
-                    return None
+                    return None, None
         except Exception as e:
-            print(f"❌ Error creating state: {e}")
-            return None
+            print(f"❌ Error triggering graph: {e}")
+            return None, None
 
 async def main():
     """Main function to create graph and trigger workflow"""
@@ -120,17 +121,18 @@ async def main():
     #     print("❌ Failed to create graph template. Exiting.")
     #     return
     
-    # Step 2: Trigger the first node
-    print("\n🎯 Step 2: Triggering first node...")
-    state_id = await trigger_first_node(graph_name)
+    # Step 2: Trigger the graph execution
+    print("\n🎯 Step 2: Triggering graph execution...")
+    state_id, run_id = await trigger_graph_execution(graph_name)
     
-    if state_id:
+    if state_id and run_id:
         print(f"\n✅ Workflow initiated successfully!")
         print(f"   The workflow will now execute:")
         print(f"   1. TestNode2 (node1) - Process initial data")
         print(f"   2. DataProcessorNode (node2) - Process node1 output")
         print(f"   3. FinalOutputNode (node3) - Combine all results")
         print(f"\n   State ID: {state_id}")
+        print(f"   Run ID: {run_id}")
         print(f"   Graph: {graph_name}")
     else:
         print("❌ Failed to trigger workflow.")
