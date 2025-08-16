@@ -58,6 +58,7 @@ class TestErroredState:
         mock_state_queued.save = AsyncMock()     
         
         mock_state_queued.status = StateStatusEnum.QUEUED
+        mock_state_queued.save = AsyncMock()
         mock_state_class.find_one = AsyncMock(return_value=mock_state_queued)
 
         # Act
@@ -70,7 +71,7 @@ class TestErroredState:
 
         # Assert
         assert result.status == StateStatusEnum.ERRORED
-        assert mock_state_class.find_one.call_count == 2  # Called twice: once for finding, once for updating
+        assert mock_state_class.find_one.call_count == 1  # Called once for finding
         
 
     @patch('app.controller.errored_state.State')
@@ -88,6 +89,7 @@ class TestErroredState:
         mock_state_executed.save = AsyncMock() 
 
         mock_state_executed.status = StateStatusEnum.QUEUED
+        mock_state_executed.save = AsyncMock()
         mock_state_class.find_one = AsyncMock(return_value=mock_state_executed)
 
         # Act
@@ -100,7 +102,7 @@ class TestErroredState:
 
         # Assert
         assert result.status == StateStatusEnum.ERRORED
-        assert mock_state_class.find_one.call_count == 2  # Called twice: once for finding, once for updating
+        assert mock_state_class.find_one.call_count == 1  # Called once for finding
         
 
     @patch('app.controller.errored_state.State')
@@ -251,6 +253,7 @@ class TestErroredState:
         mock_state_queued.save = AsyncMock()
 
         mock_state_queued.status = StateStatusEnum.QUEUED
+        mock_state_queued.set = AsyncMock()
         mock_state_class.find_one = AsyncMock(return_value=mock_state_queued)
 
         # Act
@@ -263,6 +266,6 @@ class TestErroredState:
 
         # Assert
         assert result.status == StateStatusEnum.ERRORED
-        assert mock_state_class.find_one.call_count == 2  # Called twice: once for finding, once for updating
+        assert mock_state_class.find_one.call_count == 1  # Called once for finding
         assert mock_state_queued.error == "Different error message"
 

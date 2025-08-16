@@ -69,6 +69,7 @@ class TestExecutedState:
         mock_state.save = AsyncMock()
 
         mock_state.status = StateStatusEnum.QUEUED 
+        mock_state.save = AsyncMock()
         mock_state_class.find_one = AsyncMock(return_value=mock_state)   
 
         # Act
@@ -116,7 +117,7 @@ class TestExecutedState:
         # First call returns the state object, second call returns a query object with set method
         # Additional calls in the loop also return query objects with set method
         mock_state_class.find_one = AsyncMock(return_value=mock_state)
-        mock_state_class.find_one.side_effect = [mock_state, mock_update_query, mock_update_query, mock_update_query]
+        mock_state.save = AsyncMock()
         
         # Mock State.save() for new states
         mock_new_state = MagicMock()
@@ -139,7 +140,7 @@ class TestExecutedState:
         # Should add 3 background tasks (1 for main state + 2 for new states)
         assert mock_background_tasks.add_task.call_count == 3
         # State.find_one should be called multiple times: once for finding, once for updating main state, and twice in the loop
-        assert mock_state_class.find_one.call_count == 4
+        assert mock_state_class.find_one.call_count == 1
 
     @patch('app.controller.executed_state.State')
     async def test_executed_state_not_found(
@@ -220,8 +221,8 @@ class TestExecutedState:
         
         # Configure State.find_one to return different values based on call
         # First call returns the state object, second call returns a query object with set method
-        mock_state_class.find_one = AsyncMock()
-        mock_state_class.find_one.side_effect = [mock_state, mock_update_query]
+        mock_state_class.find_one = AsyncMock(return_value=mock_state)
+        mock_state.save = AsyncMock()
 
         # Act
         result = await executed_state(
@@ -234,10 +235,7 @@ class TestExecutedState:
 
         # Assert
         assert result.status == StateStatusEnum.EXECUTED
-        mock_update_query.set.assert_called_once()
-        # Should set outputs to empty dict
-        call_args = mock_update_query.set.call_args[0][0]
-        assert call_args["outputs"] == {}
+        assert mock_state.outputs == {}
         mock_background_tasks.add_task.assert_called_once_with(mock_create_next_state, mock_state)
 
     @patch('app.controller.executed_state.State')

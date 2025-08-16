@@ -101,6 +101,7 @@ class TestCreateStates:
         state.id = ObjectId()
         state.identifier = "test_identifier"
         state.node_name = "test_node"
+        state.run_id = "test_run_id"
         state.graph_name = "test_graph"
         state.inputs = {"key": "value"}
         state.created_at = datetime.now()
@@ -132,7 +133,7 @@ class TestCreateStates:
         # Mock State.find().to_list()
         mock_state_find = MagicMock()
         mock_state_find.to_list = AsyncMock(return_value=[mock_state])
-        mock_state_class.find = AsyncMock(return_value=mock_state_find)        
+        mock_state_class.find = MagicMock(return_value=mock_state_find)        
 
         # Act
         result = await create_states(
@@ -258,6 +259,7 @@ class TestCreateStates:
         mock_state1.id = ObjectId()
         mock_state1.identifier = "node1"
         mock_state1.node_name = "test_node"
+        mock_state1.run_id = "test_run_id"
         mock_state1.graph_name = "test_graph"
         mock_state1.inputs = {"input1": "value1"}
         mock_state1.created_at = datetime.now()
@@ -266,6 +268,7 @@ class TestCreateStates:
         mock_state2.id = ObjectId()
         mock_state2.identifier = "node2"
         mock_state2.node_name = "test_node"
+        mock_state2.run_id = "test_run_id"
         mock_state2.graph_name = "test_graph"
         mock_state2.inputs = {"input2": "value2"}
         mock_state2.created_at = datetime.now()
@@ -275,6 +278,7 @@ class TestCreateStates:
         mock_state_class.find = MagicMock(return_value=mock_state_find)
 
         create_request = CreateRequestModel(
+            run_id="test_run_id",
             states=[
                 RequestStateModel(identifier="node1", inputs={"input1": "value1"}),
                 RequestStateModel(identifier="node2", inputs={"input2": "value2"})

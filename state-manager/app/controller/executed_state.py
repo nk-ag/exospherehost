@@ -22,19 +22,20 @@ async def executed_state(namespace_name: str, state_id: ObjectId, body: Executed
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="State is not queued")
         
         if len(body.outputs) == 0:
-            await State.find_one(State.id == state_id).set(
-                {"status": StateStatusEnum.EXECUTED, "outputs": {}, "parents": {**state.parents, state.identifier: ObjectId(state.id)}}
-            )
+            state.status = StateStatusEnum.EXECUTED
+            state.outputs = {}
+            state.parents = {**state.parents, state.identifier: ObjectId(state.id)}
+            await state.save()
 
             background_tasks.add_task(create_next_state, state)
 
         else:
-            await State.find_one(State.id == state_id).set(
-                {"status": StateStatusEnum.EXECUTED, "outputs": body.outputs[0], "parents": {**state.parents, state.identifier: ObjectId(state.id)}}
-            )   
-            new_state = await State.find_one(State.id == state_id)
+            state.status = StateStatusEnum.EXECUTED
+            state.outputs = body.outputs[0]
+            state.parents = {**state.parents, state.identifier: ObjectId(state.id)}
+            await state.save()
 
-            background_tasks.add_task(create_next_state, new_state)
+            background_tasks.add_task(create_next_state, state)
 
             for output in body.outputs[1:]:
                 new_state = State(
@@ -42,6 +43,7 @@ async def executed_state(namespace_name: str, state_id: ObjectId, body: Executed
                     namespace_name=state.namespace_name,
                     identifier=state.identifier,
                     graph_name=state.graph_name,
+                    run_id=state.run_id,
                     status=StateStatusEnum.CREATED,
                     inputs=state.inputs,
                     outputs=output,
