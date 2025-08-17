@@ -1,0 +1,61 @@
+name: Python SDK Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'python-sdk/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'python-sdk/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          cache: true
+
+      - name: Install dev dependencies with uv
+        working-directory: python-sdk
+        run: |
+          uv sync --group dev
+
+      - name: Install python-sdk package (editable)
+        working-directory: python-sdk
+        run: |
+          uv pip install -e .
+
+      - name: Run tests with pytest and coverage
+        working-directory: python-sdk
+        run: |
+          uv run pytest --cov=exospherehost --cov-report=xml --cov-report=term-missing -v --junitxml=pytest-report.xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: exospherehost/exospherehost
+          files: python-sdk/coverage.xml
+          flags: python-sdk-unittests
+          name: python-sdk-coverage-report
+          fail_ci_if_error: true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: python-sdk-test-results
+          path: python-sdk/pytest-report.xml
+          retention-days: 30

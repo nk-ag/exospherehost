@@ -29,6 +29,9 @@ jobs:
      
       - run: uv sync --locked --dev
 
+      - name: Run tests
+        run: uvx --from pytest pytest -q
+
       - run: uv build
 
       - run: uv publish
