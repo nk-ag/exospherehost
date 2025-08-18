@@ -8,7 +8,7 @@ from app.models.db.graph_template_model import GraphTemplate
 from app.models.node_template_model import NodeTemplate
 
 from beanie.operators import In
-from bson import ObjectId
+from beanie import PydanticObjectId
 import uuid
 
 logger = LogsManager().get_logger()
@@ -80,7 +80,7 @@ async def create_states(namespace_name: str, graph_name: str, body: CreateReques
         logger.info(f"Created states: {inserted_states.inserted_ids}", x_exosphere_request_id=x_exosphere_request_id)
         
         newStates = await State.find(
-            In(State.id, [ObjectId(id) for id in inserted_states.inserted_ids])
+            In(State.id, [PydanticObjectId(id) for id in inserted_states.inserted_ids])
         ).to_list()
         
         return CreateResponseModel(

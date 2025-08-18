@@ -1,16 +1,13 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from fastapi import HTTPException
-from bson import ObjectId
+from beanie import PydanticObjectId
 from datetime import datetime
 
 from app.controller.create_states import create_states, get_node_template
 from app.models.create_models import CreateRequestModel, RequestStateModel
 from app.models.state_status_enum import StateStatusEnum
-from app.models.db.state import State
-from app.models.db.graph_template_model import GraphTemplate
 from app.models.node_template_model import NodeTemplate
-from app.models.graph_template_validation_status import GraphTemplateValidationStatus
 
 
 class TestGetNodeTemplate:
@@ -24,7 +21,8 @@ class TestGetNodeTemplate:
             namespace="test_namespace",
             identifier="test_identifier",
             inputs={},
-            next_nodes=[]
+            next_nodes=[],
+            unites=None
         )
         mock_graph_template = MagicMock()
         mock_graph_template.get_node_by_identifier.return_value = mock_node
@@ -72,7 +70,8 @@ class TestCreateStates:
             namespace="test_namespace",
             identifier="test_identifier",
             inputs={},
-            next_nodes=[]
+            next_nodes=[],
+            unites=None
         )
 
     @pytest.fixture
@@ -98,7 +97,11 @@ class TestCreateStates:
     @pytest.fixture
     def mock_state(self):
         state = MagicMock()
+<<<<<<< HEAD
         state.id = ObjectId()
+=======
+        state.id = PydanticObjectId()
+>>>>>>> ddefa40292c8cc00b9e409117258a8593da60d37
         state.identifier = "test_identifier"
         state.node_name = "test_node"
         state.run_id = "test_run_id"
@@ -127,7 +130,11 @@ class TestCreateStates:
         
         # Mock State.insert_many
         mock_insert_result = MagicMock()
+<<<<<<< HEAD
         mock_insert_result.inserted_ids = [ObjectId()]
+=======
+        mock_insert_result.inserted_ids = [PydanticObjectId()]
+>>>>>>> ddefa40292c8cc00b9e409117258a8593da60d37
         mock_state_class.insert_many = AsyncMock(return_value=mock_insert_result)
         
         # Mock State.find().to_list()
@@ -251,12 +258,20 @@ class TestCreateStates:
         mock_graph_template_class.find_one = AsyncMock(return_value=mock_graph_template)
         
         mock_insert_result = MagicMock()
+<<<<<<< HEAD
         mock_insert_result.inserted_ids = [ObjectId(), ObjectId()]
+=======
+        mock_insert_result.inserted_ids = [PydanticObjectId(), PydanticObjectId()]
+>>>>>>> ddefa40292c8cc00b9e409117258a8593da60d37
         mock_state_class.insert_many = AsyncMock(return_value=mock_insert_result)
         
         # Mock State.find().to_list() for multiple states
         mock_state1 = MagicMock()
+<<<<<<< HEAD
         mock_state1.id = ObjectId()
+=======
+        mock_state1.id = PydanticObjectId()
+>>>>>>> ddefa40292c8cc00b9e409117258a8593da60d37
         mock_state1.identifier = "node1"
         mock_state1.node_name = "test_node"
         mock_state1.run_id = "test_run_id"
@@ -265,7 +280,11 @@ class TestCreateStates:
         mock_state1.created_at = datetime.now()
         
         mock_state2 = MagicMock()
+<<<<<<< HEAD
         mock_state2.id = ObjectId()
+=======
+        mock_state2.id = PydanticObjectId()
+>>>>>>> ddefa40292c8cc00b9e409117258a8593da60d37
         mock_state2.identifier = "node2"
         mock_state2.node_name = "test_node"
         mock_state2.run_id = "test_run_id"

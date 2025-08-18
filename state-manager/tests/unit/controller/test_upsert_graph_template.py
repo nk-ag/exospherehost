@@ -36,14 +36,16 @@ class TestUpsertGraphTemplate:
                 node_name="Test Node 1",
                 namespace="test_namespace",
                 inputs={},
-                next_nodes=[]
+                next_nodes=[],
+                unites=None
             ),
             NodeTemplate(
                 identifier="node2",
                 node_name="Test Node 2",
                 namespace="test_namespace",
                 inputs={},
-                next_nodes=[]
+                next_nodes=[],
+                unites=None
             )
         ]
 
@@ -89,9 +91,9 @@ class TestUpsertGraphTemplate:
     ):
         """Test successful update of existing graph template"""
         # Arrange
-        mock_existing_template.set_secrets = MagicMock(return_value=mock_existing_template)
-        mock_existing_template.update = AsyncMock()
 
+        mock_existing_template.update = AsyncMock()
+        mock_existing_template.set_secrets = MagicMock(return_value=mock_existing_template)
         mock_graph_template_class.find_one = AsyncMock(return_value=mock_existing_template)
 
         # Act

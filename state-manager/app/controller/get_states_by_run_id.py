@@ -2,7 +2,6 @@
 Controller for fetching states by run ID
 """
 from typing import List
-from beanie import PydanticObjectId
 
 from ..models.db.state import State
 from ..singletons.logs_manager import LogsManager

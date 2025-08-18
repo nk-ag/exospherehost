@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from bson import ObjectId
+from beanie import PydanticObjectId
 
 from app.controller.get_secrets import get_secrets
 from app.models.secrets_response import SecretsResponseModel
@@ -19,12 +19,12 @@ class TestGetSecrets:
 
     @pytest.fixture
     def mock_state_id(self):
-        return str(ObjectId())
+        return PydanticObjectId()
 
     @pytest.fixture
     def mock_state(self):
         state = MagicMock()
-        state.id = ObjectId()
+        state.id = PydanticObjectId()
         state.namespace_name = "test_namespace"
         state.graph_name = "test_graph"
         return state
@@ -69,7 +69,7 @@ class TestGetSecrets:
             "database_url": "encrypted_db_url"
         }
         
-        mock_state_class.get.assert_called_once_with(ObjectId(mock_state_id))
+        mock_state_class.get.assert_called_once_with(mock_state_id)
         mock_graph_template_class.find_one.assert_called_once()
 
     @patch('app.controller.get_secrets.State')

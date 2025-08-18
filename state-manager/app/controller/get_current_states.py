@@ -2,7 +2,6 @@
 Controller for fetching current states in a namespace
 """
 from typing import List
-from beanie import PydanticObjectId
 
 from ..models.db.state import State
 from ..singletons.logs_manager import LogsManager
