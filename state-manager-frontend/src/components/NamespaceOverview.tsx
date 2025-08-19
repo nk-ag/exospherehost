@@ -190,7 +190,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
                   <div key={index} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium text-gray-800">
-                        Graph Template {index + 1}
+                        {template.name}
                       </h4>
                       <span className={`text-xs px-2 py-1 rounded ${getValidationStatusColor(template.validation_status)}`}>
                         {template.validation_status}
@@ -224,7 +224,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
                             onClick={(e) => {
                               e.stopPropagation();
                               // For now, we'll use a generic name since we don't have the actual graph name
-                              onOpenGraphTemplate(`graph-${index + 1}`);
+                              onOpenGraphTemplate(template.name);
                             }}
                             className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 transition-colors"
                           >

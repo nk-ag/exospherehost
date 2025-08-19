@@ -216,13 +216,16 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
                         {getStatusIcon(state.status)}
                         <h4 className="font-medium text-gray-800">{state.node_name}</h4>
                         <span className="text-sm text-gray-500">({state.identifier})</span>
+                        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                          ID: {state.id}
+                        </span>
                       </div>
                       <span className={`text-xs px-2 py-1 rounded ${getStatusColor(state.status)}`}>
                         {state.status}
                       </span>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                       <div>
                         <span className="font-medium text-gray-700">Inputs:</span>
                         <pre className="mt-1 text-xs text-black bg-gray-50 p-2 rounded overflow-x-auto">
@@ -233,6 +236,15 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
                         <span className="font-medium text-gray-700">Outputs:</span>
                         <pre className="mt-1 text-xs text-black bg-gray-50 p-2 rounded overflow-x-auto">
                           {JSON.stringify(state.outputs, null, 2)}
+                        </pre>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-700">Parents:</span>
+                        <pre className="mt-1 text-xs text-black bg-gray-50 p-2 rounded overflow-x-auto">
+                          {Object.keys(state.parents).length > 0 
+                            ? JSON.stringify(state.parents, null, 2)
+                            : 'No parents'
+                          }
                         </pre>
                       </div>
                     </div>

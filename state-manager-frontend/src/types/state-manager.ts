@@ -29,6 +29,8 @@ export interface UpsertGraphTemplateRequest {
 }
 
 export interface UpsertGraphTemplateResponse {
+  name: string;
+  namespace: string;
   nodes: NodeTemplate[];
   secrets: Record<string, boolean>;
   created_at: string;
