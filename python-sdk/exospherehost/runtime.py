@@ -324,7 +324,7 @@ class Runtime:
                 if outputs is None:
                     outputs = []
 
-                if not isinstance(outputs, List):
+                if not isinstance(outputs, list):
                     outputs = [outputs]
 
                 await self._notify_executed(state["state_id"], outputs)
