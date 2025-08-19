@@ -22,10 +22,12 @@ async def executed_state(namespace_name: str, state_id: PydanticObjectId, body: 
         if state.status != StateStatusEnum.QUEUED:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="State is not queued")
         
+        parents = {**state.parents, state.identifier: state.id}
+        
         if len(body.outputs) == 0:
             state.status = StateStatusEnum.EXECUTED
             state.outputs = {}
-            state.parents = {**state.parents, state.identifier: state.id}
+            state.parents = parents
             await state.save()
 
             background_tasks.add_task(create_next_state, state)
@@ -33,13 +35,20 @@ async def executed_state(namespace_name: str, state_id: PydanticObjectId, body: 
         else:            
             state.outputs = body.outputs[0]
             state.status = StateStatusEnum.EXECUTED
-            state.parents = {**state.parents, state.identifier: state.id}
-
+            state.parents = parents
+            print("--------------------------------")
+            print(body.outputs)
+            print(body.outputs[0])
+            print(state.parents)
+            print("--------------------------------")
             await state.save()
 
             background_tasks.add_task(create_next_state, state)
 
             for output in body.outputs[1:]:
+                print("--------------------------------")
+                print(output)
+                print("--------------------------------")
                 new_state = State(
                     node_name=state.node_name,
                     namespace_name=state.namespace_name,
@@ -50,10 +59,7 @@ async def executed_state(namespace_name: str, state_id: PydanticObjectId, body: 
                     inputs=state.inputs,
                     outputs=output,
                     error=None,
-                    parents={
-                        **state.parents,
-                        state.identifier: state.id
-                    }
+                    parents=parents
                 )
                 await new_state.save()
                 background_tasks.add_task(create_next_state, new_state)
