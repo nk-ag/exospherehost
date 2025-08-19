@@ -7,6 +7,7 @@ import {
   StatesByRunIdResponse,
   StateListItem 
 } from '@/types/state-manager';
+import { GraphVisualization } from './GraphVisualization';
 import { 
   Database, 
   RefreshCw, 
@@ -16,7 +17,8 @@ import {
   XCircle,
   Loader2,
   Play,
-  Filter
+  Filter,
+  Network
 } from 'lucide-react';
 
 interface StatesByRunIdProps {
@@ -33,6 +35,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
   const [runStates, setRunStates] = useState<StatesByRunIdResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showGraph, setShowGraph] = useState(false);
 
   const loadCurrentStates = async () => {
     setIsLoading(true);
@@ -149,13 +152,24 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
     <div className="w-full max-w-6xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-800">States by Run ID</h2>
-        <button
-          onClick={loadCurrentStates}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <RefreshCw className="w-4 h-4" />
-          <span>Refresh</span>
-        </button>
+        <div className="flex items-center space-x-2">
+          {selectedRunId && (
+            <button
+              onClick={() => setShowGraph(!showGraph)}
+              className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              <Network className="w-4 h-4" />
+              <span>{showGraph ? 'Hide' : 'Show'} Graph</span>
+            </button>
+          )}
+          <button
+            onClick={loadCurrentStates}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>Refresh</span>
+          </button>
+        </div>
       </div>
 
       {/* Run ID Selector */}
@@ -186,6 +200,17 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Graph Visualization */}
+      {showGraph && selectedRunId && (
+        <div className="mb-6">
+          <GraphVisualization
+            namespace={namespace}
+            apiKey={apiKey}
+            runId={selectedRunId}
+          />
         </div>
       )}
 

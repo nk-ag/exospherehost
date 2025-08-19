@@ -302,12 +302,9 @@ export default function Dashboard() {
     setSelectedGraphTemplate(null);
   };
 
-  const tabs = [
-    { id: 'workflow', label: 'Workflow', icon: Play },
-    { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'nodes', label: 'Nodes', icon: Settings },
-    { id: 'graph', label: 'Graph Template', icon: GitBranch },
-    { id: 'states', label: 'States', icon: Database },
+  const tabs = [    
+    { id: 'overview', label: 'Overview', icon: BarChart3 },    
+    { id: 'graph', label: 'Graph Template', icon: GitBranch },    
     { id: 'run-states', label: 'Run States', icon: Filter }
   ] as const;
 
@@ -320,7 +317,7 @@ export default function Dashboard() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <Zap className="w-8 h-8 text-blue-600" />
-                <h1 className="text-xl font-bold text-gray-900">State Manager Dashboard</h1>
+                <h1 className="text-xl font-bold text-gray-900">Exosphere Dashboard</h1>
               </div>
             </div>
             

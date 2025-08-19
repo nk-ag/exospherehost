@@ -13,7 +13,8 @@ import {
   ListRegisteredNodesResponse,
   ListGraphTemplatesResponse,
   CurrentStatesResponse,
-  StatesByRunIdResponse
+  StatesByRunIdResponse,
+  GraphStructureResponse
 } from '@/types/state-manager';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
@@ -217,6 +218,22 @@ class ApiService {
   ): Promise<StatesByRunIdResponse> {
     return this.makeRequest<StatesByRunIdResponse>(
       `/v0/namespace/${namespace}/states/run/${runId}`,
+      {
+        method: 'GET',
+        headers: {
+          'X-API-Key': apiKey,
+        },
+      }
+    );
+  }
+
+  async getGraphStructure(
+    namespace: string,
+    runId: string,
+    apiKey: string
+  ): Promise<GraphStructureResponse> {
+    return this.makeRequest<GraphStructureResponse>(
+      `/v0/namespace/${namespace}/states/run/${runId}/graph`,
       {
         method: 'GET',
         headers: {

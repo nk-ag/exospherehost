@@ -37,6 +37,9 @@ from .models.state_list_models import StatesByRunIdResponse, CurrentStatesRespon
 from .controller.get_states_by_run_id import get_states_by_run_id
 from .controller.get_current_states import get_current_states
 
+from .models.graph_structure_models import GraphStructureResponse
+from .controller.get_graph_structure import get_graph_structure
+
 logger = LogsManager().get_logger()
 
 router = APIRouter(prefix="/v0/namespace/{namespace_name}")
@@ -365,3 +368,22 @@ async def get_states_by_run_id_route(namespace_name: str, run_id: str, request: 
         count=len(states),
         states=state_items
     )
+
+
+@router.get(
+    "/states/run/{run_id}/graph",
+    response_model=GraphStructureResponse,
+    status_code=status.HTTP_200_OK,
+    response_description="Graph structure for run ID retrieved successfully",
+    tags=["state"]
+)
+async def get_graph_structure_route(namespace_name: str, run_id: str, request: Request, api_key: str = Depends(check_api_key)):
+    x_exosphere_request_id = getattr(request.state, "x_exosphere_request_id", str(uuid4()))
+
+    if api_key:
+        logger.info(f"API key is valid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
+    else:
+        logger.error(f"API key is invalid for namespace {namespace_name}", x_exosphere_request_id=x_exosphere_request_id)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+
+    return await get_graph_structure(namespace_name, run_id, x_exosphere_request_id)
