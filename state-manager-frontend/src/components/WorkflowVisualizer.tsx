@@ -15,7 +15,7 @@ const getStepIcon = (step: WorkflowStep) => {
     case 'completed':
       return <CheckCircle className="w-6 h-6 text-green-500" />;
     case 'active':
-      return <Play className="w-6 h-6 text-blue-500 animate-pulse" />;
+      return <Play className="w-6 h-6 text-[#031035] animate-pulse" />;
     case 'error':
       return <XCircle className="w-6 h-6 text-red-500" />;
     default:
@@ -55,10 +55,10 @@ export const WorkflowVisualizer: React.FC<WorkflowVisualizerProps> = ({
               <div className={`
                 bg-white rounded-lg p-6 shadow-lg border-2 transition-all duration-300
                 ${step.status === 'completed' ? 'border-green-200 shadow-green-100' : ''}
-                ${step.status === 'active' ? 'border-blue-200 shadow-blue-100' : ''}
+                ${step.status === 'active' ? 'border-[#031035]/20 shadow-[#031035]/10' : ''}
                 ${step.status === 'error' ? 'border-red-200 shadow-red-100' : ''}
                 ${step.status === 'pending' ? 'border-gray-200' : ''}
-                ${index === currentStep ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}
+                ${index === currentStep ? 'ring-2 ring-[#031035] ring-opacity-50' : ''}
               `}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
@@ -89,7 +89,7 @@ export const WorkflowVisualizer: React.FC<WorkflowVisualizerProps> = ({
                 <div className={`
                   mt-4 text-xs font-medium px-2 py-1 rounded-full
                   ${step.status === 'completed' ? 'bg-green-100 text-green-800' : ''}
-                  ${step.status === 'active' ? 'bg-blue-100 text-blue-800' : ''}
+                  ${step.status === 'active' ? 'bg-[#031035]/10 text-[#031035]' : ''}
                   ${step.status === 'error' ? 'bg-red-100 text-red-800' : ''}
                   ${step.status === 'pending' ? 'bg-gray-100 text-gray-800' : ''}
                 `}>

@@ -54,9 +54,9 @@ const CustomNode: React.FC<{
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'CREATED':
-        return 'bg-blue-500';
+        return 'bg-[#031035]';
       case 'QUEUED':
-        return 'bg-blue-400';
+        return 'bg-[#0a1a4a]';
       case 'EXECUTED':
       case 'SUCCESS':
         return 'bg-green-400';
@@ -72,9 +72,9 @@ const CustomNode: React.FC<{
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'CREATED':
-        return <Clock className="w-4 h-4 text-blue-500" />;
+        return <Clock className="w-4 h-4 text-[#031035]" />;
       case 'QUEUED':
-        return <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />;
+        return <Loader2 className="w-4 h-4 text-[#0a1a4a] animate-spin" />;
       case 'EXECUTED':
       case 'SUCCESS':
         return <CheckCircle className="w-4 h-4 text-green-400" />;
@@ -88,7 +88,7 @@ const CustomNode: React.FC<{
   };
 
   return (
-    <div className="px-4 py-2 shadow-lg rounded-lg bg-white border-2 border-blue-200 min-w-[150px] relative">
+    <div className="px-4 py-2 shadow-lg rounded-lg bg-white border-2 border-[#031035]/20 min-w-[150px] relative">
       {/* Source Handle (Right side) */}
       <Handle
         type="source"
@@ -299,7 +299,7 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#031035]" />
         <span className="ml-2 text-gray-600">Loading graph structure...</span>
       </div>
     );
@@ -357,7 +357,7 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
        </div>
 
              {/* Execution Summary */}
-       <div className="bg-white rounded-lg shadow-md border border-blue-200 p-6 mb-6">
+       <div className="bg-white rounded-lg shadow-md border border-[#031035]/20 p-6 mb-6">
          <div className="flex items-center space-x-2 mb-4">
            <BarChart3 className="w-5 h-5 text-green-400" />
            <h3 className="text-lg font-semibold text-gray-800">Execution Summary</h3>
@@ -373,7 +373,7 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
       </div>
 
              {/* Graph Visualization */}
-       <div className="bg-white rounded-lg shadow-md border border-blue-200 p-6">
+       <div className="bg-white rounded-lg shadow-md border border-[#031035]/20 p-6">
          <div className="flex items-center justify-between mb-4">
            <h3 className="text-lg font-semibold text-gray-800">Graph Structure</h3>
            <div className="text-sm text-gray-500">
@@ -382,7 +382,7 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
            </div>
          </div>
 
-         <div className="border border-blue-200 rounded-lg overflow-hidden" style={{ height: '800px' }}>
+         <div className="border border-[#031035]/20 rounded-lg overflow-hidden" style={{ height: '800px' }}>
           <ReactFlow
             nodes={reactFlowNodes}
             edges={reactFlowEdges}
@@ -426,9 +426,9 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
                                  {(() => {
                    switch (selectedNode.status) {
                      case 'CREATED':
-                       return <Clock className="w-4 h-4 text-blue-500" />;
+                       return <Clock className="w-4 h-4 text-[#031035]" />;
                      case 'QUEUED':
-                       return <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />;
+                       return <Loader2 className="w-4 h-4 text-[#0a1a4a] animate-spin" />;
                      case 'EXECUTED':
                      case 'SUCCESS':
                        return <CheckCircle className="w-4 h-4 text-green-400" />;
@@ -447,8 +447,8 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
                                  <span className={`text-xs px-2 py-1 rounded ${
                    (() => {
                      switch (selectedNode.status) {
-                       case 'CREATED': return 'bg-blue-500';
-                       case 'QUEUED': return 'bg-blue-400';
+                       case 'CREATED': return 'bg-[#031035]';
+                       case 'QUEUED': return 'bg-[#0a1a4a]';
                        case 'EXECUTED':
                        case 'SUCCESS': return 'bg-green-400';
                        case 'ERRORED':

@@ -93,7 +93,7 @@ export const GraphTemplateBuilder: React.FC<GraphTemplateBuilderProps> = ({
         {!readOnly && (
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-[#031035] text-white rounded-lg hover:bg-[#0a1a4a] transition-colors"
           >
             Save Template
           </button>
@@ -147,7 +147,7 @@ export const GraphTemplateBuilder: React.FC<GraphTemplateBuilderProps> = ({
                         value={node.node_name}
                         onChange={(e) => updateNode(index, { node_name: e.target.value })}
                         disabled={readOnly}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#031035]"
                       />
                     </div>
 
@@ -160,7 +160,7 @@ export const GraphTemplateBuilder: React.FC<GraphTemplateBuilderProps> = ({
                         value={node.namespace}
                         onChange={(e) => updateNode(index, { namespace: e.target.value })}
                         disabled={readOnly}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#031035]"
                       />
                     </div>
 
@@ -189,7 +189,7 @@ export const GraphTemplateBuilder: React.FC<GraphTemplateBuilderProps> = ({
                         })}
                         disabled={readOnly}
                         placeholder="node1, node2, node3"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#031035]"
                       />
                     </div>
                   </div>
@@ -210,7 +210,7 @@ export const GraphTemplateBuilder: React.FC<GraphTemplateBuilderProps> = ({
                       }}
                       disabled={readOnly}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#031035] font-mono text-sm"
                     />
                   </div>
                 </div>
@@ -255,7 +255,7 @@ export const GraphTemplateBuilder: React.FC<GraphTemplateBuilderProps> = ({
                       setSecrets(newSecrets);
                     }}
                     disabled={readOnly}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#031035] text-sm"
                   />
                   <span className="text-gray-500">:</span>
                   <input
@@ -263,7 +263,7 @@ export const GraphTemplateBuilder: React.FC<GraphTemplateBuilderProps> = ({
                     value={value}
                     onChange={(e) => updateSecret(key, e.target.value)}
                     disabled={readOnly}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#031035] text-sm"
                   />
                   {!readOnly && (
                     <button

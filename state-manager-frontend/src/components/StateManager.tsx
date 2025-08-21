@@ -26,7 +26,7 @@ const getStateStatusIcon = (status: StateStatus) => {
     case StateStatus.CREATED:
       return <Clock className="w-5 h-5 text-gray-500" />;
     case StateStatus.QUEUED:
-      return <Play className="w-5 h-5 text-blue-500 animate-pulse" />;
+      return <Play className="w-5 h-5 text-[#031035] animate-pulse" />;
     case StateStatus.EXECUTED:
       return <CheckCircle className="w-5 h-5 text-green-500" />;
     case StateStatus.NEXT_CREATED:
@@ -51,7 +51,7 @@ const getStateStatusColor = (status: StateStatus) => {
     case StateStatus.CREATED:
       return 'bg-gray-100 text-gray-800';
     case StateStatus.QUEUED:
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-[#031035]/10 text-[#031035]';
     case StateStatus.EXECUTED:
       return 'bg-green-100 text-green-800';
     case StateStatus.NEXT_CREATED:
@@ -152,7 +152,7 @@ export const StateManager: React.FC<StateManagerProps> = ({
                     {canExecute(state.status) && onExecuteState && (
                       <button
                         onClick={() => onExecuteState(state.state_id)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="p-2 text-[#031035] hover:bg-[#031035]/5 rounded-lg transition-colors"
                         title="Execute State"
                       >
                         <Play className="w-4 h-4" />

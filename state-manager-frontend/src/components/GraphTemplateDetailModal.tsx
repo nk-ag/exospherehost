@@ -19,12 +19,12 @@ const GraphVisualizer: React.FC<{ nodes: NodeTemplate[] }> = ({ nodes }) => {
 
     return (
       <div key={index} className="relative">
-        <div className="bg-white border-2 border-blue-300 rounded-lg p-4 shadow-md">
+        <div className="bg-white border-2 border-[#031035]/30 rounded-lg p-4 shadow-md">
           <div className="flex items-center justify-between mb-2">
             <h4 className="font-semibold text-gray-800 text-sm">
               {node.identifier}
             </h4>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+            <span className="text-xs bg-[#031035]/10 text-[#031035] px-2 py-1 rounded">
               {index + 1}
             </span>
           </div>
@@ -37,8 +37,8 @@ const GraphVisualizer: React.FC<{ nodes: NodeTemplate[] }> = ({ nodes }) => {
         
         {/* Connection lines */}
         {connections.map((connection, connIndex) => (
-          <div key={connIndex} className="absolute top-1/2 left-full w-8 h-0.5 bg-blue-300 transform -translate-y-1/2">
-            <ArrowRight className="absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-4 text-blue-300" />
+          <div key={connIndex} className="absolute top-1/2 left-full w-8 h-0.5 bg-[#031035]/30 transform -translate-y-1/2">
+            <ArrowRight className="absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#031035]/30" />
           </div>
         ))}
       </div>
@@ -73,7 +73,7 @@ const NodeDetailView: React.FC<{ node: NodeTemplate; index: number }> = ({ node,
         <h4 className="font-medium text-gray-800">
           Node {index + 1}: {node.identifier}
         </h4>
-        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                    <span className="text-xs bg-[#031035]/10 text-[#031035] px-2 py-1 rounded">
           {index + 1}
         </span>
       </div>
@@ -139,7 +139,7 @@ export const GraphTemplateDetailModal: React.FC<GraphTemplateDetailModalProps> =
     <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-500 to-blue-600 p-6 text-white">
+        <div className="bg-gradient-to-r from-green-500 to-[#031035] p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">Graph Template</h2>
@@ -236,24 +236,24 @@ export const GraphTemplateDetailModal: React.FC<GraphTemplateDetailModalProps> =
           </div>
 
           {/* Summary */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-blue-800 mb-2">Graph Summary</h4>
+          <div className="bg-[#031035]/5 border border-[#031035]/20 rounded-lg p-4">
+            <h4 className="text-sm font-semibold text-[#031035] mb-2">Graph Summary</h4>
             <div className="grid grid-cols-4 gap-4 text-sm">
               <div>
-                <span className="text-blue-600 font-medium">Nodes:</span>
-                <span className="ml-2 text-blue-800">{graphTemplate.nodes.length}</span>
+                <span className="text-[#031035] font-medium">Nodes:</span>
+                <span className="ml-2 text-[#031035]">{graphTemplate.nodes.length}</span>
               </div>
               <div>
-                <span className="text-blue-600 font-medium">Secrets:</span>
-                <span className="ml-2 text-blue-800">{Object.keys(graphTemplate.secrets).length}</span>
+                <span className="text-[#031035] font-medium">Secrets:</span>
+                <span className="ml-2 text-[#031035]">{Object.keys(graphTemplate.secrets).length}</span>
               </div>
               <div>
-                <span className="text-blue-600 font-medium">Status:</span>
-                <span className="ml-2 text-blue-800">{graphTemplate.validation_status}</span>
+                <span className="text-[#031035] font-medium">Status:</span>
+                <span className="ml-2 text-[#031035]">{graphTemplate.validation_status}</span>
               </div>
               <div>
-                <span className="text-blue-600 font-medium">Connections:</span>
-                <span className="ml-2 text-blue-800">
+                <span className="text-[#031035] font-medium">Connections:</span>
+                <span className="ml-2 text-[#031035]">
                   {graphTemplate.nodes.reduce((total, node) => total + node.next_nodes.length, 0)}
                 </span>
               </div>

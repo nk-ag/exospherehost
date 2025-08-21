@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState<'workflow' | 'overview' | 'nodes' | 'graph' | 'states' | 'run-states'>('workflow');
+  const [activeTab, setActiveTab] = useState<'workflow' | 'overview' | 'nodes' | 'graph' | 'states' | 'run-states'>('overview');
   const [namespace, setNamespace] = useState('testnamespace');
   const [apiKey, setApiKey] = useState('niki');
   const [runtimeName, setRuntimeName] = useState('test-runtime');
@@ -311,33 +311,33 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-[#031035] shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <Zap className="w-8 h-8 text-blue-600" />
-                <h1 className="text-xl font-bold text-gray-900">Exosphere Dashboard</h1>
+                <img src="/exospheresmall.png" alt="Exosphere Logo" className="w-8 h-8" />
+                <h1 className="text-xl font-bold text-white">Exosphere Dashboard</h1>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">Namespace:</span>
+                <span className="text-sm text-white">Namespace:</span>
                 <input
                   type="text"
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
-                  className="px-2 py-1 text-sm border border-gray-300 rounded"
+                  className="px-2 py-1 text-sm text-white border border-gray-300 rounded"
                 />
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">API Key:</span>
+                <span className="text-sm text-white">API Key:</span>
                 <input
                   type="password"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  className="px-2 py-1 text-sm border border-gray-300 rounded"
+                  className="px-2 py-1 text-sm text-white border border-gray-300 rounded"
                 />
               </div>
             </div>
@@ -357,7 +357,7 @@ export default function Dashboard() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
+                      ? 'border-[#031035] text-[#031035]'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
@@ -387,10 +387,10 @@ export default function Dashboard() {
 
         {/* Loading Indicator */}
         {isLoading && (
-          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-md p-4">
+          <div className="mb-6 bg-[#031035]/10 border border-[#031035]/20 rounded-md p-4">
             <div className="flex items-center">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-              <span className="ml-2 text-sm text-blue-800">Processing...</span>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#031035]"></div>
+              <span className="ml-2 text-sm text-[#031035]">Processing...</span>
             </div>
           </div>
         )}
@@ -403,7 +403,7 @@ export default function Dashboard() {
               <button
                 onClick={() => executeWorkflowStep(0)}
                 disabled={isLoading}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                className="px-4 py-2 bg-[#031035] text-white rounded-lg hover:bg-[#0a1a4a] disabled:opacity-50"
               >
                 Start Workflow
               </button>

@@ -37,7 +37,7 @@ const SchemaRenderer: React.FC<{ schema: any; title: string }> = ({ schema, titl
         {value.enum && (
           <div className="mt-1">
             <span className="text-xs text-gray-500">Values: </span>
-            <span className="text-xs font-mono text-blue-600">
+            <span className="text-xs font-mono text-[#031035]">
               {value.enum.join(', ')}
             </span>
           </div>
@@ -91,13 +91,13 @@ export const NodeSchemaViewer: React.FC<NodeSchemaViewerProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
       <div 
-        className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white cursor-pointer hover:from-blue-600 hover:to-purple-700 transition-all duration-200"
+                    className="bg-gradient-to-r from-[#031035] to-purple-600 p-4 text-white cursor-pointer hover:from-[#0a1a4a] hover:to-purple-700 transition-all duration-200"
         onClick={onToggle}
       >
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold">{node.name}</h3>
-            <p className="text-blue-100 text-sm">
+            <p className="text-[#031035]/80 text-sm">
               {node.secrets.length} secrets • {Object.keys(node.inputs_schema.properties || {}).length} inputs • {Object.keys(node.outputs_schema.properties || {}).length} outputs
             </p>
           </div>
@@ -105,7 +105,7 @@ export const NodeSchemaViewer: React.FC<NodeSchemaViewerProps> = ({
             <div className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">
               Node
             </div>
-            <div className="text-xs text-blue-100 mt-1">
+            <div className="text-xs text-[#031035]/80 mt-1">
               Click to view details
             </div>
           </div>

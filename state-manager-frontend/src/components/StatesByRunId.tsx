@@ -85,7 +85,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'CREATED':
-        return <Clock className="w-4 h-4 text-blue-500" />;
+        return <Clock className="w-4 h-4 text-[#031035]" />;
       case 'QUEUED':
         return <Loader2 className="w-4 h-4 text-yellow-500 animate-spin" />;
       case 'EXECUTED':
@@ -103,7 +103,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'CREATED':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-[#031035]/10 text-[#031035]';
       case 'QUEUED':
         return 'bg-yellow-100 text-yellow-800';
       case 'EXECUTED':
@@ -121,7 +121,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
   if (isLoading && !currentStates) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#031035]" />
         <span className="ml-2 text-gray-600">Loading states...</span>
       </div>
     );
@@ -164,7 +164,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
           )}
           <button
             onClick={loadCurrentStates}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-[#031035] text-white rounded-lg hover:bg-[#0a1a4a] transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
             <span>Refresh</span>
@@ -187,7 +187,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
                 onClick={() => setSelectedRunId(runId)}
                 className={`p-4 rounded-lg border-2 transition-colors ${
                   selectedRunId === runId
-                    ? 'border-blue-500 bg-blue-50'
+                    ? 'border-[#031035] bg-[#031035]/5'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -220,7 +220,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <Database className="w-6 h-6 text-blue-600" />
+                <Database className="w-6 h-6 text-[#031035]" />
                 <h3 className="text-lg font-semibold text-gray-800">
                   States for Run ID: {selectedRunId}
                 </h3>
@@ -310,7 +310,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Summary</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{currentStates.count}</div>
+              <div className="text-2xl font-bold text-[#031035]">{currentStates.count}</div>
               <div className="text-sm text-gray-600">Total States</div>
             </div>
             <div className="text-center">

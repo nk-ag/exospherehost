@@ -37,7 +37,7 @@ const SchemaRenderer: React.FC<{ schema: any; title: string }> = ({ schema, titl
         {value.enum && (
           <div className="mt-1">
             <span className="text-xs text-gray-500">Values: </span>
-            <span className="text-xs font-mono text-blue-600">
+            <span className="text-xs font-mono text-[#031035]">
               {value.enum.join(', ')}
             </span>
           </div>
@@ -94,11 +94,11 @@ export const NodeDetailModal: React.FC<NodeDetailModalProps> = ({
     <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+        <div className="bg-gradient-to-r from-[#031035] to-purple-600 p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">{node.name}</h2>
-              <p className="text-blue-100 text-sm mt-1">
+              <p className="text-[#031035]/80 text-sm mt-1">
                 Node Schema Details
               </p>
             </div>
@@ -152,22 +152,22 @@ export const NodeDetailModal: React.FC<NodeDetailModalProps> = ({
           </div>
 
           {/* Summary */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-blue-800 mb-2">Node Summary</h4>
+          <div className="bg-[#031035]/5 border border-[#031035]/20 rounded-lg p-4">
+            <h4 className="text-sm font-semibold text-[#031035] mb-2">Node Summary</h4>
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
-                <span className="text-blue-600 font-medium">Secrets:</span>
-                <span className="ml-2 text-blue-800">{node.secrets.length}</span>
+                <span className="text-[#031035] font-medium">Secrets:</span>
+                <span className="ml-2 text-[#031035]">{node.secrets.length}</span>
               </div>
               <div>
-                <span className="text-blue-600 font-medium">Inputs:</span>
-                <span className="ml-2 text-blue-800">
+                <span className="text-[#031035] font-medium">Inputs:</span>
+                <span className="ml-2 text-[#031035]">
                   {Object.keys(node.inputs_schema.properties || {}).length}
                 </span>
               </div>
               <div>
-                <span className="text-blue-600 font-medium">Outputs:</span>
-                <span className="ml-2 text-blue-800">
+                <span className="text-[#031035] font-medium">Outputs:</span>
+                <span className="ml-2 text-[#031035]">
                   {Object.keys(node.outputs_schema.properties || {}).length}
                 </span>
               </div>

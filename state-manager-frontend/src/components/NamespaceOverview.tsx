@@ -77,7 +77,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#031035]" />
         <span className="ml-2 text-gray-600">Loading namespace data...</span>
       </div>
     );
@@ -110,7 +110,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
         <h2 className="text-2xl font-bold text-gray-800">Namespace Overview</h2>
         <button
           onClick={loadNamespaceData}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      className="flex items-center space-x-2 px-4 py-2 bg-[#031035] text-white rounded-lg hover:bg-[#0a1a4a] transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
           <span>Refresh</span>
@@ -123,7 +123,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <Database className="w-6 h-6 text-blue-600" />
+                <Database className="w-6 h-6 text-[#031035]" />
                 <h3 className="text-lg font-semibold text-gray-800">Registered Nodes</h3>
               </div>
               <span className="text-sm text-gray-500">
@@ -143,7 +143,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
                   >
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium text-gray-800">{node.name}</h4>
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      <span className="text-xs bg-[#031035]/10 text-[#031035] px-2 py-1 rounded">
                         {node.secrets.length} secrets
                       </span>
                     </div>
@@ -226,7 +226,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
                               // For now, we'll use a generic name since we don't have the actual graph name
                               onOpenGraphTemplate(template.name);
                             }}
-                            className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 transition-colors"
+                            className="text-xs bg-[#031035] text-white px-2 py-1 rounded hover:bg-[#0a1a4a] transition-colors"
                           >
                             View Details
                           </button>
@@ -251,7 +251,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Namespace Summary</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{nodesResponse?.count || 0}</div>
+            <div className="text-2xl font-bold text-[#031035]">{nodesResponse?.count || 0}</div>
             <div className="text-sm text-gray-600">Registered Nodes</div>
           </div>
           <div className="text-center">
