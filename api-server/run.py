@@ -12,7 +12,7 @@ load_dotenv()
 def serve():
     mode = args.mode
     if mode == "development":
-        uvicorn.run("app.main:app", reload=True, host="0.0.0.0", port=8001)
+        uvicorn.run("app.main:app", reload=True, host="0.0.0.0", port=8000)
     elif mode == "production":
         workers = args.workers
         print(f"Running with {workers} workers")

@@ -1,8 +1,4 @@
-niku/.env
-niku/.python-version
-niku/main.py
-niku/pyproject.toml
-niku/README.md
-niku/uv.lock
-
 *.env
+*.venv
+*.python-version
+*__pycache__/
