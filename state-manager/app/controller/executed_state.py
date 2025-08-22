@@ -6,7 +6,7 @@ from fastapi import HTTPException, status, BackgroundTasks
 from app.models.db.state import State
 from app.models.state_status_enum import StateStatusEnum
 from app.singletons.logs_manager import LogsManager
-from app.tasks.create_next_state import create_next_state
+from app.tasks.create_next_states import create_next_states
 
 logger = LogsManager().get_logger()
 
@@ -22,34 +22,23 @@ async def executed_state(namespace_name: str, state_id: PydanticObjectId, body: 
         if state.status != StateStatusEnum.QUEUED:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="State is not queued")
         
-        parents = {**state.parents, state.identifier: state.id}
-        
+        next_state_ids = []
         if len(body.outputs) == 0:
             state.status = StateStatusEnum.EXECUTED
             state.outputs = {}
-            state.parents = parents
             await state.save()
 
-            background_tasks.add_task(create_next_state, state)
+            next_state_ids.append(state.id)
 
         else:            
             state.outputs = body.outputs[0]
             state.status = StateStatusEnum.EXECUTED
-            state.parents = parents
-            print("--------------------------------")
-            print(body.outputs)
-            print(body.outputs[0])
-            print(state.parents)
-            print("--------------------------------")
             await state.save()
+            next_state_ids.append(state.id)
 
-            background_tasks.add_task(create_next_state, state)
-
+            new_states = []
             for output in body.outputs[1:]:
-                print("--------------------------------")
-                print(output)
-                print("--------------------------------")
-                new_state = State(
+                new_states.append(State(
                     node_name=state.node_name,
                     namespace_name=state.namespace_name,
                     identifier=state.identifier,
@@ -59,10 +48,16 @@ async def executed_state(namespace_name: str, state_id: PydanticObjectId, body: 
                     inputs=state.inputs,
                     outputs=output,
                     error=None,
-                    parents=parents
+                    parents=state.parents
                 )
                 await new_state.save()
                 background_tasks.add_task(create_next_state, new_state)
+
+            if len(new_states) > 0:
+                inserted_ids = (await State.insert_many(new_states)).inserted_ids
+                next_state_ids.extend(inserted_ids)
+
+        background_tasks.add_task(create_next_states, next_state_ids, state.identifier, state.namespace_name, state.graph_name, state.parents)
 
         return ExecutedResponseModel(status=StateStatusEnum.EXECUTED)
 

@@ -1,7 +1,9 @@
 import base64
+import time
+import asyncio
 
 from .base import BaseDatabaseModel
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, PrivateAttr
 from typing import Optional, List
 from ..graph_template_validation_status import GraphTemplateValidationStatus
 from ..node_template_model import NodeTemplate
@@ -17,6 +19,7 @@ class GraphTemplate(BaseDatabaseModel):
     validation_status: GraphTemplateValidationStatus = Field(..., description="Validation status of the graph")
     validation_errors: Optional[List[str]] = Field(None, description="Validation errors of the graph")
     secrets: Dict[str, str] = Field(default_factory=dict, description="Secrets of the graph")
+    _node_by_identifier: Dict[str, NodeTemplate] | None = PrivateAttr(default=None)
 
     class Settings:
         indexes = [
@@ -27,12 +30,16 @@ class GraphTemplate(BaseDatabaseModel):
             )
         ]
 
+    def _build_node_by_identifier(self) -> None:
+        self._node_by_identifier = {node.identifier: node for node in self.nodes}
+
     def get_node_by_identifier(self, identifier: str) -> NodeTemplate | None:
         """Get a node by its identifier using O(1) dictionary lookup."""
-        for node in self.nodes:
-            if node.identifier == identifier:
-                return node
-        return None
+        if self._node_by_identifier is None:
+            self._build_node_by_identifier()
+
+        assert self._node_by_identifier is not None
+        return self._node_by_identifier.get(identifier)
 
     @field_validator('secrets')
     @classmethod
@@ -79,3 +86,39 @@ class GraphTemplate(BaseDatabaseModel):
         if secret_name not in self.secrets:
             return None
         return get_encrypter().decrypt(self.secrets[secret_name])
+
+    def is_valid(self) -> bool:
+        return self.validation_status == GraphTemplateValidationStatus.VALID
+
+    def is_validating(self) -> bool:
+        return self.validation_status in (GraphTemplateValidationStatus.ONGOING, GraphTemplateValidationStatus.PENDING)
+    
+    @staticmethod
+    async def get(namespace: str, graph_name: str) -> "GraphTemplate":
+        graph_template = await GraphTemplate.find_one(GraphTemplate.namespace == namespace, GraphTemplate.name == graph_name)
+        if not graph_template:
+            raise ValueError(f"Graph template not found for namespace: {namespace} and graph name: {graph_name}")
+        return graph_template
+    
+    @staticmethod
+    async def get_valid(namespace: str, graph_name: str, polling_interval: float = 1.0, timeout: float = 300.0) -> "GraphTemplate":
+        # Validate polling_interval and timeout
+        if polling_interval <= 0:
+            raise ValueError("polling_interval must be positive")
+        if timeout <= 0:
+            raise ValueError("timeout must be positive")
+        
+        # Coerce polling_interval to a sensible minimum
+        if polling_interval < 0.1:
+            polling_interval = 0.1
+        
+        start_time = time.monotonic()
+        while time.monotonic() - start_time < timeout:
+            graph_template = await GraphTemplate.get(namespace, graph_name)
+            if graph_template.is_valid():
+                return graph_template
+            if graph_template.is_validating():
+                await asyncio.sleep(polling_interval)
+            else:
+                raise ValueError(f"Graph template is in a non-validating state: {graph_template.validation_status.value} for namespace: {namespace} and graph name: {graph_name}")
+        raise ValueError(f"Graph template is not valid for namespace: {namespace} and graph name: {graph_name} after {timeout} seconds")
