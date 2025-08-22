@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 from beanie import PydanticObjectId
 from datetime import datetime
 
@@ -36,10 +36,10 @@ class TestEnqueueStates:
         state.created_at = datetime.now()
         return state
 
-    @patch('app.controller.enqueue_states.State')
+    @patch('app.controller.enqueue_states.find_state')
     async def test_enqueue_states_success(
         self,
-        mock_state_class,
+        mock_find_state,
         mock_namespace,
         mock_enqueue_request,
         mock_state,
@@ -47,18 +47,8 @@ class TestEnqueueStates:
     ):
         """Test successful enqueuing of states"""
         # Arrange
-        # Mock State.find().limit().to_list() chain
-        mock_query = MagicMock()
-        mock_query.limit = MagicMock(return_value=mock_query)
-        mock_query.to_list = AsyncMock(return_value=[mock_state])
-        
-        # Mock State.find().set() chain for updating states
-        mock_update_query = MagicMock()
-        mock_update_query.set = AsyncMock()
-        
-        # Configure State.find to return different mocks based on call
-        mock_state_class.find = MagicMock()
-        mock_state_class.find.side_effect = [mock_query, mock_update_query]
+        # Mock find_state to return the mock_state for all calls
+        mock_find_state.return_value = mock_state
 
         # Act
         result = await enqueue_states(
@@ -68,36 +58,31 @@ class TestEnqueueStates:
         )
 
         # Assert
-        assert result.count == 1
+        assert result.count == 10  # batch_size=10, so 10 states should be returned
         assert result.namespace == mock_namespace
         assert result.status == StateStatusEnum.QUEUED
-        assert len(result.states) == 1
+        assert len(result.states) == 10
         assert result.states[0].state_id == str(mock_state.id)
         assert result.states[0].node_name == "node1"
         assert result.states[0].identifier == "test_identifier"
         assert result.states[0].inputs == {"key": "value"}
 
-        # Verify the find query was called correctly
-        assert mock_state_class.find.call_count == 2  # Called twice: once for finding, once for updating
-        mock_query.limit.assert_called_once_with(10)
-        mock_update_query.set.assert_called_once()
+        # Verify find_state was called correctly
+        assert mock_find_state.call_count == 10  # Called batch_size times
+        mock_find_state.assert_called_with(mock_namespace, ["node1", "node2"])
 
-    @patch('app.controller.enqueue_states.State')
+    @patch('app.controller.enqueue_states.find_state')
     async def test_enqueue_states_no_states_found(
         self,
-        mock_state_class,
+        mock_find_state,
         mock_namespace,
         mock_enqueue_request,
         mock_request_id
     ):
         """Test when no states are found to enqueue"""
         # Arrange
-        mock_query = MagicMock()
-        mock_query.limit = MagicMock(return_value=mock_query)
-        mock_query.to_list = AsyncMock(return_value=[])
-        
-        # When no states are found, the second State.find() call won't happen
-        mock_state_class.find = MagicMock(return_value=mock_query)
+        # Mock find_state to return None for all calls
+        mock_find_state.return_value = None
 
         # Act
         result = await enqueue_states(
@@ -112,10 +97,10 @@ class TestEnqueueStates:
         assert result.status == StateStatusEnum.QUEUED
         assert len(result.states) == 0
 
-    @patch('app.controller.enqueue_states.State')
+    @patch('app.controller.enqueue_states.find_state')
     async def test_enqueue_states_multiple_states(
         self,
-        mock_state_class,
+        mock_find_state,
         mock_namespace,
         mock_enqueue_request,
         mock_request_id
@@ -136,17 +121,8 @@ class TestEnqueueStates:
         state2.inputs = {"input2": "value2"}
         state2.created_at = datetime.now()
 
-        mock_query = MagicMock()
-        mock_query.limit = MagicMock(return_value=mock_query)
-        mock_query.to_list = AsyncMock(return_value=[state1, state2])
-        
-        # Mock State.find().set() chain for updating states
-        mock_update_query = MagicMock()
-        mock_update_query.set = AsyncMock()
-        
-        # Configure State.find to return different mocks based on call
-        mock_state_class.find = MagicMock()
-        mock_state_class.find.side_effect = [mock_query, mock_update_query]
+        # Mock find_state to return different states
+        mock_find_state.side_effect = [state1, state2, None, None, None, None, None, None, None, None]
 
         # Act
         result = await enqueue_states(
@@ -161,32 +137,36 @@ class TestEnqueueStates:
         assert result.states[0].node_name == "node1"
         assert result.states[1].node_name == "node2"
 
-    @patch('app.controller.enqueue_states.State')
+    @patch('app.controller.enqueue_states.find_state')
     async def test_enqueue_states_database_error(
         self,
-        mock_state_class,
+        mock_find_state,
         mock_namespace,
         mock_enqueue_request,
         mock_request_id
     ):
         """Test handling of database errors"""
         # Arrange
-        mock_state_class.find = MagicMock(side_effect=Exception("Database error"))
+        # Mock find_state to raise an exception
+        mock_find_state.side_effect = Exception("Database error")
 
-        # Act & Assert
-        with pytest.raises(Exception) as exc_info:
-            await enqueue_states(
-                mock_namespace,
-                mock_enqueue_request,
-                mock_request_id
-            )
-        
-        assert str(exc_info.value) == "Database error"
+        # Act
+        result = await enqueue_states(
+            mock_namespace,
+            mock_enqueue_request,
+            mock_request_id
+        )
 
-    @patch('app.controller.enqueue_states.State')
+        # Assert - the function should handle exceptions gracefully and return empty result
+        assert result.count == 0
+        assert result.namespace == mock_namespace
+        assert result.status == StateStatusEnum.QUEUED
+        assert len(result.states) == 0
+
+    @patch('app.controller.enqueue_states.find_state')
     async def test_enqueue_states_with_different_batch_size(
         self,
-        mock_state_class,
+        mock_find_state,
         mock_namespace,
         mock_request_id
     ):
@@ -197,12 +177,8 @@ class TestEnqueueStates:
             batch_size=5
         )
 
-        mock_query = MagicMock()
-        mock_query.limit = MagicMock(return_value=mock_query)
-        mock_query.to_list = AsyncMock(return_value=[])
-        
-        # When no states are found, the second State.find() call won't happen
-        mock_state_class.find = MagicMock(return_value=mock_query)
+        # Mock find_state to return None
+        mock_find_state.return_value = None
 
         # Act
         result = await enqueue_states(
@@ -213,4 +189,4 @@ class TestEnqueueStates:
 
         # Assert
         assert result.count == 0
-        mock_query.limit.assert_called_once_with(5)
+        assert mock_find_state.call_count == 5  # Called batch_size times
