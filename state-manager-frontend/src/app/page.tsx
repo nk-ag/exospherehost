@@ -33,7 +33,7 @@ import {
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'workflow' | 'overview' | 'nodes' | 'graph' | 'states' | 'run-states'>('overview');
   const [namespace, setNamespace] = useState('testnamespace');
-  const [apiKey, setApiKey] = useState('niki');
+  const [apiKey, setApiKey] = useState(process.env.NEXT_PUBLIC_DEFAULT_API_KEY || '');
   const [runtimeName, setRuntimeName] = useState('test-runtime');
   const [graphName, setGraphName] = useState('test-graph');
   
