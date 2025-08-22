@@ -61,7 +61,7 @@ PARSE_LIST_OF_DOCS_GRAPH_TEMPLATE = {
 async def create_graph_template(graph_name: str):
     """Create a graph template with simplified document processing nodes"""
     namespace = "parse-list-of-docs"
-    api_key = "niki"  # TODO: Replace with your actual API key
+    api_key = os.getenv("STATE_MANAGER_API_KEY")  # TODO: Replace with your actual API key
     
     graph_request = {
         "secrets": {
