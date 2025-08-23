@@ -1,8 +1,12 @@
+from pymongo import IndexModel
 from .base import BaseDatabaseModel
 from ..state_status_enum import StateStatusEnum
 from pydantic import Field
-from beanie import PydanticObjectId
+from beanie import Insert, PydanticObjectId, Replace, Save, before_event
+from pymongo.results import InsertManyResult
 from typing import Any, Optional
+import hashlib
+import json
 
 
 class State(BaseDatabaseModel):
@@ -16,3 +20,50 @@ class State(BaseDatabaseModel):
     outputs: dict[str, Any] = Field(..., description="Outputs of the state")
     error: Optional[str] = Field(None, description="Error message")
     parents: dict[str, PydanticObjectId] = Field(default_factory=dict, description="Parents of the state")
+    does_unites: bool = Field(default=False, description="Whether this state unites other states")
+    state_fingerprint: str = Field(default="", description="Fingerprint of the state")
+    
+    @before_event([Insert, Replace, Save])
+    def _generate_fingerprint(self):
+        if not self.does_unites:
+            self.state_fingerprint = ""
+            return
+        
+        data = {
+            "node_name": self.node_name,
+            "namespace_name": self.namespace_name,
+            "identifier": self.identifier,
+            "graph_name": self.graph_name,
+            "run_id": self.run_id,
+            "parents": {k: str(v) for k, v in self.parents.items()},
+        }
+        payload = json.dumps(
+            data,
+            sort_keys=True,            # canonical key ordering at all levels
+            separators=(",", ":"),     # no whitespace variance
+            ensure_ascii=True,         # normalized non-ASCII escapes
+        ).encode("utf-8")
+        self.state_fingerprint = hashlib.sha256(payload).hexdigest()    
+    
+    @classmethod
+    async def insert_many(cls, documents: list["State"]) -> InsertManyResult:
+        """Override insert_many to ensure fingerprints are generated before insertion."""
+        # Generate fingerprints for states that need them
+        for state in documents:
+            state._generate_fingerprint()
+        
+        return await super().insert_many(documents) # type: ignore
+        
+    class Settings:
+        indexes = [
+            IndexModel(
+                [
+                    ("state_fingerprint", 1)
+                ],
+                unique=True,
+                name="uniq_state_fingerprint_unites",
+                partialFilterExpression={
+                    "does_unites": True
+                }
+            )
+        ]
