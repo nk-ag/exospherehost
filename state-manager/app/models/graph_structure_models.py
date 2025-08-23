@@ -1,14 +1,14 @@
 from pydantic import BaseModel, Field
 from typing import Dict, List, Any, Optional
 from datetime import datetime
-
+from .db.state import StateStatusEnum
 
 class GraphNode(BaseModel):
     """Represents a node in the graph structure"""
     id: str = Field(..., description="Unique identifier for the node (state ID)")
     node_name: str = Field(..., description="Name of the node")
     identifier: str = Field(..., description="Identifier of the node")
-    status: str = Field(..., description="Status of the state")
+    status: StateStatusEnum = Field(..., description="Status of the state")
     inputs: Dict[str, Any] = Field(..., description="Inputs of the state")
     outputs: Dict[str, Any] = Field(..., description="Outputs of the state")
     error: Optional[str] = Field(None, description="Error message if any")

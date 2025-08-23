@@ -22,15 +22,13 @@ import {
   GraphNode as GraphNodeType,
   GraphEdge as GraphEdgeType
 } from '@/types/state-manager';
-import { 
-  Database, 
+import {  
   RefreshCw, 
   AlertCircle,
   Clock,
   CheckCircle,
   XCircle,
   Loader2,
-  Play,
   Filter,
   Network,
   BarChart3
@@ -195,7 +193,7 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
 
     // Build layers
     let currentLayer = 0;
-    while (visited.size < graphData.nodes.length && currentLayer < 10) {
+    while (visited.size < graphData.nodes.length && currentLayer < graphData.nodes.length) {
       const currentLayerNodes = layers[currentLayer] || [];
       const nextLayer: GraphNodeType[] = [];
 
@@ -275,10 +273,6 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
         strokeDasharray: 'none',
       },
     }));
-
-    console.log('React Flow nodes:', reactFlowNodes.length);
-    console.log('React Flow edges:', reactFlowEdges.length);
-    console.log('Original graph edges:', graphData.edges);
     
     return { nodes: reactFlowNodes, edges: reactFlowEdges };
   }, [graphData]);

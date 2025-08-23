@@ -12,7 +12,7 @@ class CreateReportNode(BaseNode):
         key: str
 
     class Outputs(BaseModel):
-        final_report: Dict[str, Any]
+        final_report: str
         key: str
 
     class Secrets(BaseModel):
@@ -42,6 +42,6 @@ class CreateReportNode(BaseNode):
         }
         
         return self.Outputs(
-            final_report=report,
+            final_report=json.dumps(report),
             key=self.inputs.key
         )

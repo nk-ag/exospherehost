@@ -1,5 +1,5 @@
 # Use the official Node.js runtime as the base image
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -52,7 +52,7 @@ EXPOSE 3000
 
 ENV PORT 3000
 # set hostname to localhost
-ENV HOSTNAME "0.0.0.0"
+ENV HOSTNAME 0.0.0.0
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output

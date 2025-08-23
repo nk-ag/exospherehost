@@ -91,7 +91,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
           <div className="ml-3">
             <h3 className="text-sm font-medium text-red-800">Error</h3>
             <div className="mt-2 text-sm text-red-700">{error}</div>
-            <button
+            <button type="button"
               onClick={loadNamespaceData}
               className="mt-3 inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200"
             >
@@ -202,7 +202,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
                           <span className="font-medium">Nodes:</span> {template.nodes.length}
                         </div>
                         <div>
-                          <span className="font-medium">Secrets:</span> {Object.keys(template.secrets).length}
+                          <span className="font-medium">Secrets:</span> {Object.keys(template.secrets ?? {}).length}
                         </div>
                       </div>
                       <div className="mt-2">
@@ -221,6 +221,7 @@ export const NamespaceOverview: React.FC<NamespaceOverviewProps> = ({
                       {onOpenGraphTemplate && (
                         <div className="mt-3">
                           <button
+                            type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               // For now, we'll use a generic name since we don't have the actual graph name

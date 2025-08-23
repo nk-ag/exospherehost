@@ -2,7 +2,6 @@
 Controller for listing registered nodes by namespace
 """
 from typing import List
-from beanie import PydanticObjectId
 
 from ..models.db.registered_node import RegisteredNode
 from ..singletons.logs_manager import LogsManager

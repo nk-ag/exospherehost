@@ -18,21 +18,15 @@ import os
 import pytest
 import asyncio
 import httpx
-import json
-from typing import Dict, Any, Optional
-from datetime import datetime
 import uuid
 
 # Add the api-server app to the path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from app.user.models.create_user_request import CreateUserRequestModel
-from app.user.models.create_user_response import CreateUserResponseModel
-from app.auth.models.token_request import TokenRequestModel
-from app.auth.models.token_response import TokenResponseModel
-from app.auth.models.refresh_token_request import RefreshTokenRequestModel
-from app.project.models.create_project_request import CreateProjectRequestModel
-from app.project.models.create_project_response import CreateProjectResponseModel
+from app.user.models.create_user_request import CreateUserRequest
+from app.auth.models.token_request import TokenRequest
+from app.auth.models.refresh_token_request import RefreshTokenRequest
+from app.project.models.create_project_request import CreateProjectRequest
 
 # Mark all tests as integration tests
 pytestmark = pytest.mark.integration
@@ -44,7 +38,8 @@ class TestApiServerIntegration:
     @pytest.fixture
     async def api_server_client(self):
         """Create an HTTP client for the api-server."""
-        async with httpx.AsyncClient(base_url="http://localhost:8000") as client:
+        base_url = os.environ.get("API_SERVER_BASE_URL", "http://localhost:8000")  
+        async with httpx.AsyncClient(base_url=base_url) as client:
             yield client
     
     @pytest.fixture
@@ -81,7 +76,7 @@ class TestApiServerIntegration:
         """Test creating a new user."""
         
         # Prepare the request
-        request_data = CreateUserRequestModel(
+        request_data = CreateUserRequest(
             email=test_user_email,
             password=test_user_password,
             first_name="Test",
@@ -110,7 +105,7 @@ class TestApiServerIntegration:
         """Test creating authentication tokens."""
         
         # Prepare the request
-        request_data = TokenRequestModel(
+        request_data = TokenRequest(
             email=test_user_email,
             password=test_user_password
         )
@@ -137,7 +132,7 @@ class TestApiServerIntegration:
         """Test refreshing an access token."""
         
         # Prepare the request
-        request_data = RefreshTokenRequestModel(
+        request_data = RefreshTokenRequest(
             refresh_token=refresh_token
         )
         
@@ -163,7 +158,7 @@ class TestApiServerIntegration:
         """Test creating a new project."""
         
         # Prepare the request
-        request_data = CreateProjectRequestModel(
+        request_data = CreateProjectRequest(
             name=test_project_name,
             description=test_project_description
         )
@@ -248,7 +243,7 @@ class TestApiServerIntegration:
             api_server_client, new_access_token, project_id
         )
         
-        print(f"🎉 Complete user workflow completed successfully!")
+        print("🎉 Complete user workflow completed successfully!")
         print(f"   - User ID: {user_id}")
         print(f"   - User Email: {test_user_email}")
         print(f"   - Project ID: {project_id}")
@@ -267,7 +262,7 @@ class TestApiServerErrorHandling:
     async def test_create_user_with_invalid_email(self, api_server_client):
         """Test creating a user with an invalid email."""
         
-        request_data = CreateUserRequestModel(
+        request_data = CreateUserRequest(
             email="invalid-email",
             password="TestPassword123!",
             first_name="Test",
@@ -286,7 +281,7 @@ class TestApiServerErrorHandling:
     async def test_create_user_with_weak_password(self, api_server_client):
         """Test creating a user with a weak password."""
         
-        request_data = CreateUserRequestModel(
+        request_data = CreateUserRequest(
             email="test@example.com",
             password="weak",
             first_name="Test",
@@ -305,7 +300,7 @@ class TestApiServerErrorHandling:
     async def test_create_token_with_invalid_credentials(self, api_server_client):
         """Test creating tokens with invalid credentials."""
         
-        request_data = TokenRequestModel(
+        request_data = TokenRequest(
             email="nonexistent@example.com",
             password="wrongpassword"
         )
@@ -322,7 +317,7 @@ class TestApiServerErrorHandling:
     async def test_create_project_without_authentication(self, api_server_client):
         """Test creating a project without authentication."""
         
-        request_data = CreateProjectRequestModel(
+        request_data = CreateProjectRequest(
             name="Test Project",
             description="Test Description"
         )
@@ -339,7 +334,7 @@ class TestApiServerErrorHandling:
     async def test_create_project_with_invalid_token(self, api_server_client):
         """Test creating a project with an invalid token."""
         
-        request_data = CreateProjectRequestModel(
+        request_data = CreateProjectRequest(
             name="Test Project",
             description="Test Description"
         )
@@ -370,7 +365,7 @@ class TestApiServerConcurrentOperations:
         
         async def create_user(user_id: int):
             email = f"concurrent-user-{user_id}-{uuid.uuid4().hex[:8]}@example.com"
-            request_data = CreateUserRequestModel(
+            request_data = CreateUserRequest(
                 email=email,
                 password="TestPassword123!",
                 first_name=f"User{user_id}",
@@ -401,7 +396,7 @@ class TestApiServerConcurrentOperations:
         email = f"concurrent-project-user-{uuid.uuid4().hex[:8]}@example.com"
         
         # Create user
-        user_request = CreateUserRequestModel(
+        user_request = CreateUserRequest(
             email=email,
             password="TestPassword123!",
             first_name="Concurrent",
@@ -415,7 +410,7 @@ class TestApiServerConcurrentOperations:
         assert user_response.status_code == 200
         
         # Get tokens
-        token_request = TokenRequestModel(
+        token_request = TokenRequest(
             email=email,
             password="TestPassword123!"
         )
@@ -430,7 +425,7 @@ class TestApiServerConcurrentOperations:
         headers = {"Authorization": f"Bearer {access_token}"}
         
         async def create_project(project_id: int):
-            request_data = CreateProjectRequestModel(
+            request_data = CreateProjectRequest(
                 name=f"Concurrent Project {project_id}",
                 description=f"Test concurrent project {project_id}"
             )

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { NodeTemplate, UpsertGraphTemplateRequest } from '@/types/state-manager';
-import { Plus, Trash2, ArrowRight, Settings } from 'lucide-react';
+import { Plus, Trash2, Settings } from 'lucide-react';
 
 interface GraphTemplateBuilderProps {
   graphTemplate?: UpsertGraphTemplateRequest;

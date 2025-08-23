@@ -13,7 +13,7 @@ class ChunkDocumentNode(BaseNode):
         overlap: str = "200"
 
     class Outputs(BaseModel):
-        chunk: Dict[str, Any]
+        chunk: str
         
     class Secrets(BaseModel):
         pass

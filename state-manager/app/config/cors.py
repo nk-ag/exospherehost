@@ -13,7 +13,7 @@ def get_cors_origins() -> List[str]:
     
     if cors_origins:
         # Split by comma and strip whitespace
-        return [origin.strip() for origin in cors_origins.split(",")]
+        return [origin.strip() for origin in cors_origins.split(",") if origin.strip()]
     
     # Default origins for development
     return [
@@ -40,5 +40,8 @@ def get_cors_config():
             "Authorization",
             "X-Requested-With",
             "X-Exosphere-Request-ID",
+        ],
+        "expose_headers": [  
+            "X-Exosphere-Request-ID",  
         ],
     }

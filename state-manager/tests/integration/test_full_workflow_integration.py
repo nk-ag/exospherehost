@@ -16,11 +16,8 @@ Prerequisites:
 import sys
 import os
 import pytest
-import asyncio
 import httpx
-import json
-from typing import Dict, Any, List
-from datetime import datetime
+from typing import List
 import uuid
 
 # Add the state-manager app to the path
@@ -43,7 +40,8 @@ class TestFullWorkflowIntegration:
     @pytest.fixture
     async def state_manager_client(self):
         """Create an HTTP client for the state-manager."""
-        async with httpx.AsyncClient(base_url="http://localhost:8000") as client:
+        base_url = os.environ.get("STATE_MANAGER_BASE_URL", "http://localhost:8000")  
+        async with httpx.AsyncClient(base_url=base_url) as client:
             yield client
     
     @pytest.fixture
@@ -54,7 +52,7 @@ class TestFullWorkflowIntegration:
     @pytest.fixture
     def test_api_key(self) -> str:
         """Get the test API key from environment."""
-        return "niki"
+        return "TEST_API_KEY"
     
     @pytest.fixture
     def test_graph_name(self) -> str:
@@ -115,7 +113,7 @@ class TestFullWorkflowIntegration:
             )
         ]
     
-    async def test_register_nodes(self, state_manager_client, test_namespace: str, 
+    async def step_register_nodes(self, state_manager_client, test_namespace: str, 
                                  test_api_key: str, test_runtime_name: str, 
                                  sample_node_registration: NodeRegistrationModel):
         """Test registering nodes with the state-manager."""
@@ -142,7 +140,7 @@ class TestFullWorkflowIntegration:
         assert len(response_data["registered_nodes"]) == 1
         assert response_data["registered_nodes"][0]["name"] == "TestNode"
     
-    async def test_upsert_graph_template(self, state_manager_client, test_namespace: str,
+    async def step_upsert_graph_template(self, state_manager_client, test_namespace: str,
                                        test_api_key: str, test_graph_name: str,
                                        sample_graph_nodes: List[NodeTemplate]):
         """Test creating a graph template."""
@@ -170,7 +168,7 @@ class TestFullWorkflowIntegration:
         assert "validation_status" in response_data
         assert len(response_data["nodes"]) == 2
     
-    async def test_get_graph_template(self, state_manager_client, test_namespace: str,
+    async def step_get_graph_template(self, state_manager_client, test_namespace: str,
                                     test_api_key: str, test_graph_name: str):
         """Test retrieving a graph template."""
         
@@ -190,12 +188,13 @@ class TestFullWorkflowIntegration:
         assert "validation_status" in response_data
         assert len(response_data["nodes"]) == 2
     
-    async def test_create_states(self, state_manager_client, test_namespace: str,
+    async def step_create_states(self, state_manager_client, test_namespace: str,
                                test_api_key: str, test_graph_name: str):
         """Test creating states for a graph."""
         
         # Prepare the request
         request_data = CreateRequestModel(
+            run_id = "test-run-id"
             states=[
                 RequestStateModel(
                     identifier="node1",
@@ -225,7 +224,7 @@ class TestFullWorkflowIntegration:
         state_id = response_data["states"][0]["state_id"]
         return state_id
     
-    async def test_queued_state(self, state_manager_client, test_namespace: str,
+    async def step_queued_state(self, state_manager_client, test_namespace: str,
                                 test_api_key: str):
         # Prepare the request
         request_data = EnqueueRequestModel(
@@ -252,7 +251,7 @@ class TestFullWorkflowIntegration:
         assert response_data["states"][0]["identifier"] == "node1"
         assert response_data["states"][0]["inputs"] == {"input1": "test_value", "input2": 42}
     
-    async def test_execute_state(self, state_manager_client, test_namespace: str,
+    async def step_execute_state(self, state_manager_client, test_namespace: str,
                                test_api_key: str, state_id: str):
         """Test executing a state."""
         
@@ -280,7 +279,7 @@ class TestFullWorkflowIntegration:
         assert response_data["status"] == StateStatusEnum.EXECUTED      
 
     
-    async def test_get_secrets(self, state_manager_client, test_namespace: str,
+    async def step_get_secrets(self, state_manager_client, test_namespace: str,
                              test_api_key: str, state_id: str):
         """Test retrieving secrets for a state."""
         
@@ -304,38 +303,38 @@ class TestFullWorkflowIntegration:
         """Test the complete happy path workflow."""
         
         # Step 1: Register nodes
-        await self.test_register_nodes(
+        await self.step_register_nodes(
             state_manager_client, test_namespace, test_api_key, 
             test_runtime_name, sample_node_registration
         )
         
         # Step 2: Create graph template
-        await self.test_upsert_graph_template(
+        await self.step_upsert_graph_template(
             state_manager_client, test_namespace, test_api_key,
             test_graph_name, sample_graph_nodes
         )
         
         # Step 3: Get graph template to verify it was created
-        await self.test_get_graph_template(
+        await self.step_get_graph_template(
             state_manager_client, test_namespace, test_api_key, test_graph_name
         )
         
         # Step 4: Create states
-        state_id = await self.test_create_states(
+        state_id = await self.step_create_states(
             state_manager_client, test_namespace, test_api_key, test_graph_name
         )
         
         # Step 5: Get secrets for the state
-        await self.test_get_secrets(
+        await self.step_get_secrets(
             state_manager_client, test_namespace, test_api_key, state_id
         )
 
-        await self.test_queued_state(
+        await self.step_queued_state(
             state_manager_client, test_namespace, test_api_key
         )
         
         # Step 6: Execute the state
-        await self.test_execute_state(
+        await self.step_execute_state(
             state_manager_client, test_namespace, test_api_key, state_id
         )
         

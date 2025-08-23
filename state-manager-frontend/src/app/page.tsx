@@ -1,74 +1,32 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { WorkflowVisualizer } from '@/components/WorkflowVisualizer';
-import { NodeSchemaViewer } from '@/components/NodeSchemaViewer';
-import { StateManager } from '@/components/StateManager';
 import { GraphTemplateBuilder } from '@/components/GraphTemplateBuilder';
 import { NamespaceOverview } from '@/components/NamespaceOverview';
 import { StatesByRunId } from '@/components/StatesByRunId';
 import { NodeDetailModal } from '@/components/NodeDetailModal';
 import { GraphTemplateDetailModal } from '@/components/GraphTemplateDetailModal';
 import { apiService } from '@/services/api';
-import { 
-  WorkflowStep, 
+import {
   NodeRegistration, 
   ResponseState, 
   UpsertGraphTemplateRequest,
   UpsertGraphTemplateResponse,
-  StateStatus 
 } from '@/types/state-manager';
 import { 
-  Settings, 
   GitBranch, 
-  Database, 
-  Play, 
   BarChart3,
-  Zap,
-  CheckCircle,
   AlertCircle,
   Filter
 } from 'lucide-react';
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState<'workflow' | 'overview' | 'nodes' | 'graph' | 'states' | 'run-states'>('overview');
+  const [activeTab, setActiveTab] = useState< 'overview' | 'graph' |'run-states'>('overview');
   const [namespace, setNamespace] = useState('testnamespace');
-  const [apiKey, setApiKey] = useState(process.env.NEXT_PUBLIC_DEFAULT_API_KEY || '');
+  const [apiKey, setApiKey] = useState('');
   const [runtimeName, setRuntimeName] = useState('test-runtime');
   const [graphName, setGraphName] = useState('test-graph');
   
-  const [workflowSteps, setWorkflowSteps] = useState<WorkflowStep[]>([
-    {
-      id: 'register-nodes',
-      title: 'Register Nodes',
-      description: 'Register nodes with their input/output schemas and secrets',
-      status: 'pending'
-    },
-    {
-      id: 'create-graph',
-      title: 'Create Graph Template',
-      description: 'Define the workflow graph with nodes and connections',
-      status: 'pending'
-    },
-    {
-      id: 'create-states',
-      title: 'Create States',
-      description: 'Create execution states for the graph template',
-      status: 'pending'
-    },
-    {
-      id: 'enqueue-states',
-      title: 'Enqueue States',
-      description: 'Queue states for execution',
-      status: 'pending'
-    },
-    {
-      id: 'execute-states',
-      title: 'Execute States',
-      description: 'Execute states and handle results',
-      status: 'pending'
-    }
-  ]);
   
   const [currentStep, setCurrentStep] = useState(0);
   const [registeredNodes, setRegisteredNodes] = useState<NodeRegistration[]>([]);
@@ -82,187 +40,6 @@ export default function Dashboard() {
   const [isNodeModalOpen, setIsNodeModalOpen] = useState(false);
   const [selectedGraphTemplate, setSelectedGraphTemplate] = useState<UpsertGraphTemplateResponse | null>(null);
   const [isGraphModalOpen, setIsGraphModalOpen] = useState(false);
-
-  // Sample node for demonstration
-  const sampleNode: NodeRegistration = {
-    name: "TestNode",
-    inputs_schema: {
-      type: "object",
-      properties: {
-        input1: { type: "string", description: "First input parameter" },
-        input2: { type: "number", description: "Second input parameter" }
-      },
-      required: ["input1", "input2"]
-    },
-    outputs_schema: {
-      type: "object",
-      properties: {
-        output1: { type: "string", description: "First output result" },
-        output2: { type: "number", description: "Second output result" }
-      }
-    },
-    secrets: ["test_secret"]
-  };
-
-  const executeWorkflowStep = async (stepIndex: number) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const step = workflowSteps[stepIndex];
-      
-      // Update step status to active
-      const updatedSteps = [...workflowSteps];
-      updatedSteps[stepIndex].status = 'active';
-      setWorkflowSteps(updatedSteps);
-      setCurrentStep(stepIndex);
-
-      switch (step.id) {
-        case 'register-nodes':
-          const registerResponse = await apiService.registerNodes(
-            namespace,
-            {
-              runtime_name: runtimeName,
-              nodes: [sampleNode]
-            },
-            apiKey
-          );
-          setRegisteredNodes(registerResponse.registered_nodes);
-          updatedSteps[stepIndex].data = registerResponse;
-          updatedSteps[stepIndex].status = 'completed';
-          break;
-
-        case 'create-graph':
-          const graphRequest: UpsertGraphTemplateRequest = {
-            secrets: { test_secret: "secret_value" },
-            nodes: [
-              {
-                node_name: "TestNode",
-                namespace: namespace,
-                identifier: "node1",
-                inputs: { input1: "test_value", input2: 42 },
-                next_nodes: ["node2"]
-              },
-              {
-                node_name: "TestNode",
-                namespace: namespace,
-                identifier: "node2",
-                inputs: { input1: "{{node1.output1}}", input2: "{{node1.output2}}" },
-                next_nodes: []
-              }
-            ]
-          };
-          
-          const graphResponse = await apiService.upsertGraphTemplate(
-            namespace,
-            graphName,
-            graphRequest,
-            apiKey
-          );
-          setGraphTemplate(graphRequest);
-          updatedSteps[stepIndex].data = graphResponse;
-          updatedSteps[stepIndex].status = 'completed';
-          break;
-
-        case 'create-states':
-          // Generate a unique run ID for this execution
-          const runId = `run_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-          const createResponse = await apiService.createStates(
-            namespace,
-            graphName,
-            {
-              run_id: runId,
-              states: [
-                {
-                  identifier: "node1",
-                  inputs: { input1: "test_value", input2: 42 }
-                }
-              ]
-            },
-            apiKey
-          );
-          setStates(createResponse.states);
-          updatedSteps[stepIndex].data = createResponse;
-          updatedSteps[stepIndex].status = 'completed';
-          break;
-
-        case 'enqueue-states':
-          const enqueueResponse = await apiService.enqueueStates(
-            namespace,
-            {
-              nodes: ["TestNode"],
-              batch_size: 1
-            },
-            apiKey
-          );
-          updatedSteps[stepIndex].data = enqueueResponse;
-          updatedSteps[stepIndex].status = 'completed';
-          break;
-
-        case 'execute-states':
-          if (states.length > 0) {
-            const executeResponse = await apiService.executeState(
-              namespace,
-              states[0].state_id,
-              {
-                outputs: [
-                  {
-                    output1: "executed_value",
-                    output2: 100
-                  }
-                ]
-              },
-              apiKey
-            );
-            updatedSteps[stepIndex].data = executeResponse;
-            updatedSteps[stepIndex].status = 'completed';
-          }
-          break;
-      }
-      
-      setWorkflowSteps(updatedSteps);
-      
-      // Auto-advance to next step if not the last
-      if (stepIndex < workflowSteps.length - 1) {
-        setTimeout(() => {
-          executeWorkflowStep(stepIndex + 1);
-        }, 1000);
-      }
-      
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
-      setError(errorMessage);
-      
-      const updatedSteps = [...workflowSteps];
-      updatedSteps[stepIndex].status = 'error';
-      setWorkflowSteps(updatedSteps);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleExecuteState = async (stateId: string) => {
-    try {
-      await apiService.executeState(
-        namespace,
-        stateId,
-        {
-          outputs: [
-            {
-              output1: "executed_value",
-              output2: 100
-            }
-          ]
-        },
-        apiKey
-      );
-      
-      // Refresh states
-      // In a real app, you'd fetch updated states
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to execute state');
-    }
-  };
 
   const handleSaveGraphTemplate = async (template: UpsertGraphTemplateRequest) => {
     try {
@@ -395,52 +172,6 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Tab Content */}
-        {activeTab === 'workflow' && (
-          <div>
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900">Workflow Execution</h2>
-              <button
-                onClick={() => executeWorkflowStep(0)}
-                disabled={isLoading}
-                className="px-4 py-2 bg-[#031035] text-white rounded-lg hover:bg-[#0a1a4a] disabled:opacity-50"
-              >
-                Start Workflow
-              </button>
-            </div>
-            <WorkflowVisualizer
-              steps={workflowSteps}
-              currentStep={currentStep}
-              onStepClick={(stepIndex) => executeWorkflowStep(stepIndex)}
-            />
-          </div>
-        )}
-
-        {activeTab === 'nodes' && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Registered Nodes</h2>
-            <div className="grid gap-6">
-              {registeredNodes.map((node, index) => (
-                <div key={index} className="cursor-pointer" onClick={() => handleOpenNodeModal(node)}>
-                  <NodeSchemaViewer
-                    node={node}
-                    isExpanded={index === 0}
-                    onToggle={() => {}}
-                  />
-                </div>
-              ))}
-              {registeredNodes.length === 0 && (
-                <div className="text-center py-12">
-                  <Settings className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-600 mb-2">No Nodes Registered</h3>
-                  <p className="text-sm text-gray-500">
-                    Run the workflow to register nodes
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
 
         {activeTab === 'graph' && (
           <div>
@@ -469,13 +200,6 @@ export default function Dashboard() {
             apiKey={apiKey}
             onOpenNode={handleOpenNodeModal}
             onOpenGraphTemplate={handleOpenGraphModal}
-          />
-        )}
-
-        {activeTab === 'states' && (
-          <StateManager
-            states={states}
-            onExecuteState={handleExecuteState}
           />
         )}
 

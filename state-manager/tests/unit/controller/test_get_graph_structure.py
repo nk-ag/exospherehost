@@ -107,6 +107,7 @@ async def test_get_graph_structure_success(mock_states):
         
         # Verify execution summary
         assert result.execution_summary["SUCCESS"] == 3
+        assert any(n.node_name == "start_node" for n in result.root_states)
 
 
 @pytest.mark.asyncio
@@ -130,6 +131,7 @@ async def test_get_graph_structure_no_states():
         assert len(result.nodes) == 0
         assert len(result.edges) == 0
         assert result.execution_summary == {}
+        assert result.root_states == [] 
 
 
 @pytest.mark.asyncio

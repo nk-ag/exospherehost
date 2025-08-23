@@ -14,8 +14,8 @@ class VerifyAnswerNode(BaseNode):
         chunk_id: str
 
     class Outputs(BaseModel):
-        verification_results: Dict[str, Any]
-        chunk_id: int
+        verification_results: str
+        chunk_id: str
         key: str
 
     class Secrets(BaseModel):
@@ -57,17 +57,18 @@ class VerifyAnswerNode(BaseNode):
         }
         
         try:
-            response = requests.post(
-                "https://api.openai.com/v1/chat/completions",
-                headers=headers,
-                json=payload
-            )
-            response.raise_for_status()
+           async with httpx.AsyncClient() as client:  
+                response = await client.post(  
+                    "https://api.openai.com/v1/chat/completions",  
+                    headers=headers,  
+                    json=payload  
+                ) 
+                response.raise_for_status()
             
-            verification_feedback = response.json()["choices"][0]["message"]["content"]
+                verification_feedback = response.json()["choices"][0]["message"]["content"]
             
-            # Extract score from feedback (simplified)
-            score = 85  # Default score, in production you'd parse this from the feedback
+                # Extract score from feedback (simplified)
+                score = 85  # Default score, in production you'd parse this from the feedback
             
         except Exception as e:
             verification_feedback = "Verification failed due to API error"
@@ -85,7 +86,7 @@ class VerifyAnswerNode(BaseNode):
         }
         
         return self.Outputs(
-            verification_results=verification_results,
+            verification_results=json.dumps(verification_results),
             chunk_id=chunk_id,
             key=chunk_data["key"]
         )

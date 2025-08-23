@@ -8,8 +8,7 @@ It processes a list of documents from S3: list files → parse each PDF → uplo
 
 import asyncio
 import aiohttp
-import json
-from typing import List
+import os
 
 # Graph Template Definition
 PARSE_LIST_OF_DOCS_GRAPH_TEMPLATE = {
@@ -132,26 +131,6 @@ async def trigger_graph_execution(graph_name: str):
             print(f"❌ Error triggering graph: {e}")
             return None, None
 
-# Example trigger request
-EXAMPLE_TRIGGER_REQUEST = {
-    "states": [
-        {
-            "identifier": "list_files",
-            "inputs": {
-                "bucket_name": "docs-to-be-parsed-exosphere",
-                "prefix": "pdfs/"
-            }
-        }
-    ]
-}
-
-# Example secrets
-EXAMPLE_SECRETS = {
-    "openai_api_key": "sk-your-openai-api-key-here",
-    "aws_access_key_id": "your-aws-access-key",
-    "aws_secret_access_key": "your-aws-secret-key",
-    "aws_region": "us-east-1"
-}
 
 async def main():
     """Main function to create graph and trigger workflow"""
@@ -170,7 +149,7 @@ async def main():
         print(f"\n✅ Parse list of docs workflow initiated successfully!")
         print(f"   The workflow will now execute:")
         print(f"   1. ListS3FilesNode (list_files) - List PDF files from S3")
-        print(f"   2. ParseSinglePDFNode (parse_pdf) - Parse the first PDF file")
+        print(f"   2. ParseSinglePDFNode (parse_pdf) - Parse each PDF file")
         print(f"   3. UploadToS3Node (upload_to_s3) - Upload processed document to S3")
         print(f"\n   State ID: {state_id}")
         print(f"   Run ID: {run_id}")

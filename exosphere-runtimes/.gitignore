@@ -1,4 +1,13 @@
-*.env
-*.venv
-*.python-version
-*__pycache__/
+# Environment files (keep .env.example tracked)  
+.env  
+.env.*.local  
+.env.local  
+*.env  
+
+# Virtual environments  
+**/.venv/  
+**/venv/  
+
+# Python caches  
+**/__pycache__/  
+*.py[cod]

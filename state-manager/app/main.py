@@ -72,15 +72,13 @@ app = FastAPI(
     },
 )
 
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    **get_cors_config()
-)
-
-# this middleware should be the first one
-app.add_middleware(RequestIdMiddleware)
-app.add_middleware(UnhandledExceptionsMiddleware)
+# Add middlewares in inner-to-outer order (last added runs first on request):  
+# 1) UnhandledExceptions (inner)  
+app.add_middleware(UnhandledExceptionsMiddleware)  
+# 2) Request ID (middle)  
+app.add_middleware(RequestIdMiddleware)  
+# 3) CORS (outermost)  
+app.add_middleware(CORSMiddleware, **get_cors_config())  
 
 
 @app.get("/health")

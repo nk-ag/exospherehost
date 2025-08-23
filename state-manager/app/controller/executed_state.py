@@ -49,7 +49,7 @@ async def executed_state(namespace_name: str, state_id: PydanticObjectId, body: 
                     outputs=output,
                     error=None,
                     parents=state.parents
-                )
+                ))
                 await new_state.save()
                 background_tasks.add_task(create_next_state, new_state)
 

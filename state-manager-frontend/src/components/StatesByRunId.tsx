@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { apiService } from '@/services/api';
 import { 
   CurrentStatesResponse, 
@@ -36,6 +36,12 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showGraph, setShowGraph] = useState(false);
+
+  const countsByRunId = useMemo(() => {  
+  const m = new Map<string, number>();  
+  currentStates?.states.forEach((s) => m.set(s.run_id, (m.get(s.run_id) ?? 0) + 1));  
+  return m;  
+}, [currentStates]);  
 
   const loadCurrentStates = async () => {
     setIsLoading(true);
@@ -195,7 +201,7 @@ export const StatesByRunId: React.FC<StatesByRunIdProps> = ({
                   {runId}
                 </div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {currentStates.states.filter(s => s.run_id === runId).length} states
+                  {countsByRunId.get(runId) ?? 0} states
                 </div>
               </button>
             ))}

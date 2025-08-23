@@ -38,6 +38,7 @@ async def get_graph_structure(namespace: str, run_id: str, request_id: str) -> G
                 namespace=namespace,
                 run_id=run_id,
                 graph_name="",
+                root_states=[],
                 nodes=[],
                 edges=[],
                 node_count=0,

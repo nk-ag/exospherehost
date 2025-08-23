@@ -1,5 +1,4 @@
-import json
-import requests
+import httpx  
 from exospherehost import BaseNode
 from pydantic import BaseModel
 from typing import Dict, Any
@@ -56,14 +55,16 @@ class GenerateAnswerNode(BaseNode):
         }
         
         try:
-            response = requests.post(
-                "https://api.openai.com/v1/chat/completions",
-                headers=headers,
-                json=payload
-            )
-            response.raise_for_status()
-            
-            generated_answer = response.json()["choices"][0]["message"]["content"]
+            async with httpx.AsyncClient() as client:  
+                response = await client.post(  
+                    "https://api.openai.com/v1/chat/completions",  
+                    headers=headers,  
+                    json=payload  
+                )  
+                
+                response.raise_for_status()                
+                generated_answer = response.json()["choices"][0]["message"]["content"]
+
         except Exception as e:
             # Fallback answer if API call fails
             generated_answer = f"Based on the provided text chunk, the answer to '{question}' would be found in the content."

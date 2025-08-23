@@ -175,7 +175,7 @@ export interface GraphNode {
   id: string;
   node_name: string;
   identifier: string;
-  status: string;
+  status: StateStatus;
   inputs: Record<string, unknown>;
   outputs: Record<string, unknown>;
   error?: string;
@@ -196,6 +196,7 @@ export interface GraphStructureResponse {
   namespace: string;
   run_id: string;
   graph_name: string;
+  root_nodes: GraphNode[];
   nodes: GraphNode[];
   edges: GraphEdge[];
   node_count: number;
