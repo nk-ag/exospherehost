@@ -40,7 +40,8 @@ class TestGetGraphTemplate:
                 node_name="Test Node 2",
                 namespace="test_namespace",
                 inputs={},
-                next_nodes=[],
+                next_nodes=[]
+            )
         ]
         template.validation_status = GraphTemplateValidationStatus.VALID
         template.secrets = {"secret1": "encrypted_value1", "secret2": "encrypted_value2"}

@@ -1,8 +1,7 @@
 """
 Controller for building graph structure from states by run ID
 """
-from typing import List, Dict, Any
-from uuid import uuid4
+from typing import List, Dict
 
 from ..models.db.state import State
 from ..models.graph_structure_models import GraphStructureResponse, GraphNode, GraphEdge

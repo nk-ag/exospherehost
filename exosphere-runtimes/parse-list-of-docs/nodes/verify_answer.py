@@ -1,8 +1,7 @@
 import json
-import requests
+import httpx 
 from exospherehost import BaseNode
 from pydantic import BaseModel
-from typing import Dict, Any
 
 
 class VerifyAnswerNode(BaseNode):

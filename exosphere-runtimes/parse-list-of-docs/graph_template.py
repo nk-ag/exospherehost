@@ -146,11 +146,11 @@ async def main():
     state_id, run_id = await trigger_graph_execution(graph_name)
     
     if state_id and run_id:
-        print(f"\n✅ Parse list of docs workflow initiated successfully!")
-        print(f"   The workflow will now execute:")
-        print(f"   1. ListS3FilesNode (list_files) - List PDF files from S3")
-        print(f"   2. ParseSinglePDFNode (parse_pdf) - Parse each PDF file")
-        print(f"   3. UploadToS3Node (upload_to_s3) - Upload processed document to S3")
+        print("\n✅ Parse list of docs workflow initiated successfully!")
+        print("   The workflow will now execute:")
+        print("   1. ListS3FilesNode (list_files) - List PDF files from S3")
+        print("   2. ParseSinglePDFNode (parse_pdf) - Parse each PDF file")
+        print("   3. UploadToS3Node (upload_to_s3) - Upload processed document to S3")
         print(f"\n   State ID: {state_id}")
         print(f"   Run ID: {run_id}")
         print(f"   Graph: {graph_name}")

@@ -25,11 +25,7 @@ class ListS3FilesNode(BaseNode):
         
         This is a simplified implementation. In production, you would use
         boto3 to actually connect to AWS S3.
-        """
-        
-        # Convert string inputs to appropriate types
-        files_only = self.inputs.files_only.lower() == "true"
-        recursive = self.inputs.recursive.lower() == "true"
+        """       
         
         # For now, we'll simulate the S3 file listing
         # In a real implementation, you would:

@@ -63,7 +63,7 @@ class GenerateQuestionNode(BaseNode):
                 
         except Exception as e:
             # Fallback question if API call fails
-            generated_question = f"What are the main points discussed in this text chunk?"
+            generated_question = "What are the main points discussed in this text chunk?"
             print(f"OpenAI API call failed: {e}")
         
         return self.Outputs(
