@@ -4,6 +4,7 @@ main file for exosphere apis
 import os
 from beanie import init_beanie
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from pymongo import AsyncMongoClient
@@ -25,6 +26,9 @@ from .models.db.registered_node import RegisteredNode
 
 # injecting routes
 from .routes import router
+
+# importing CORS config
+from .config.cors import get_cors_config
  
 load_dotenv()
 
@@ -68,9 +72,13 @@ app = FastAPI(
     },
 )
 
-# this middleware should be the first one
-app.add_middleware(RequestIdMiddleware)
-app.add_middleware(UnhandledExceptionsMiddleware)
+# Add middlewares in inner-to-outer order (last added runs first on request):  
+# 1) UnhandledExceptions (inner)  
+app.add_middleware(UnhandledExceptionsMiddleware)  
+# 2) Request ID (middle)  
+app.add_middleware(RequestIdMiddleware)  
+# 3) CORS (outermost)  
+app.add_middleware(CORSMiddleware, **get_cors_config())  
 
 
 @app.get("/health")

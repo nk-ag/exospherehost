@@ -40,12 +40,10 @@ class TestGetGraphTemplate:
                 node_name="Test Node 2",
                 namespace="test_namespace",
                 inputs={},
-                next_nodes=[],
-                unites=None
+                next_nodes=[]
             )
         ]
         template.validation_status = GraphTemplateValidationStatus.VALID
-        template.validation_errors = []
         template.secrets = {"secret1": "encrypted_value1", "secret2": "encrypted_value2"}
         template.created_at = datetime(2023, 1, 1, 12, 0, 0)
         template.updated_at = datetime(2023, 1, 2, 12, 0, 0)

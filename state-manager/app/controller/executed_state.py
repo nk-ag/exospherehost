@@ -33,7 +33,6 @@ async def executed_state(namespace_name: str, state_id: PydanticObjectId, body: 
         else:            
             state.outputs = body.outputs[0]
             state.status = StateStatusEnum.EXECUTED
-
             await state.save()
             next_state_ids.append(state.id)
 
@@ -50,7 +49,7 @@ async def executed_state(namespace_name: str, state_id: PydanticObjectId, body: 
                     outputs=output,
                     error=None,
                     parents=state.parents
-                ))
+                ))                
 
             if len(new_states) > 0:
                 inserted_ids = (await State.insert_many(new_states)).inserted_ids
