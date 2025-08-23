@@ -194,7 +194,7 @@ class TestFullWorkflowIntegration:
         
         # Prepare the request
         request_data = CreateRequestModel(
-            run_id = "test-run-id"
+            run_id = "test-run-id",
             states=[
                 RequestStateModel(
                     identifier="node1",

@@ -116,7 +116,7 @@ async def trigger_graph_execution(graph_name: str):
             async with session.post(url, json=trigger_request, headers=headers) as response:
                 if response.status == 200:
                     response_data = await response.json()
-                    print(f"✅ Parse list of docs graph triggered successfully!")
+                    print("✅ Parse list of docs graph triggered successfully!")
                     print(f"   - Graph: {graph_name}")
                     print(f"   - Run ID: {response_data['run_id']}")
                     print(f"   - State ID: {response_data['states'][0]['state_id']}")

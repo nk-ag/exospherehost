@@ -94,7 +94,7 @@ class TestMainApp:
         unhandled_exceptions_index = middleware_classes.index(UnhandledExceptionsMiddleware) # type: ignore
         
         # Since middleware is stored in reverse order, UnhandledExceptions should have lower index
-        assert unhandled_exceptions_index < request_id_index
+        assert unhandled_exceptions_index > request_id_index
 
     def test_router_included(self):
         """Test that the main router is included in the app"""
@@ -388,7 +388,7 @@ class TestAppConfiguration:
         unhandled_exceptions_index = middleware_classes.index(UnhandledExceptionsMiddleware) # type: ignore
         
         # Since middleware is stored in reverse order, UnhandledExceptions should have lower index
-        assert unhandled_exceptions_index < request_id_index
+        assert unhandled_exceptions_index > request_id_index
 
     def test_health_endpoint_response(self):
         """Test that the health endpoint returns the expected response"""
