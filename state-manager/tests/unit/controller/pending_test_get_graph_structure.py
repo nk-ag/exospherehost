@@ -2,7 +2,7 @@
 Unit tests for get_graph_structure controller
 """
 import pytest
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, patch, MagicMock
 from beanie import PydanticObjectId
 from datetime import datetime
 
@@ -11,60 +11,68 @@ from app.models.db.state import State
 from app.models.state_status_enum import StateStatusEnum
 
 
+def mock_state(id, status, run_id, node_name, namespace_name, identifier, graph_name, inputs, outputs, parents):
+    state = MagicMock()
+    state.id = id
+    state.status = status
+    state.run_id= run_id
+    state.node_name = node_name
+    state.namespace_name = namespace_name
+    state.identifier = identifier
+    state.graph_name = graph_name
+    state.inputs = inputs
+    state.outputs = outputs
+    state.parents = parents
+    return state
+
+
 @pytest.fixture
 def mock_states():
     """Create mock states for testing"""
     state1_id = PydanticObjectId()
     state2_id = PydanticObjectId()
     state3_id = PydanticObjectId()
-    
-    return [
-        State(
-            id=state1_id,
-            node_name="start_node",
-            namespace_name="test_namespace",
-            identifier="start_1",
-            graph_name="test_graph",
-            run_id="test_run_123",
-            status=StateStatusEnum.SUCCESS,
-            inputs={"input1": "value1"},
-            outputs={"output1": "result1"},
-            error=None,
-            parents={},
-            created_at=datetime.now(),
-            updated_at=datetime.now()
-        ),
-        State(
-            id=state2_id,
+
+    state1= mock_state(
+        id=state1_id,
+        status= StateStatusEnum.SUCCESS,
+        node_name="start_node",
+        run_id= "test-run-id",
+        namespace_name="test_namespace",
+        identifier="start_1",
+        graph_name="test_graph",
+        inputs={"input1": "value1"},
+        outputs={"output1"},
+        parents={},
+    )
+
+    state2= mock_state(
+        id=state2_id,
+        status= StateStatusEnum.SUCCESS,
+        node_name="process_node",
+        run_id= "test-run-id",
+        namespace_name="test_namespace",
+        identifier="process_1",
+        graph_name="test_graph",
+        inputs={"input2": "value2"},
+        outputs={"output2": "result2"},
+        parents={"start_1": state1_id}
+    )    
+
+    state3= mock_state(
+            id=state3_id,
+            status= StateStatusEnum.SUCCESS,
             node_name="process_node",
+            run_id= "test-run-id",
             namespace_name="test_namespace",
             identifier="process_1",
             graph_name="test_graph",
-            run_id="test_run_123",
-            status=StateStatusEnum.SUCCESS,
             inputs={"input2": "value2"},
             outputs={"output2": "result2"},
-            error=None,
-            parents={"start_1": state1_id},
-            created_at=datetime.now(),
-            updated_at=datetime.now()
-        ),
-        State(
-            id=state3_id,
-            node_name="end_node",
-            namespace_name="test_namespace",
-            identifier="end_1",
-            graph_name="test_graph",
-            run_id="test_run_123",
-            status=StateStatusEnum.SUCCESS,
-            inputs={"input3": "value3"},
-            outputs={"output3": "result3"},
-            error=None,
-            parents={"process_1": state2_id},
-            created_at=datetime.now(),
-            updated_at=datetime.now()
-        )
-    ]
+            parents={"start_1": state1_id}
+        )    
+    
+    return [state1,state2,state3]
 
 
 @pytest.mark.asyncio

@@ -58,7 +58,7 @@ async def get_graph_structure(namespace: str, run_id: str, request_id: str) -> G
                 id=str(state.id),
                 node_name=state.node_name,
                 identifier=state.identifier,
-                status=state.status.value,
+                status=state.status,
                 inputs=state.inputs,
                 outputs=state.outputs,
                 error=state.error,
@@ -81,7 +81,7 @@ async def get_graph_structure(namespace: str, run_id: str, request_id: str) -> G
             # Process parent relationships - only create edges for direct parents
             # Since parents are accumulated, we only want the direct parent (not all ancestors)
 
-            if len(state.parents) == 1 and state.parents[state.identifier] == state.id:
+            if len(state.parents) == 0:
                 root_states.append(state_id_to_node[str(state.id)])
                 continue        
 
@@ -90,13 +90,8 @@ async def get_graph_structure(namespace: str, run_id: str, request_id: str) -> G
                 # In Python 3.7+, dict.items() preserves insertion order
                 # The most recent parent should be the last one added
                 parent_items = list(state.parents.items())
-                if parent_items:
-
-                    if parent_items[-1][1] != state.id:
-                        direct_parent_key , parent_id = parent_items[-1]
-                    else:
-                        # Get the last parent added (most recent)
-                        direct_parent_key, parent_id = parent_items[-2]                    
+                if parent_items:                    
+                    direct_parent_key , parent_id = parent_items[-1]                                   
 
                     parent_id_str = str(parent_id)
                     
