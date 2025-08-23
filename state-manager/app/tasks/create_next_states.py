@@ -1,4 +1,5 @@
 from beanie import PydanticObjectId
+from pymongo.errors import DuplicateKeyError, BulkWriteError
 from beanie.operators import In, NE
 from app.singletons.logs_manager import LogsManager
 from app.models.db.graph_template_model import GraphTemplate
@@ -57,6 +58,7 @@ async def check_unites_satisfied(namespace: str, graph_name: str, node_template:
             ).count() > 0:
                 return False
     return True
+
 
 def get_dependents(syntax_string: str) -> DependentString:
     splits = syntax_string.split("${{")
@@ -134,6 +136,7 @@ def generate_next_state(next_state_input_model: Type[BaseModel], next_state_node
         parents=new_parents,
         inputs=next_state_input_data,
         outputs={},
+        does_unites=next_state_node_template.unites is not None,
         run_id=current_state.run_id,
         error=None
     )
@@ -231,10 +234,17 @@ async def create_next_states(state_ids: list[PydanticObjectId], identifier: str,
             parent_state = parents[next_state_node_template.unites.identifier]
 
             new_unit_states.append(generate_next_state(next_state_input_model, next_state_node_template, parents, parent_state))
-
-        if len(new_unit_states) > 0:
-            await State.insert_many(new_unit_states)
-    
+        
+        try:
+            if len(new_unit_states) > 0:
+                await State.insert_many(new_unit_states)
+        except (DuplicateKeyError, BulkWriteError):
+            logger.warning(
+                f"Caught duplicate key error for new unit states in namespace={namespace}, "
+                f"graph={graph_name}, likely due to a race condition. "
+                f"Attempted to insert {len(new_unit_states)} states"
+            )
+            
     except Exception as e:
         await State.find(
             In(State.id, state_ids)
