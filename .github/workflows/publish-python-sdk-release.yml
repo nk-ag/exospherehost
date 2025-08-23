@@ -102,7 +102,7 @@ jobs:
 
       - name: Verify version format
         run: |
-          python -c "
+          uv run python -c "
           import sys
           sys.path.append('.')
           from exospherehost._version import version
