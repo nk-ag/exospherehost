@@ -100,8 +100,6 @@ services:
     restart: unless-stopped
     environment:
       - NEXT_PUBLIC_EXOSPHERE_STATE_MANAGER_URL=http://exosphere-state-manager:8000
-      - NEXT_PUBLIC_DEFAULT_NAMESPACE=my-project
-      - NEXT_PUBLIC_DEFAULT_API_KEY=your-secret-key
     depends_on:
       - exosphere-state-manager
     ports:
@@ -202,4 +200,8 @@ For detailed guides and examples, visit [docs.exosphere.host](https://docs.exosp
 
 We welcome contributions! See [CONTRIBUTING.md](/CONTRIBUTING.md) for guidelines.
 
-Join our [Discord community](https://discord.gg/msUHahrp) for discussions and weekly feature talks.
+Join our [Discord community](https://discord.gg/V8uuA6mmzg) for discussions and weekly feature talks.
+
+## Thank You!
+
+![exosphere.host Contributors](https://contrib.rocks/image?repo=exospherehost/exospherehost)
