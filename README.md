@@ -71,24 +71,29 @@ This allows developers to deploy production agents that can scale beautifully to
 
 - ### Define your first flow
   
-  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Flow defintions](https://docs.exosphere.host) to see more examples.
-  ```json
-  {
-    "secrets": {},
-    "nodes": [
-        {
-            "node_name": "MyFirstNode",
-            "namespace": "hello-world",
-            "identifier": "describe_city",
-            "inputs": {
-                "bucket_name": "initial",
-                "prefix": "initial",
-                "files_only": "true",
-                "recursive": "false"
-            },
-            "next_nodes": ["create_batches"]
-        }
+  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Documentation](https://docs.exosphere.host) to see more examples.
+  ```python
+  import asyncio
+  from exospherehost import StateManager
+  import YourNodeClass
+
+  asyncio.run(StateManager( namespace="your-namespace").upsert_graph(
+    graph_name="your-graph-name",
+    secrets= {
+      "your-secret-key": "your-secret-value"
+    },
+    graph_nodes=[
+      {
+        "node_name": YourNodeClass.__name__,
+        "identifier": "your-identifier",
+        "inputs": {
+          "your-input-key": "your-input-value"
+        },
+        "next_nodes": ["your-next-node"]
+      }
     ]
+  ))
+
   ```
 
 ## Use State Manager and Dashboard
