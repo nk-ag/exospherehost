@@ -8,8 +8,6 @@
 [![Discord](https://badgen.net/discord/members/V8uuA6mmzg)](https://discord.gg/V8uuA6mmzg)
 ![Stars](https://img.shields.io/github/stars/exospherehost/exospherehost?style=social)
 
----
-
 # ExosphereHost - AI Agents at Scale with Reliability
 
 Exosphere helps you build and deploy AI Agents that can handle large amounts of data and run for long periods. Create reusable components (nodes) and connect them into powerful AI Agents/workflows.
