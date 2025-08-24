@@ -1,14 +1,5 @@
 # Exosphere Docs
 
-<div align="center">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/logo-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/logo-light.svg">
-  <img src="./assets/logo-light.svg" alt="Exosphere Logo">
-</picture>
-
-</div>
 
 
 Exosphere is an open-source infrastructure layer to run distributed AI workflows and agents with Python based on a node-based architecture.
@@ -147,6 +138,113 @@ Runtime(
 
 The runtime will automatically reload and register the updated node.
 
+### Create it
+
+Create a file `main.py` with:
+
+```python
+from exospherehost import Runtime, BaseNode
+from pydantic import BaseModel
+
+class HelloWorldNode(BaseNode):
+    class Inputs(BaseModel):
+        name: str
+
+    class Outputs(BaseModel):
+        message: str
+
+    class Secrets(BaseModel):
+        pass
+
+    async def execute(self) -> Outputs:
+        return self.Outputs(
+            message=f"Hello, {self.inputs.name}!"
+        )
+
+# Initialize the runtime
+Runtime(
+    namespace="MyProject",
+    name="HelloWorld",
+    nodes=[HelloWorldNode]
+).start()
+```
+
+### Run it
+
+Run the server with:
+
+```bash
+uv run main.py
+```
+
+### Check it
+
+Your runtime is now running and ready to process workflows!
+
+### Interactive Dashboard
+
+Now go to your Exosphere dashboard to:
+
+* View your registered nodes
+* Create and manage graph templates
+* Trigger workflows
+* Monitor execution states
+* Debug and troubleshoot
+
+Ref: [Dashboard Guide](./exosphere/dashboard.md)
+
+## Example flow
+
+Now modify the file `main.py` to add more complex processing:
+
+```python
+from exospherehost import Runtime, BaseNode
+from pydantic import BaseModel
+import json
+
+class DataProcessorNode(BaseNode):
+    class Inputs(BaseModel):
+        data: str
+        operation: str
+
+    class Outputs(BaseModel):
+        result: str
+        status: str
+
+    class Secrets(BaseModel):
+        api_key: str
+
+    async def execute(self) -> Outputs:
+        # Parse the input data
+        try:
+            data = json.loads(self.inputs.data)
+        except:
+            return self.Outputs(
+                result="",
+                status="error: invalid json"
+            )
+        
+        # Process based on operation
+        if self.inputs.operation == "transform":
+            result = {"transformed": data, "processed": True}
+        else:
+            result = {"original": data, "processed": False}
+        
+        return self.Outputs(
+            result=json.dumps(result),
+            status="success"
+        )
+
+# Initialize the runtime
+Runtime(
+    namespace="MyProject",
+    name="DataProcessor",
+    nodes=[DataProcessorNode]
+).start()
+```
+
+The runtime will automatically reload and register the updated node.
+
 
 ## Open Source Commitment
 
@@ -164,13 +262,4 @@ We welcome community contributions. For guidelines, refer to our [CONTRIBUTING.m
 
 ![exosphere.host Contributors](https://contrib.rocks/image?repo=exospherehost/exospherehost)
 
-## Star History
-
-<a href="https://www.star-history.com/#exospherehost/exospherehost&Date" target="_blank">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
- </picture>
-</a>
 
