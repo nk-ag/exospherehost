@@ -38,7 +38,7 @@ This allows developers to deploy production agents that can scale beautifully to
             #Output fields from this node            
 
         async def execute(self) -> Outputs:    
-            return Outputs(descriptor_agent(inputs.city))        
+            return Outputs(descriptor_agent(self.inputs.city))        
             #Execution function:
             # >>Agent
             # >>Existing Code
