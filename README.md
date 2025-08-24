@@ -89,4 +89,4 @@ This allows developers to deploy production agents that can scale beautifully to
 
 We welcome community contributions. For guidelines, refer to our [CONTRIBUTING.md](/CONTRIBUTING.md). Further we are thankful to all the contributors helping us to simplify infrastructure starting with the process of building and deploying AI workflows and agents.
 
-Join our Discord: https://discord.gg/msUHahrp for active community discussions. We have weekly community huddle to talk up feature dicsussions, feel free to become a part of the conversation.
+Join our Discord: https://discord.gg/msUHahrp for active community discussions. We have weekly community huddle to talk up feature discussions, feel free to become a part of the conversation.
