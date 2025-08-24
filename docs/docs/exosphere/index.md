@@ -1,6 +1,6 @@
 # Exosphere
 
-Exosphere is a modern, fast (high-performance), open-source infrastructure layer for building distributed AI workflows and agents with Python based on a node-based architecture.
+Exosphere is an open-source infrastructure layer to run distributed AI workflows and agents with Python based on a node-based architecture.
 
 ---
 
@@ -76,7 +76,9 @@ Now go to your Exosphere dashboard to:
 * Monitor execution states
 * Debug and troubleshoot
 
-## Example upgrade
+Ref: [Dashboard Guide](./dashboard.md)
+
+## Example flow
 
 Now modify the file `main.py` to add more complex processing:
 
