@@ -24,10 +24,9 @@ CREATED → QUEUED → EXECUTING → EXECUTED/ERRORED → SUCCESS
 1. **CREATED**: State is initialized with inputs and dependencies
 2. **QUEUED**: State is ready for execution and waiting for a runtime
 3. **EXECUTING**: State is currently being processed by a runtime
-4. **EXECUTED**: State completed successfully with outputs
+4. **EXECUTED**: State finished (with outputs) — terminal for that state
 5. **ERRORED**: State failed during execution
-6. **SUCCESS**: State and all its dependencies are complete
-
+6. **SUCCESS**: Workflow/branch-level success once all dependent states complete
 
 ## Fanout Mechanism
 
