@@ -19,7 +19,6 @@ Exosphere lets you define plug and playable nodes that can then be run on a reli
 This allows developers to deploy production agents that can scale beautifully to build robust autonomous AI workflows.
 
 
-
 ## Getting Started
 
 - ### Installation
@@ -57,6 +56,10 @@ This allows developers to deploy production agents that can scale beautifully to
   ```python
   from exospherehost import Runtime
 
+  # Make sure to set EXOSPHERE environment variables:
+  # - EXOSPHERE_STATE_MANAGER_URI=http://your-state-manager:8000
+  # - EXOSPHERE_API_KEY=your-api-key
+  # - Details on how to set these up are below
   Runtime(
     name="my-first-runtime",
     namespace="hello-world",
@@ -68,7 +71,7 @@ This allows developers to deploy production agents that can scale beautifully to
 
 - ### Define your first flow
   
-  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Flow defintions](docs.exosphere.host) to see more examples.
+  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Flow defintions](https://docs.exosphere.host) to see more examples.
   ```json
   {
     "secrets": {},
@@ -84,8 +87,135 @@ This allows developers to deploy production agents that can scale beautifully to
                 "recursive": "false"
             },
             "next_nodes": ["create_batches"]
-        },
+        }
+    ]
   ```
+
+## Use State Manager and Dashboard
+
+Exosphere provides a State Manager for persistent data storage and a Dashboard for monitoring your AI workflows. Here's how to set them up:
+
+#### Quick Start with Docker Compose
+
+The easiest way to get started is using Docker Compose. Create a `docker-compose.yml` file:
+
+```yaml
+version: "3.8"
+
+services:
+  # MongoDB database for storing state
+  mongodb:
+    image: mongo:7.0
+    container_name: exosphere-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: exosphere
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - exosphere-network
+
+  # State Manager service
+  exosphere-state-manager:
+    image: ghcr.io/exospherehost/exosphere-state-manager:latest
+    container_name: exosphere-state-manager
+    restart: unless-stopped
+    environment:
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/exosphere?authSource=admin
+      - STATE_MANAGER_SECRET=your-secret-key
+      - MONGO_DATABASE_NAME=exosphere
+      - SECRETS_ENCRYPTION_KEY=your-encryption-key
+    depends_on:
+      - mongodb
+    ports:
+      - "8000:8000"
+    networks:
+      - exosphere-network
+
+  # Dashboard for monitoring workflows
+  exosphere-dashboard:
+    image: ghcr.io/exospherehost/exosphere-dashboard:latest
+    container_name: exosphere-dashboard
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_EXOSPHERE_STATE_MANAGER_URL=http://exosphere-state-manager:8000
+      - NEXT_PUBLIC_DEFAULT_NAMESPACE=my-project
+      - NEXT_PUBLIC_DEFAULT_API_KEY=your-secret-key
+    depends_on:
+      - exosphere-state-manager
+    ports:
+      - "3000:3000"
+    networks:
+      - exosphere-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  exosphere-network:
+    driver: bridge
+```
+
+#### Running the Stack
+
+1. **Start the services:**
+   ```bash
+   docker-compose up -d
+   ```
+
+2. **Access the Dashboard:**
+   - Open your browser and go to `http://localhost:3000`
+   - Use the default namespace and API key from your docker-compose file
+
+3. **Connect your nodes to the State Manager:**
+   
+   Your nodes need environment variables to connect to the State Manager. Add these to your node containers:
+   
+   ```bash
+   # Environment variables for your node containers
+   - EXOSPHERE_STATE_MANAGER_URI=http://exosphere-state-manager:8000
+   - EXOSPHERE_API_KEY=your-secret-key
+   ```
+   
+   Or add them to your docker-compose.yml:
+   ```yaml
+   your-node-service:
+     image: your-node-image
+     environment:
+       - EXOSPHERE_STATE_MANAGER_URI=http://exosphere-state-manager:8000
+       - EXOSPHERE_API_KEY=your-secret-key
+     networks:
+       - exosphere-network
+   ```
+
+#### What Each Service Does
+
+- **MongoDB**: Stores all your workflow state and data
+- **State Manager**: Provides APIs for storing and retrieving state across workflow executions
+- **Dashboard**: Web interface to monitor flows, view node status, and manage your AI agents
+
+#### Production Deployment
+
+For production, you can use the same images with Kubernetes or other orchestration tools:
+
+```bash
+# Pull the latest images
+docker pull ghcr.io/exospherehost/exosphere-state-manager:latest
+docker pull ghcr.io/exospherehost/exosphere-dashboard:latest
+
+# Run with your own configuration
+docker run -d \
+  --name exosphere-state-manager \
+  -p 8000:8000 \
+  -e MONGO_URI=your-mongodb-connection \
+  -e STATE_MANAGER_SECRET=your-secret \
+  ghcr.io/exospherehost/exosphere-state-manager:latest
+```
 
 ## Documentation
 
