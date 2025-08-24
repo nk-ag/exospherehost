@@ -159,6 +159,7 @@ volumes:
 networks:
   exosphere-network:
     driver: bridge
+    attachable: true
 ```
 
 #### Running the Stack
