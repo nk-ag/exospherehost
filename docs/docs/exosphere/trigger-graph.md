@@ -51,5 +51,4 @@ For more details on using the Exosphere dashboard see the **[Dashboard Guide](./
 ## Next Steps
 
 - **[Dashboard](./dashboard.md)** - Use the Exosphere dashboard for monitoring
-- **[Examples](./examples.md)** - See real-world triggering examples
-- **[Concepts](./concepts.md)** - Learn about fanout, units, inputs, outputs, and secrets
+- **[ARchitecture](./architecture.md)** - Learn about fanout, unites

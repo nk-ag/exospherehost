@@ -153,11 +153,9 @@ View graph runs and debug each node that was created.
 
 For additional help:
 - Check the [State Manager Setup](./state-manager-setup.md) guide
-- Review [Concepts](./concepts.md) for workflow understanding
-- See [Examples](./examples.md) for usage patterns
+- Review [Architecture](./architecture.md) for workflow understanding
 
 ## Next Steps
 
-- **[Examples](./examples.md)** - See real-world usage examples
-- **[Concepts](./concepts.md)** - Learn about fanout, units, inputs, outputs, and secrets
+- **[Architecture](./architecture.md)** - Learn about fanout, units, inputs, outputs, and secrets
 - **[State Manager Setup](./state-manager-setup.md)** - Complete backend setup guide

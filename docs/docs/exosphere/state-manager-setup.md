@@ -225,13 +225,9 @@ The state manager provides a health check endpoint:
 curl http://localhost:8000/health
 ```
 
-Response:
+Response: 200
 ```json
-{
-  "status": "healthy",
-  "timestamp": "2024-01-01T00:00:00Z",
-  "version": "0.1.0"
-}
+{"message": "OK"}
 ```
 
 ### Getting Help
@@ -246,4 +242,3 @@ Response:
 - **[Dashboard Setup](./dashboard.md)** - Set up the web dashboard for monitoring
 - **[Node Development](./register-node.md)** - Learn how to create and register nodes
 - **[Graph Creation](./create-graph.md)** - Build workflows using graph templates
-- **[Examples](./examples.md)** - See real-world usage examples

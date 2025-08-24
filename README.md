@@ -1,8 +1,6 @@
 ![logo light](assets/logo-light.svg#gh-light-mode-only)
 ![logo dark](assets/logo-dark.svg#gh-dark-mode-only)
 
-![logo light](assets/logo-light.svg#gh-light-mode-only)
-![logo dark](assets/logo-dark.svg#gh-dark-mode-only)
 [![Docs](https://img.shields.io/badge/docs-latest-success)](https://docs.exosphere.host)
 [![Last commit](https://img.shields.io/github/last-commit/exospherehost/exospherehost)](https://github.com/exospherehost/exospherehost/commits/main)
 [![PyPI - Version](https://img.shields.io/pypi/v/exospherehost)](https://pypi.org/project/exospherehost/)
@@ -73,7 +71,7 @@ This allows developers to deploy production agents that can scale beautifully to
 
 - ### Define your first flow
   
-  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Flow defintions](https://docs.exosphere.host) to see more examples.
+  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Graph definitions](https://docs.exosphere.host) to see more examples.
   ```json
   {
     "secrets": {},
@@ -99,7 +97,7 @@ This allows developers to deploy production agents that can scale beautifully to
 For comprehensive documentation and guides, check out:
 
 
-- **[Getting Started Guide](https://docs.exosphere.host/exosphere/getting-started/) 
+- **[Getting Started Guide](https://docs.exosphere.host/exosphere/getting-started)**
 - **[State Manager Setup Guide](docs/docs/exosphere/state-manager-setup.md)**: Step-by-step instructions for running the Exosphere backend locally or in production.
 - **[Dashboard Guide](docs/docs/exosphere/dashboard.md)**: Learn how to set up and use the Exosphere web dashboard.
 - **[Architecture](docs/docs/exosphere/architecture.md)**: Understand core ideas on building graphs like fanout and unite.

@@ -148,7 +148,7 @@ async def create_graph_template():
     
     # Define secrets
     secrets = {
-        ...
+        ...  # Store real values in a secret manager or environment variables, not in code.
     }
     
     try:
@@ -293,5 +293,4 @@ The Exosphere dashboard provides visual representation of your graphs. Checkout 
 ## Next Steps
 
 - **[Trigger Graph](./trigger-graph.md)** - Learn how to execute your workflows
-- **[Examples](./examples.md)** - See real-world graph examples
 - **[Dashboard](./dashboard.md)** - Use the Exosphere dashboard for monitoring

@@ -63,15 +63,6 @@ class Secrets(BaseModel):
     encryption_key: str
 ```
 
-## Examples
-
-For node implementation examples, see the **[Node Implementation Examples](./examples/node-examples/index.md)** section, which includes:
-
-- **[Nodes](./examples/node-examples/basic-nodes.md)** - Fundamental patterns and simple node implementations
-- **[Integration](./examples/node-examples/integration-nodes.md)** - Nodes that integrate with external services and systems
-
-These examples demonstrate common patterns, best practices, and real-world use cases for creating Exosphere nodes.
-
 ## Node Validation
 
 The runtime automatically validates your nodes:
@@ -133,7 +124,7 @@ Runtime(
 
 ### Namespace Organization
 
-Organise nodes to a namespace to re-use them across flows in that namespace
+Organise nodes to a namespace to reuse them across flows in that namespace
 
 ```python hl_lines="3 10"
 # Development namespace
@@ -153,7 +144,5 @@ Runtime(
 
 ## Next Steps
 
-- **[Node Implementation Examples](./node-examples/index.md)** - Comprehensive examples of node implementations
 - **[Create Graph](./create-graph.md)** - Learn how to connect nodes into workflows
 - **[Trigger Graph](./trigger-graph.md)** - Execute and monitor your workflows
-- **[Examples](./examples.md)** - See real-world workflow examples and use cases
