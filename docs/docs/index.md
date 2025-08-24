@@ -1,214 +1,152 @@
-# Introduction
+# Exosphere Docs
 
-## Vision
-> Our vision is a world where creators and innovators can fully dedicate themselves to crafting extraordinary products and services, unburdened by the complexities of the underlying infrastructure. We foresee a future where intelligent systems seamlessly operate behind the scenes, tackling intricate, high-scale challenges with immense computational demands and vast data movements.
+<div align="center">
 
-To realize this, we are pioneering an open-source infrastructure layer for background AI workflows and agents that is robust, affordable, and effortless to use, empowering the scalable solutions and transformative tasks of today, tomorrow, and beyond.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/logo-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/logo-light.svg">
+  <img src="./assets/logo-light.svg" alt="Exosphere Logo">
+</picture>
 
-## Core Concepts
+</div>
 
-To have an intuition of the first version of the platform, we would highly recommend watching the video below. This explains using our cluster APIs with YML input. We are working on more modalities like Pythonic control systems.
 
-<a href="https://www.youtube.com/watch?v=tfVYXpjyGqQ" target="_blank">
-  <img src="assets/cluster-api-yt.png" alt="Cluster API YT">
+Exosphere is an open-source infrastructure layer to run distributed AI workflows and agents with Python based on a node-based architecture.
+
+---
+
+**Documentation**: [https://docs.exosphere.host](https://docs.exosphere.host)
+
+**Source Code**: [https://github.com/exospherehost/exospherehost](https://github.com/exospherehost/exospherehost)
+
+**Watch the Step by Step Demo**:
+
+<a href="https://www.youtube.com/watch?v=f41UtzInhp8" target="_blank">
+  <img src="../assets/parallel-nodes-demo.png" alt="Step by Step Execution of an Exosphere Workflow">
 </a>
 
-### Satellite
 
-Satellites are the core building blocks for exosphere.They are lego blocks designed for a specific purpose: you can connect them together to create complex systems in a matter of minutes without worrying about the underlying infrastructure.
+---
 
-They are pre-implemented serverless functions highly optimized for workflows and high volume batch processing, optimized for cost, reliability, developer velocity and ease of use.
+## Requirements
 
-Our inhouse optimization for workflows and batch processing can lead to significant cost savings, for example you can expect a cost per token saving of about 50-75% on LLMs like DeepSeek R1 70B, Gemma 3 27B, etc.
+Python 3.12+
 
-Each of these satellites must satisfy the following properties:
+## Installation
 
-1. Should be idempotent and stateless.
-2. Should have a unique identifier of the format `satellite/unique-project-name/satellite-name`, example: `satellite/exospherehost/deepseek-r1-distrill-llama-70b`
-3. Should take a `config` parameter as an `object` to control or modify the behaviour.
-4. Should be totally independent of any other satellite.
-5. Should return a `list` of `objects`.
-6. Should have following necessary fields: `parents`, `children`, `identifier`, `status`, `retries`, `delay`. Most of these fields are optional are set by the platform itself.
-7. Should provide a clean interface for the user to check the status of the satellite and get output data.
-
-Further work is being done to allow users to bring their own satellites and use our core infrastructure to manage their lifecycle.
-
-### Cluster
-
-A Cluster is a collection of satellites connected together to form a complete workflow: a series of satellites working together to achieve a common goal.
-
-Each of these clusters must satisfy the following properties:
-
-1. Should be a collection of satellites that are connected together to form a system.
-2. Should have a unique identifier of the format `cluster/unique-project-name/cluster-name`, example: `cluster/aikin/structured-json`
-3. Should define a necessary parameter of `SLA` denoting the maximum time to complete the cluster, **higher the SLA, lower the cost** as systems have more time to optimize for the task (currently supported: `6h`, `12h`, `24h`)
-4. Should have a necessary `trigger` parameter to start the cluster, this can be a `cron` expression, or an `api-call` or other possible events.
-5. Each cluster can also define `logs` parameter to configure log forwarding to a specific destination like `NewRelic`, `Kusto`, `CloudWatch` or any other logging service.
-6. Each cluster can also define `failure` steps to handle the cluster in case of failure, this could again be a set of satellites to run in case of failure.
-
-Developers can define their own clusters using our cluster api, which supports cluster creation, deletion, status, logs and other operations. Currently we are supporting cluster creation through `YML` files or our APIs and SDKs.
-
-### Orbit
-
-Orbit is the core compute platform capable of managing the lifecycle of satellites and clusters optimally across multiple computes including GPUs, CPUs, and other hardware. Further allowing developers to write their own satellites and plug-in with our core exosphere platform.
+```bash
+uv add exospherehost
+```
 
 ## Example
 
-Here is an example of using our cluster api to create a satellite cluster to get structured json from PDF files of quarterly financial reports. The workflow in the image could be represented as the `YML` file below.
+### Create it
 
-![Example Workflow](assets/example-workflow.png)
-```yaml title="structured-json-deepseek.yml"
-# define the version of the exosphere apis
-version: 0.0.1b
+Create a file `main.py` with:
 
-# using cluster api to create the cluster
-cluster: 
-  # maximum allowed to compute the cluster
-  # define the sla of the cluster (6h, 12h, 24h)
-  sla: 6h 
+```python
+from exospherehost import Runtime, BaseNode
+from pydantic import BaseModel
 
-  # define the name and description of the cluster for better understanding (optional)
-  title: Structured JSON from Quarterly Financial Reports
-  description: This cluster will take a list of PDF files from S3 and return a structured JSON output.
+class HelloWorldNode(BaseNode):
+    class Inputs(BaseModel):
+        name: str
 
-  # define the identifier of the cluster (project-name/cluster-name)
-  identifier: aikin/structured-pdfs
+    class Outputs(BaseModel):
+        message: str
 
-  # trigger for the cluster
-  trigger: 
-    cron: "0 0 * * *"
+    class Secrets(BaseModel):
+        pass
 
-  # define retries for each satellite, default is 5
-  retries: 3
+    async def execute(self) -> Outputs:
+        return self.Outputs(
+            message=f"Hello, {self.inputs.name}!"
+        )
 
-  # define the secrets for the cluster, these are stored in a secure vault and only excessible by allowed satellites in this cluster
-  # still be sure to have minimum required permissions for each secret to avoid any security issues
-  secrets:
-    - AWS_ACCESS_KEY: "your-aws-access-key"
-    - AWS_SECRET_KEY: "your-aws-secret-key"
-    - API_BEARER_TOKEN: "your-api-bearer-token"
-    - NEW_RELIC_ACCOUNT_ID: "your-new-relic-account-id"
-    - NEW_RELIC_API_KEY: "your-new-relic-api-key"
-    - NEW_RELIC_APPLICATION_ID: "your-new-relic-application-id"
-    - FAILURE_S3_AWS_ACCESS_KEY: "your-failure-s3-aws-access-key"
-    - FAILURE_S3_AWS_SECRET_KEY: "your-failure-s3-aws-secret-key"
-  
-  # satellites in order to execute, each satellite returns a list of objects hence computational graph is formed and is executed in parallel.
-  satellites:
-    - name: Get files from S3
-      uses: satellite/exospherehost/get-files-from-s3
-      identifier: get-files-from-s3
-      config:
-        bucket: aikin-financial-reports
-        prefix: sec
-        recursive: true
-        extension: pdf
-        secrets:
-          - AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          - AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-
-    - name: Extract text from PDF
-      uses: satellite/exospherehost/parse-pdf-with-docling
-      identifier: parse-pdf-with-docling
-      config: 
-        language: en
-        output-format: markdown-string
-        extract-images: false
-
-    - name: Get structured json from markdown using DeepSeek
-      uses: satellite/exospherehost/deepseek-r1-distrill-llama-70b
-      identifier: deepseek-r1-distrill-llama-70b
-      retries: 5
-      config:
-        temperature: 0.5
-        max-tokens: 1024
-        output-format: json
-        output-schema: |
-            {
-                "company": string, 
-                "quarter": string,
-                "year": string,
-                "revenue": number,
-                "net-income": number,
-                "gross-profit": number,
-                "operating-income": number,
-                "net-income-margin": number,
-                "gross-profit-margin": number,
-                "operating-income-margin": number,
-            }
-      input:
-        prompt: |
-            Parse the following quarterly financial report and return a structured json output as defined in the output-schema, report text is provided below:
-            ${{satellites.parse-pdf-with-docling.output}}
-
-    - name: Call Webhook to send the structured json to aikin api
-      uses: satellite/exospherehost/call-webhook
-      identifier: call-webhook
-      config:
-        url: https://api.aikin.com/v1/financial-reports
-        method: POST
-        headers:
-          - Authorization: Bearer ${{ secrets.API_BEARER_TOKEN }}
-        body:
-          - data: ${{satellites.deepseek-r1-distrill-llama-70b.output}}
-            file-path: $${{satellites.get-files-from-s3.output.file-path}}
-
-    - name: Delete success file from S3
-      uses: satellite/exospherehost/delete-file-from-s3
-      identifier: delete-file-from-s3
-      config:
-        bucket: aikin-financial-reports
-        file-path: $${{satellites.get-files-from-s3.output.file-path}}
-        secrets:
-            - AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-            - AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-
-
-  # define steps to handle logs for this cluster
-  logs:
-    satellites:
-        - name: Send logs to NewRelic
-          uses: satellite/exospherehost/send-logs-to-new-relic
-          identifier: send-logs-to-new-relic
-          config:
-            account-id: ${{ secrets.NEW_RELIC_ACCOUNT_ID }}
-            api-key: ${{ secrets.NEW_RELIC_API_KEY }}
-            application-id: ${{ secrets.NEW_RELIC_APPLICATION_ID }}
-            log-level: info
-
-  # define steps to handle failure for this cluster
-  failure:
-    # run from failed steps from this satellite
-    from: parse-pdf-with-docling
-    
-    satellites:
-         - name: Move to failure bucket
-            uses: satellite/exospherehost/move-file
-            identifier: move-to-failure-bucket
-            config:
-              origin-source: s3
-              origin-bucket: aikin-financial-reports-failure
-              origin-file-path: $${{satellites.get-files-from-s3.output.file-path}}
-              destination-source: s3
-              destination-bucket: aikin-financial-reports-failure
-              destination-file-path: failed/quarterly-financial-reports/$${{satellites.get-files-from-s3.output.file-name}}
-              secrets:
-                  - ORIGIN_AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-                  - ORIGIN_AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-                  - DESTINATION_AWS_ACCESS_KEY: ${{ secrets.FAILURE_S3_AWS_ACCESS_KEY }}
-                  - DESTINATION_AWS_SECRET_KEY: ${{ secrets.FAILURE_S3_AWS_SECRET_KEY }}
-        - name: Send failure notification on PagerDuty
-          uses: satellite/exospherehost/send-pagerduty-alert
-          identifier: send-pagerduty-alert
-          config:
-            pagerduty-api-key: ${{ secrets.PAGERDUTY_API_KEY }}
-            pagerduty-service-id: ${{ secrets.PAGERDUTY_SERVICE_ID }}
-          input:
-              message: |
-                Cluster ${{cluster.identifier}} failed at ${{cluster.trigger}} for file $${{satellites.get-files-from-s3.output.file-path}}  with error ${{satellites.get-files-from-s3.output.error}}, file has been moved to failure bucket with path $${{satellites.move-to-failure-bucket.output.file-uri}}
+# Initialize the runtime
+Runtime(
+    namespace="MyProject",
+    name="HelloWorld",
+    nodes=[HelloWorldNode]
+).start()
 ```
 
-This could also be represented as a pythonic control using our SDK/APIs, checkout [documentation](https://docs.exosphere.host) for more details.
+### Run it
+
+Run the server with:
+
+```bash
+uv run main.py
+```
+
+### Check it
+
+Your runtime is now running and ready to process workflows!
+
+### Interactive Dashboard
+
+Now go to your Exosphere dashboard to:
+
+* View your registered nodes
+* Create and manage graph templates
+* Trigger workflows
+* Monitor execution states
+* Debug and troubleshoot
+
+Ref: [Dashboard Guide](./exosphere/dashboard.md)
+
+## Example flow
+
+Now modify the file `main.py` to add more complex processing:
+
+```python
+from exospherehost import Runtime, BaseNode
+from pydantic import BaseModel
+import json
+
+class DataProcessorNode(BaseNode):
+    class Inputs(BaseModel):
+        data: str
+        operation: str
+
+    class Outputs(BaseModel):
+        result: str
+        status: str
+
+    class Secrets(BaseModel):
+        api_key: str
+
+    async def execute(self) -> Outputs:
+        # Parse the input data
+        try:
+            data = json.loads(self.inputs.data)
+        except:
+            return self.Outputs(
+                result="",
+                status="error: invalid json"
+            )
+        
+        # Process based on operation
+        if self.inputs.operation == "transform":
+            result = {"transformed": data, "processed": True}
+        else:
+            result = {"original": data, "processed": False}
+        
+        return self.Outputs(
+            result=json.dumps(result),
+            status="success"
+        )
+
+# Initialize the runtime
+Runtime(
+    namespace="MyProject",
+    name="DataProcessor",
+    nodes=[DataProcessorNode]
+).start()
+```
+
+The runtime will automatically reload and register the updated node.
+
 
 ## Open Source Commitment
 
@@ -235,3 +173,4 @@ We welcome community contributions. For guidelines, refer to our [CONTRIBUTING.m
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
  </picture>
 </a>
+
