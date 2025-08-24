@@ -7,108 +7,64 @@
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-native-326ce5?logo=kubernetes&logoColor=white)](https://github.com/orgs/exospherehost/packages?repo_name=exospherehost)
 [![Discord](https://badgen.net/discord/members/V8uuA6mmzg)](https://discord.gg/V8uuA6mmzg)
 ![Stars](https://img.shields.io/github/stars/exospherehost/exospherehost?style=social)
+
 ---
-Exosphere is open source infrastructure to run AI agents at scale with first party support for large data and long running flows.
 
-Exosphere lets you define plug and playable nodes that can then be run on a reliable backbone in the form of a workflow, with:
-- Dynamic State Creation at runtime
-- Infinite parallel agents 
-- Persistent state management
-- Failure handling
+# Exosphere
 
-This allows developers to deploy production agents that can scale beautifully to build robust autonomous AI workflows.
+**Run AI agents at scale with reliable workflows**
 
+Exosphere helps you build and deploy AI workflows that can handle large amounts of data and run for long periods. Create reusable components (nodes) and connect them into powerful workflows.
 
-## Getting Started
+## What Exosphere Does
 
-- ### Installation
-  ```bash
-  uv add exospherehost
-  ```
+- **Build once, use anywhere**: Create reusable AI components
+- **Scale automatically**: Run infinite parallel agents
+- **Never lose data**: Persistent state management across runs
+- **Handle failures**: Built-in error recovery and retry logic
+- **Monitor everything**: Web dashboard to track your workflows
 
-- ### Define your first node
-   Each node is an atomic reusable unit on Exosphere. Once registered, you can plug it into any workflow going forward. This could be an agent, an api call, or existing code, anything you want to be a unit of your workflow. 
-  ```python
-    from exospherehost import BaseNode
-    from pydantic import BaseModel
+## Quick Start
 
-    class MyFirstNode(BaseNode):
+### 1. Install Exosphere
 
-        class Inputs(BaseModel):
-            city:str
-            #Define inputs taken by node
+```bash
+uv add exospherehost
+```
 
-        class Outputs(BaseModel):
-            description:str
-            #Output fields from this node            
+### 2. Create Your First AI Node
 
-        async def execute(self) -> Outputs:    
-            return Outputs(descriptor_agent(inputs.city))        
-            #Execution function:
-            # >>Agent
-            # >>Existing Code
-            # >>Anything else you want to do!
-  ```
+A node is a reusable AI component. It could be an AI agent, API call, or any code you want to run.
 
- 
+```python
+from exospherehost import BaseNode
+from pydantic import BaseModel
 
-  Create the node and add it to a runtime to enable execution:
-  ```python
-  from exospherehost import Runtime
+class CityAnalyzer(BaseNode):
+    class Inputs(BaseModel):
+        city_name: str
+    
+    class Outputs(BaseModel):
+        description: str
+        population: str
+    
+    async def execute(self) -> Outputs:
+        # Your AI logic here
+        description = f"Analyzing {self.inputs.city_name}..."
+        population = "1000000"  # Example data
+        
+        return Outputs(description=description, population=population)
+```
 
-  # Make sure to set EXOSPHERE environment variables:
-  # - EXOSPHERE_STATE_MANAGER_URI=http://your-state-manager:8000
-  # - EXOSPHERE_API_KEY=your-api-key
-  # - Details on how to set these up are below
-  Runtime(
-    name="my-first-runtime",
-    namespace="hello-world",
-    nodes=[
-       MyFirstNode
-    ]
-   ).start()
-  ```
+### 3. Set Up State Manager & Dashboard
 
-- ### Define your first flow
-  
-  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Documentation](https://docs.exosphere.host) to see more examples.
-  ```python
-  import asyncio
-  from exospherehost import StateManager
-  import YourNodeClass
-
-  asyncio.run(StateManager( namespace="your-namespace").upsert_graph(
-    graph_name="your-graph-name",
-    secrets= {
-      "your-secret-key": "your-secret-value"
-    },
-    graph_nodes=[
-      {
-        "node_name": YourNodeClass.__name__,
-        "identifier": "your-identifier",
-        "inputs": {
-          "your-input-key": "your-input-value"
-        },
-        "next_nodes": ["your-next-node"]
-      }
-    ]
-  ))
-
-  ```
-
-## Use State Manager and Dashboard
-
-Exosphere provides a State Manager for persistent data storage and a Dashboard for monitoring your AI workflows. Here's how to set them up:
-
-#### Quick Start with Docker Compose
-
-The easiest way to get started is using Docker Compose. Create a `docker-compose.yml` file:
+Create a `docker-compose.yml` file to run Exosphere services:
 
 ```yaml
 version: "3.8"
 
 services:
-  # MongoDB database for storing state
+  # Database for storing workflow data
   mongodb:
     image: mongo:7.0
     container_name: exosphere-mongodb
@@ -124,7 +80,7 @@ services:
     networks:
       - exosphere-network
 
-  # State Manager service
+  # State Manager - stores and retrieves data
   exosphere-state-manager:
     image: ghcr.io/exospherehost/exosphere-state-manager:latest
     container_name: exosphere-state-manager
@@ -141,7 +97,7 @@ services:
     networks:
       - exosphere-network
 
-  # Dashboard for monitoring workflows
+  # Dashboard - web interface to monitor workflows
   exosphere-dashboard:
     image: ghcr.io/exospherehost/exosphere-dashboard:latest
     container_name: exosphere-dashboard
@@ -167,54 +123,72 @@ networks:
     attachable: true
 ```
 
-#### Running the Stack
-
-1. **Start the services:**
-   ```bash
-   docker-compose up -d
-   ```
-
-2. **Access the Dashboard:**
-   - Open your browser and go to `http://localhost:3000`
-   - Use the default namespace and API key from your docker-compose file
-
-3. **Connect your nodes to the State Manager:**
-   
-   Your nodes need environment variables to connect to the State Manager. Add these to your node containers:
-   
-   ```bash
-   # Environment variables for your node containers
-   - EXOSPHERE_STATE_MANAGER_URI=http://exosphere-state-manager:8000
-   - EXOSPHERE_API_KEY=your-secret-key
-   ```
-   
-   Or add them to your docker-compose.yml:
-   ```yaml
-   your-node-service:
-     image: your-node-image
-     environment:
-       - EXOSPHERE_STATE_MANAGER_URI=http://exosphere-state-manager:8000
-       - EXOSPHERE_API_KEY=your-secret-key
-     networks:
-       - exosphere-network
-   ```
-
-#### What Each Service Does
-
-- **MongoDB**: Stores all your workflow state and data
-- **State Manager**: Provides APIs for storing and retrieving state across workflow executions
-- **Dashboard**: Web interface to monitor flows, view node status, and manage your AI agents
-
-#### Production Deployment
-
-For production, you can use the same images with Kubernetes or other orchestration tools:
+Start the services:
 
 ```bash
-# Pull the latest images
+docker-compose up -d
+```
+
+### 4. Run Your Node
+
+```python
+from exospherehost import Runtime
+
+# Set environment variables to connect to State Manager
+# EXOSPHERE_STATE_MANAGER_URI=http://localhost:8000
+# EXOSPHERE_API_KEY=your-secret-key
+
+Runtime(
+    name="my-runtime",
+    namespace="my-project",
+    nodes=[CityAnalyzer]
+).start()
+```
+
+### 5. Register the graph with the State Manager
+
+Register the graph with the State Manager:
+
+```python
+import asyncio
+from exospherehost import StateManager
+
+asyncio.run(StateManager(namespace="my-project").upsert_graph(
+    graph_name="city-analysis-workflow",
+    secrets={},
+    graph_nodes=[
+        {
+            "node_name": "CityAnalyzer",
+            "identifier": "analyze-nyc",
+            "inputs": {
+                "city_name": "New York"
+            },
+            "next_nodes": []
+        }
+    ]
+))
+```
+
+### 6. Monitor Your Workflows
+
+Open your browser and go to `http://localhost:3000` to see the dashboard.
+
+## What Each Service Does
+
+- **MongoDB**: Stores all your workflow data and state
+- **State Manager**: Handles data storage and retrieval between workflow runs
+- **Dashboard**: Web interface to monitor and manage your workflows
+
+## Production Deployment
+
+For production, use the same Docker images with your own configuration:
+
+```bash
+# Pull latest images
 docker pull ghcr.io/exospherehost/exosphere-state-manager:latest
 docker pull ghcr.io/exospherehost/exosphere-dashboard:latest
 
-# Run with your own configuration
+# Run with your settings
 docker run -d \
   --name exosphere-state-manager \
   -p 8000:8000 \
@@ -225,10 +199,10 @@ docker run -d \
 
 ## Documentation
 
-
+For detailed guides and examples, visit [docs.exosphere.host](https://docs.exosphere.host)
 
 ## Contributing
 
-We welcome community contributions. For guidelines, refer to our [CONTRIBUTING.md](/CONTRIBUTING.md). Further we are thankful to all the contributors helping us to simplify infrastructure starting with the process of building and deploying AI workflows and agents.
+We welcome contributions! See [CONTRIBUTING.md](/CONTRIBUTING.md) for guidelines.
 
-Join our Discord: https://discord.gg/msUHahrp for active community discussions. We have weekly community huddle to talk up feature dicsussions, feel free to become a part of the conversation.
+Join our [Discord community](https://discord.gg/msUHahrp) for discussions and weekly feature talks.
