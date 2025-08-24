@@ -1,6 +1,10 @@
 ![logo light](assets/logo-light.svg#gh-light-mode-only)
 ![logo dark](assets/logo-dark.svg#gh-dark-mode-only)
-
+![Stars](https://img.shields.io/github/stars/exospherehost/exospherehost?style=social)
+![Last commit](https://img.shields.io/github/last-commit/exospherehost/exospherehost)
+![Commit activity](https://img.shields.io/github/commit-activity/m/exospherehost/exospherehost)
+[![PyPI - Version](https://img.shields.io/pypi/v/exospherehost)](https://pypi.org/project/exospherehost/)
+[![Coverage](https://img.shields.io/codecov/c/gh/exospherehost/exospherehost)](https://codecov.io/gh/exospherehost/exospherehost)
 ---
 Exosphere is open source infrastructure to run AI agents at scale with first party support for large data and long running flows.
 
