@@ -1,4 +1,4 @@
-name: Publish Python SDK on Release
+name: Release Python SDK
 
 on:
   release:
