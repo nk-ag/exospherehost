@@ -88,11 +88,23 @@ This allows developers to deploy production agents that can scale beautifully to
                 "files_only": "true",
                 "recursive": "false"
             },
-            "next_nodes": ["create_batches"]
-        },
+            "next_nodes": []
+        }
+    ]
+  }
   ```
 
 ## Documentation
+
+For comprehensive documentation and guides, check out:
+
+
+- **[Getting Started Guide](https://docs.exosphere.host/exosphere/getting-started/) 
+- **[State Manager Setup Guide](docs/docs/exosphere/state-manager-setup.md)**: Step-by-step instructions for running the Exosphere backend locally or in production.
+- **[Dashboard Guide](docs/docs/exosphere/dashboard.md)**: Learn how to set up and use the Exosphere web dashboard.
+- **[Architecture](docs/docs/exosphere/architecture.md)**: Understand core ideas on building graphs like fanout and unite.
+
+You can also visit the [official documentation site](https://docs.exosphere.host) for the latest updates and more resources.
 
 
 
