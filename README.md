@@ -1,13 +1,15 @@
 ![logo light](assets/logo-light.svg#gh-light-mode-only)
 ![logo dark](assets/logo-dark.svg#gh-dark-mode-only)
 
-[![Docs](https://img.shields.io/badge/docs-latest-success)](https://docs.exosphere.host)
-[![Last commit](https://img.shields.io/github/last-commit/exospherehost/exospherehost)](https://github.com/exospherehost/exospherehost/commits/main)
-[![PyPI - Version](https://img.shields.io/pypi/v/exospherehost)](https://pypi.org/project/exospherehost/)
-[![Coverage](https://img.shields.io/codecov/c/gh/exospherehost/exospherehost)](https://codecov.io/gh/exospherehost/exospherehost)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-native-326ce5?logo=kubernetes&logoColor=white)](https://github.com/orgs/exospherehost/packages?repo_name=exospherehost)
-[![Discord](https://badgen.net/discord/members/V8uuA6mmzg)](https://discord.gg/V8uuA6mmzg)
-![Stars](https://img.shields.io/github/stars/exospherehost/exospherehost?style=social)
+<p align="center">
+  <a href="https://docs.exosphere.host"><img src="https://img.shields.io/badge/docs-latest-success" alt="Docs"></a>
+  <a href="https://github.com/exospherehost/exospherehost/commits/main"><img src="https://img.shields.io/github/last-commit/exospherehost/exospherehost" alt="Last commit"></a>
+  <a href="https://pypi.org/project/exospherehost/"><img src="https://img.shields.io/pypi/v/exospherehost" alt="PyPI - Version"></a>
+  <a href="https://codecov.io/gh/exospherehost/exospherehost"><img src="https://img.shields.io/codecov/c/gh/exospherehost/exospherehost" alt="Coverage"></a>
+  <a href="https://github.com/orgs/exospherehost/packages?repo_name=exospherehost"><img src="https://img.shields.io/badge/Kubernetes-native-326ce5?logo=kubernetes&logoColor=white" alt="Kubernetes"></a>
+  <a href="https://discord.gg/V8uuA6mmzg"><img src="https://badgen.net/discord/members/V8uuA6mmzg" alt="Discord"></a>
+  <a href="https://github.com/exospherehost/exospherehost"><img src="https://img.shields.io/github/stars/exospherehost/exospherehost?style=social" alt="Stars"></a>
+</p>
 
 ---
 
@@ -123,13 +125,5 @@ We welcome community contributions. For guidelines, refer to our [CONTRIBUTING.m
 
 ![exosphere.host Contributors](https://contrib.rocks/image?repo=exospherehost/exospherehost)
 
-## Star History
 
-<a href="https://www.star-history.com/#exospherehost/exospherehost&Date" target="_blank">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
- </picture>
-</a>
 

@@ -1,14 +1,5 @@
 # Exosphere Docs
 
-<div align="center">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/logo-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/logo-light.svg">
-  <img src="./assets/logo-light.svg" alt="Exosphere Logo">
-</picture>
-
-</div>
 
 
 Exosphere is an open-source infrastructure layer to run distributed AI workflows and agents with Python based on a node-based architecture.
@@ -164,13 +155,4 @@ We welcome community contributions. For guidelines, refer to our [CONTRIBUTING.m
 
 ![exosphere.host Contributors](https://contrib.rocks/image?repo=exospherehost/exospherehost)
 
-## Star History
-
-<a href="https://www.star-history.com/#exospherehost/exospherehost&Date" target="_blank">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
- </picture>
-</a>
 
