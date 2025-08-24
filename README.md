@@ -10,11 +10,9 @@
 
 ---
 
-# Exosphere
+# ExosphereHost - AI Agents at Scale with Reliability
 
-**Run AI agents at scale with reliable workflows**
-
-Exosphere helps you build and deploy AI workflows that can handle large amounts of data and run for long periods. Create reusable components (nodes) and connect them into powerful workflows.
+Exosphere helps you build and deploy AI Agents that can handle large amounts of data and run for long periods. Create reusable components (nodes) and connect them into powerful AI Agents/workflows.
 
 ## What Exosphere Does
 
