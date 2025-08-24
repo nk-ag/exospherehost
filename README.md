@@ -5,10 +5,8 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/exospherehost)](https://pypi.org/project/exospherehost/)
 [![Coverage](https://img.shields.io/codecov/c/gh/exospherehost/exospherehost)](https://codecov.io/gh/exospherehost/exospherehost)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-native-326ce5?logo=kubernetes&logoColor=white)
-[![GHCR](https://img.shields.io/badge/ghcr.io-available-181717?logo=github)](https://ghcr.io/exospherehost/exospherehost)
-[![Discord](https://img.shields.io/discord/816925020973432832?label=discord)](https://discord.gg/V8uuA6mmzg)
-[![X follow](https://img.shields.io/twitter/follow/exospherehost?style=social)](https://x.com/exospherehost)
-[![Star History](https://img.shields.io/github/stars/exospherehost/exospherehost?label=star%20history&logo=github)](https://star-history.com/#exospherehost/exospherehost)
+[![Discord](https://badgen.net/discord/members/V8uuA6mmzg)](https://discord.gg/V8uuA6mmzg)
+![Stars](https://img.shields.io/github/stars/exospherehost/exospherehost?style=social)
 ---
 Exosphere is open source infrastructure to run AI agents at scale with first party support for large data and long running flows.
 
