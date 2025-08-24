@@ -12,14 +12,14 @@ Set up your environment variables for authentication:
 === ".env File"
 
     ```bash
-    EXOSPHERE_URI=your-state-manager-uri
-    EXOSPHERE_KEY=your-api-key
+    STATE_MANAGER_URI=your-state-manager-uri
+    STATE_MANAGER_SECRET=your-api-key
     ```
 === "Environment Variables"
 
     ```bash
-    export EXOSPHERE_URI="your-state-manager-uri"
-    export EXOSPHERE_KEY="your-api-key"
+    export STATE_MANAGER_URI="your-state-manager-uri"
+    export STATE_MANAGER_SECRET="your-api-key"
     ```
 
 Refer: [Getting State Manager URI](./state-manager-setup.md)

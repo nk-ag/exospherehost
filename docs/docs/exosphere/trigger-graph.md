@@ -13,8 +13,8 @@ The recommended way to trigger graphs is using the Exosphere Python SDK, which p
         # Initialize state manager
         state_manager = StateManager(
             namespace="MyProject",
-            state_manager_uri=EXOSPHERE_URI,
-            key=EXOSPHERE_KEY
+            state_manager_uri=STATE_MANAGER_URI,
+            key=STATE_MANAGER_SECRET
         )
         
         # Create trigger state

@@ -138,8 +138,8 @@ async def create_flow_template():
     # Initialize the State Manager
     state_manager = StateManager(
         namespace="MyProject",
-        state_manager_uri="https://your-state-manager.exosphere.host",
-        key="your-api-key"
+        state_manager_uri=STATE_MANAGER_URI,
+        key=STATE_MANAGER_SECRET
     )
     
     # Define the graph nodes
@@ -225,8 +225,8 @@ The state manager validates your graph template:
     async def get_graph_template():
         state_manager = StateManager(
             namespace="MyProject",
-            state_manager_uri="https://your-state-manager.exosphere.host",
-            key="your-api-key"
+            state_manager_uri=STATE_MANAGER_URI,
+            key=STATE_MANAGER_SECRET
         )
         
         try:
@@ -249,8 +249,8 @@ The state manager validates your graph template:
     async def update_graph_template():
         state_manager = StateManager(
             namespace="MyProject",
-            state_manager_uri="https://your-state-manager.exosphere.host",
-            key="your-api-key"
+            state_manager_uri=STATE_MANAGER_URI,
+            key=STATE_MANAGER_SECRET
         )
         
         # Updated graph nodes

@@ -23,10 +23,10 @@ The Exosphere state manager is the core backend service that handles workflow ex
        docker run -d \
          --name exosphere-state-manager \
          -p 8000:8000 \
-         -e MONGO_URI="mongodb://admin:password@mongodb:27017/exosphere?authSource=admin" \
-         -e MONGO_DATABASE_NAME="exosphere" \
-         -e STATE_MANAGER_SECRET="exosphere@123" \
-         -e SECRETS_ENCRYPTION_KEY="YTzpUlBGLSwm-3yKJRJTZnb0_aQuQQHyz64s8qAERVU=" \
+         -e MONGO_URI="your-mongodb-connection-string" \
+         -e MONGO_DATABASE_NAME="your-database-name" \
+         -e STATE_MANAGER_SECRET="your-secret-key" \
+         -e SECRETS_ENCRYPTION_KEY="your-base64-encoded-encryption-key" \
          ghcr.io/exospherehost/state-manager:latest
        ```
 
@@ -78,10 +78,10 @@ The Exosphere state manager is the core backend service that handles workflow ex
 
     3. **Set up environment variables**:
        ```bash
-               export MONGO_URI="your-mongodb-connection-string"
-        export MONGO_DATABASE_NAME="your-database-name"
-        export STATE_MANAGER_SECRET="your-secret-key"
-        export SECRETS_ENCRYPTION_KEY="your-base64-encoded-encryption-key"
+       export MONGO_URI="your-mongodb-connection-string"
+       export MONGO_DATABASE_NAME="your-database-name"
+       export STATE_MANAGER_SECRET="your-secret-key"
+       export SECRETS_ENCRYPTION_KEY="your-base64-encoded-encryption-key"
        ```
 
     4. **Run the state manager**:
@@ -89,7 +89,9 @@ The Exosphere state manager is the core backend service that handles workflow ex
        uv run run.py --mode=development
        ```
 
-    The state manager will be available at `http://localhost:8000`
+    The state manager will be available at `http://localhost:8000` 
+
+The state manager uri and key would be configured accordingly while setting up nodes and graphs as per the config given locally.
 
 ## Production Setup
 
@@ -143,10 +145,10 @@ The Exosphere state manager is the core backend service that handles workflow ex
            ports:
              - "8000:8000"
                        environment:
-              - MONGO_URI=${MONGO_URI}
-              - MONGO_DATABASE_NAME=${MONGO_DATABASE_NAME}
-              - STATE_MANAGER_SECRET=${STATE_MANAGER_SECRET}
-              - SECRETS_ENCRYPTION_KEY=${SECRETS_ENCRYPTION_KEY}
+             - MONGO_URI=${MONGO_URI}
+             - MONGO_DATABASE_NAME=${MONGO_DATABASE_NAME}
+             - STATE_MANAGER_SECRET=${STATE_MANAGER_SECRET}
+             - SECRETS_ENCRYPTION_KEY=${SECRETS_ENCRYPTION_KEY}
            deploy:
              replicas: 3
              update_config:
@@ -176,8 +178,8 @@ The Exosphere state manager is the core backend service that handles workflow ex
          name: state-manager-config
          namespace: exosphere
        data:
-                   MONGO_URI: "your-mongodb-connection-string"
-          MONGO_DATABASE_NAME: "your-database-name"
+         MONGO_URI: "your-mongodb-connection-string"
+         MONGO_DATABASE_NAME: "your-database-name"
          LOG_LEVEL: "INFO"
        ```
 

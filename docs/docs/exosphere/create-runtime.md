@@ -56,8 +56,8 @@ The `Runtime` class is the core component that manages the execution environment
         namespace="MyProject",
         name="MyRuntime",
         nodes=[MyNode],
-        state_manager_uri="https://your-state-manager.exosphere.host",
-        key="your-api-key",
+        state_manager_uri=STATE_MANAGER_URI,
+        key=STATE_MANAGER_SECRET,
         batch_size=32,
         workers=8,
         poll_interval=2
@@ -90,8 +90,8 @@ The `Runtime` class is the core component that manages the execution environment
 Create a `.env` file in your project root:
 
 ```bash
-EXOSPHERE_URI=https://your-state-manager.exosphere.host
-EXOSPHERE_KEY=your-api-key
+STATE_MANAGER_URI=https://your-state-manager.exosphere.host
+STATE_MANAGER_SECRET=your-api-key
 ```
 
 Then load it in your code:
@@ -260,9 +260,9 @@ spec:
       - name: runtime
         image: your-registry/exosphere-runtime:latest
         env:
-        - name: EXOSPHERE_URI
+        - name: STATE_MANAGER_URI
           value: "https://your-state-manager.exosphere.host"
-        - name: EXOSPHERE_KEY
+        - name: STATE_MANAGER_SECRET
           valueFrom:
             secretKeyRef:
               name: exosphere-secrets
