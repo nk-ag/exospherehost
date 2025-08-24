@@ -1,10 +1,10 @@
 ![logo light](assets/logo-light.svg#gh-light-mode-only)
 ![logo dark](assets/logo-dark.svg#gh-dark-mode-only)
 [![Docs](https://img.shields.io/badge/docs-latest-success)](https://docs.exosphere.host)
-![Last commit](https://img.shields.io/github/last-commit/exospherehost/exospherehost)
+[![Last commit](https://img.shields.io/github/last-commit/exospherehost/exospherehost)](https://github.com/exospherehost/exospherehost/commits/main)
 [![PyPI - Version](https://img.shields.io/pypi/v/exospherehost)](https://pypi.org/project/exospherehost/)
 [![Coverage](https://img.shields.io/codecov/c/gh/exospherehost/exospherehost)](https://codecov.io/gh/exospherehost/exospherehost)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-native-326ce5?logo=kubernetes&logoColor=white)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-native-326ce5?logo=kubernetes&logoColor=white)](https://github.com/orgs/exospherehost/packages?repo_name=exospherehost)
 [![Discord](https://badgen.net/discord/members/V8uuA6mmzg)](https://discord.gg/V8uuA6mmzg)
 ![Stars](https://img.shields.io/github/stars/exospherehost/exospherehost?style=social)
 ---
