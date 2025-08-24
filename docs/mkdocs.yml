@@ -96,20 +96,20 @@ plugins:
         Introduction:
           - index.md
           - getting-started.md
-        Satellites:
-          - satellites/index.md
-          - satellites/exospherehost/call-webhook.md
-          - satellites/exospherehost/deepseek-r1-distrill-llama-70b.md
-          - satellites/exospherehost/forward-logs.md
-          - satellites/exospherehost/get-files.md
-          - satellites/exospherehost/move-file.md
-          - satellites/exospherehost/parse-with-docling.md
-          - satellites/exospherehost/send-alert.md
-          - satellites/exospherehost/send-email.md
-        Cluster:
-          - cluster.md
-        Architecture:
-          - architecture.md
+        Exosphere:
+          - exosphere/index.md
+          - exosphere/getting-started.md
+          - exosphere/state-manager-setup.md
+          - exosphere/create-runtime.md
+          - exosphere/register-node.md
+          - exosphere/examples/node-examples/index.md
+          - exosphere/examples/node-examples/basic-nodes.md          
+          - exosphere/create-graph.md
+          - exosphere/trigger-graph.md
+          - exosphere/dashboard.md
+          - exosphere/examples.md
+          - exosphere/concepts.md      
+       
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -119,25 +119,25 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
 
 extra_css:
   - stylesheets/extra.css
 
 nav:
-  - Introduction: index.md
-  - Getting Started: getting-started.md
-  - Satellites:
-    - Overview: satellites/index.md
-    - exospherehost/deepseek-r1-distrill-llama-70b: satellites/exospherehost/deepseek-r1-distrill-llama-70b.md
-    - exospherehost/get-files: satellites/exospherehost/get-files.md
-    - exospherehost/parse-with-docling: satellites/exospherehost/parse-with-docling.md
-    - exospherehost/call-webhook: satellites/exospherehost/call-webhook.md
-    - exospherehost/forward-logs: satellites/exospherehost/forward-logs.md
-    - exospherehost/move-file: satellites/exospherehost/move-file.md
-    - exospherehost/send-alert: satellites/exospherehost/send-alert.md
-    - exospherehost/send-email: satellites/exospherehost/send-email.md
-  - Cluster: cluster.md
-  - Architecture: architecture.md
-  - API Server:
-    - Overview: api-server/index.md
-    - Swagger: api-server/swagger.md
+  - Introduction: exosphere/index.md
+  - Getting Started: exosphere/getting-started.md
+  - State Manager Setup: exosphere/state-manager-setup.md
+  - Concepts: exosphere/concepts.md
+  - Create Runtime: exosphere/create-runtime.md
+  - Register Node: exosphere/register-node.md    
+  - Create Graph: exosphere/create-graph.md
+  - Trigger Graph: exosphere/trigger-graph.md
+  - Dashboard: exosphere/dashboard.md    
+  - Examples:
+    - Overview: exosphere/examples.md      
+    - Node Examples:
+      - Overview: exosphere/examples/node-examples/index.md
+      - Basic Nodes: exosphere/examples/node-examples/basic-nodes.md        
+    - Workflow Examples: exosphere/examples/workflow-examples/index.md    
