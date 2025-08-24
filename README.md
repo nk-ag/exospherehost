@@ -134,6 +134,7 @@ from exospherehost import Runtime
 # EXOSPHERE_STATE_MANAGER_URI=http://localhost:8000
 # EXOSPHERE_API_KEY=your-secret-key
 
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     name="my-runtime",
     namespace="my-project",

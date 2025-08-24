@@ -52,6 +52,7 @@ class SampleNode(BaseNode):
         )
 
 # Initialize the runtime
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="DataProcessor",

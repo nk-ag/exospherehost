@@ -171,6 +171,7 @@ For production workloads, we recommend using the hosted Exosphere platform. This
    ```python
    from exospherehost import Runtime
    
+   # Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
    Runtime(
        namespace="your-namespace",
        name="YourWorkflow",
