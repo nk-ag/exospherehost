@@ -86,7 +86,7 @@ Now go to your Exosphere dashboard to:
 
 Ref: [Dashboard Guide](./exosphere/dashboard.md)
 
-## Example flow
+## Example graph
 
 Now modify the file `main.py` to add more complex processing:
 
@@ -193,7 +193,7 @@ Now go to your Exosphere dashboard to:
 
 Ref: [Dashboard Guide](./exosphere/dashboard.md)
 
-## Example flow
+## Example graph
 
 Now modify the file `main.py` to add more complex processing:
 

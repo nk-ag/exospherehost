@@ -71,9 +71,9 @@ This allows developers to deploy production agents that can scale beautifully to
    ).start()
   ```
 
-- ### Define your first flow
+- ### Define your first graph
   
-  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Graph definitions](https://docs.exosphere.host) to see more examples.
+  Graphs are then described connecting nodes with relationships in json objects. Exosphere runs graph as per defined trigger conditions. See [Graph definitions](https://docs.exosphere.host/exosphere/create-graph/) to see more examples.
   ```json
   {
     "secrets": {},
@@ -99,10 +99,10 @@ This allows developers to deploy production agents that can scale beautifully to
 For comprehensive documentation and guides, check out:
 
 
-- **[Getting Started Guide](https://docs.exosphere.host/exosphere/getting-started)**
-- **[State Manager Setup Guide](docs/docs/exosphere/state-manager-setup.md)**: Step-by-step instructions for running the Exosphere backend locally or in production.
-- **[Dashboard Guide](docs/docs/exosphere/dashboard.md)**: Learn how to set up and use the Exosphere web dashboard.
-- **[Architecture](docs/docs/exosphere/architecture.md)**: Understand core ideas on building graphs like fanout and unite.
+- **[Getting Started Guide](https://docs.exosphere.host/getting-started)**
+- **[State Manager Setup Guide](https://docs.exosphere.host/exosphere/state-manager-setup)**: Step-by-step instructions for running the Exosphere backend locally or in production.
+- **[Dashboard Guide](https://docs.exosphere.host/exosphere/dashboard)**: Learn how to set up and use the Exosphere web dashboard.
+- **[Architecture](https://docs.exosphere.host/exosphere/architecture)**: Understand core ideas on building graphs like fanout and unite.
 
 You can also visit the [official documentation site](https://docs.exosphere.host) for the latest updates and more resources.
 
@@ -119,16 +119,6 @@ We believe that humanity would not have been able to achieve the level of innova
 
 Please feel free to reach out to us at [nivedit@exosphere.host](mailto:nivedit@exosphere.host). Lets push the boundaries of possibilities for humanity together!
 
-
-## Open Source Commitment
-
-We believe that humanity would not have been able to achieve the level of innovation and progress we have today without the support of open source and community, we want to be a part of this movement and support the open source community. In following ways: 
-
-1. We will be open sourcing majority of our codebase for exosphere.host and making it available to the community. We welcome all sort of contributions and feedback from the community and will be happy to collaborate with you.
-2. For whatever the profits which we generate from exosphere.host, we will be donating a portion of it to open source projects and communities. If you have any questions, suggestions or ideas.
-3. We would be further collaborating with various open source student programs to provide with the support and encourage and mentor the next generation of open source contributors.
-
-Please feel free to reach out to us at [nivedit@exosphere.host](mailto:nivedit@exosphere.host). Lets push the boundaries of possibilities for humanity together!
 
 ## Contributing
 
