@@ -1,189 +1,173 @@
 # Exosphere Dashboard
 
-The Exosphere dashboard provides a comprehensive web interface for monitoring, debugging, and managing your workflows. This guide shows you how to access and use the dashboard effectively.
+The Exosphere dashboard provides a comprehensive web interface for monitoring, debugging, and managing your workflows. This guide shows you how to set up and use the dashboard effectively.
 
 ## Dashboard Overview
 
-The Exosphere dashboard is a separate frontend application that connects to your state manager backend and provides:
+The Exosphere dashboard is a modern web application that connects to your state manager backend and provides:
 
 - **Real-time monitoring** of workflow execution
 - **Visual graph representation** of your workflows
 - **State management** and debugging tools
 - **Performance metrics** and analytics
 - **Error tracking** and resolution
+- **Graph template management** and validation
 
-## Running the Dashboard
+## Setup Guide
 
-There are currently two ways to run the Exosphere dashboard frontend:
+### Prerequisites
 
-### Option 1: Docker Container (Recommended)
+Before setting up the dashboard, ensure you have:
+- A running Exosphere state manager (see [State Manager Setup](./state-manager-setup.md))
+- Your API key and namespace from the state manager
+- Docker (for containerized deployment)
 
-The easiest way to run the dashboard is using the pre-built Docker container:
+=== "Docker (Recommended)"
 
-```bash
-docker run -p 3000:3000 ghcr.io/exospherehost/exosphere-dashboard:latest
-```
+    The easiest way to run the dashboard is using the pre-built Docker container. This approach ensures consistent environments and minimal setup.
 
-This will start the dashboard and make it available at:
-- **Local**: http://localhost:3000
-- **Network**: http://0.0.0.0:3000
+    #### Prerequisites
 
-The container will automatically start and be ready in a few seconds.
+    - Docker installed
 
-### Option 2: Local Development
+    #### Setup Steps
 
-For development or customization, you can run the dashboard locally:
+    1. **Pull the latest dashboard image and run**:
+       ```bash
+       # Pull the latest dashboard image
+       docker pull ghcr.io/exospherehost/exosphere-dashboard:latest
 
-```bash
-# Clone the state-manager-frontend repository
-git clone <repository-url>
-cd state-manager-frontend
+       # Run the dashboard container
+       docker run -d \
+         --name exosphere-dashboard \
+         -p 3000:3000 \
+         -e NEXT_PUBLIC_STATE_MANAGER_URL="http://localhost:8000" \
+         -e NEXT_PUBLIC_API_KEY="your-api-key" \
+         -e NEXT_PUBLIC_NAMESPACE="your-namespace" \
+         ghcr.io/exospherehost/exosphere-dashboard:latest
+       ```
 
-# Install dependencies
-npm install
+    2. **Verify the service is running**:
+       ```bash
+       # Check container status
+       docker ps
+       
+       # Check logs
+       docker logs exosphere-dashboard
+       
+       # Test the dashboard
+       curl http://localhost:3000
+       ```
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your configuration
+    The dashboard will be available at `http://localhost:3000`
 
-# Start the development server
-npm run dev
-```
+    #### Required Environment Variables
 
-The dashboard will be available at `http://localhost:3000`
+    | Variable | Description | Required | Default |
+    |----------|-------------|----------|---------|
+    | `NEXT_PUBLIC_STATE_MANAGER_URL` | State manager API endpoint | Yes | - |
+    | `NEXT_PUBLIC_API_KEY` | API key for authentication | Yes | - |
+    | `NEXT_PUBLIC_NAMESPACE` | Default namespace | Yes | - |
+    
+=== "Local Development"
 
-### Option 3: Web Portal (Coming Soon)
+    For development or customization, you can run the dashboard locally using the source code.
 
-A third option will be available soon - a hosted web portal where you can view your running states in production without needing to run anything locally.
+    #### Prerequisites
 
-## Dashboard Features
+    - Node.js 18 or higher
+    - npm or yarn package manager
+    - Git
 
-The Exosphere dashboard provides the following key features:
+    #### Setup Steps
 
-### 1. Graph Templates Management
+    1. **Clone the repository**:
+       ```bash
+       git clone https://github.com/exospherehost/exospherehost.git
+       cd exospherehost/dashboard
+       ```
 
-- **View all graph templates** in your namespace
-- **Visual graph representation** with node connections
-- **Graph validation** and status checking
-- **Template editing** capabilities
+    2. **Install dependencies**:
+       ```bash
+       npm install
+       ```
 
-### 2. Registered Nodes Monitoring
+    3. **Set up environment variables**:
+       ```bash
+       cp .env.example .env
+       # Edit .env with your configuration
+       ```
 
-- **List all registered nodes** in your namespace
-- **Node health status** and availability
-- **Node schemas** (inputs, outputs, secrets)
-- **Node performance** metrics
+    4. **Start the development server**:
+       ```bash
+       npm run dev
+       ```
 
-### 3. Execution Monitoring
+    The dashboard will be available at `http://localhost:3000`
 
-- **Real-time workflow execution** tracking
-- **State transitions** visualization
-- **Execution progress** indicators
-- **Run history** and status
+    #### Environment Variables
 
-### 4. State Management
+    Create a `.env` file in the dashboard directory with these variables:
 
-- **Current states** for active runs
-- **State history** for completed runs
-- **Error details** and debugging information
-- **State retry** capabilities
+    ```bash
+    # State manager API endpoint
+    NEXT_PUBLIC_STATE_MANAGER_URL=http://localhost:8000
 
-### 5. API Integration
+    # API key for authentication
+    NEXT_PUBLIC_API_KEY=your-api-key
 
-- **REST API endpoints** for programmatic access
-- **Authentication** via API keys
-- **Real-time updates** via WebSocket connections
+    # Default namespace
+    NEXT_PUBLIC_NAMESPACE=your-namespace
+    ```
 
-## Connecting to Your State Manager
+## Dashboard Interface
 
-The dashboard connects to your state manager backend. Make sure your state manager is running and accessible:
+The Exosphere dashboard features a clean, modern interface with three main sections accessible via the navigation tabs at the top.
 
-> **Note**: For detailed setup instructions, see **[State Manager Setup](./state-manager-setup.md)**.
+![Namespace Overview](../assets/DashboardSS-1.png)
 
-### Local State Manager
+View registered nodes, and graph templates on a namespace
 
-```bash
-# Start the state manager
-cd state-manager
-python run.py
-```
+![Runs Overview](../assets/DashboardSS-2.png)
 
-The state manager will be available at `http://localhost:8000`
-
-### Production State Manager
-
-In production, your state manager is typically available at:
-`https://your-state-manager.exosphere.host`
-
-## Configuration
-
-### Environment Variables
-
-Configure the dashboard by setting these environment variables:
-
-```bash
-# State manager API endpoint
-NEXT_PUBLIC_STATE_MANAGER_URL=http://localhost:8000
-
-# API key for authentication
-NEXT_PUBLIC_API_KEY=your-api-key
-
-# Namespace
-NEXT_PUBLIC_NAMESPACE=your-namespace
-
-# Other configuration options
-NEXT_PUBLIC_REFRESH_INTERVAL=5000
-NEXT_PUBLIC_ENABLE_WEBSOCKET=true
-```
-
-### API Key Authentication
-
-The dashboard uses the same API key authentication as the state manager:
-
-```bash
-# Set your API key
-export EXOSPHERE_KEY="your-api-key"
-```
+![Runs Overview](../assets/DashboardSS-3.jpg)
+View graph runs and debug each node that was created.
 
 ## Using the Dashboard
 
-### Viewing Graph Templates
+1. **Configure Connection**:
+   
+      - Set your namespace in the header
+      - Enter your API key
+      - Ensure your state manager is running
 
-1. Navigate to the **Graphs** section
-2. Select a graph template to view its details
-3. The visual representation shows:
-   - Nodes as connected boxes
-   - Data flow direction with arrows
-   - Triggers as entry points
-   - Node relationships and dependencies
+2. **Explore Overview**:
 
-### Monitoring Execution
+      - Review registered nodes and their capabilities
+      - Check graph template status and validation
+      - Monitor namespace statistics
 
-1. Go to the **Executions** section
-2. Find your active run by run ID or search criteria
-3. View the execution status:
-   - **Pending**: States waiting to be executed
-   - **Running**: Currently executing states
-   - **Completed**: Successfully executed states
-   - **Failed**: States that encountered errors
+3. **Manage Templates**:
 
-### Debugging Failed Executions
+      - View existing graph templates
+      - Create new templates using the builder
+      - Validate template configurations
 
-1. Identify failed states in the execution view
-2. Click on a failed state to view details:
-   - **Error message** and stack trace
-   - **Input data** that caused the failure
-   - **Node configuration** and secrets used
-   - **Execution logs** and timestamps
+4. **Monitor Execution**:
 
-3. Use the debugging tools:
-   - **Retry state** with the same inputs
-   - **Modify inputs** and retry
-   - **View related states** in the workflow
+      - Select specific run IDs to track
+      - View real-time execution progress
+      - Debug failed states and errors
 
+### Support
+
+For additional help:
+- Check the [State Manager Setup](./state-manager-setup.md) guide
+- Review [Concepts](./concepts.md) for workflow understanding
+- See [Examples](./examples.md) for usage patterns
 
 ## Next Steps
 
-- **[Examples](./examples.md)** - See real-world dashboard usage examples
+- **[Examples](./examples.md)** - See real-world usage examples
 - **[Concepts](./concepts.md)** - Learn about fanout, units, inputs, outputs, and secrets
-- **[API Reference](./api-reference.md)** - Complete API documentation
+- **[State Manager Setup](./state-manager-setup.md)** - Complete backend setup guide

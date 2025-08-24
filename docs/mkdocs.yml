@@ -100,15 +100,15 @@ plugins:
           - exosphere/index.md
           - exosphere/getting-started.md
           - exosphere/state-manager-setup.md
-          - exosphere/create-runtime.md
           - exosphere/register-node.md
-          - exosphere/examples/node-examples/index.md
-          - exosphere/examples/node-examples/basic-nodes.md          
+          - exosphere/create-runtime.md
           - exosphere/create-graph.md
           - exosphere/trigger-graph.md
           - exosphere/dashboard.md
+          - exosphere/concepts.md 
           - exosphere/examples.md
-          - exosphere/concepts.md      
+          - exosphere/examples/node-examples/index.md
+          - exosphere/examples/node-examples/basic-nodes.md              
        
 
 markdown_extensions:
@@ -119,6 +119,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - admonition
+  - pymdownx.details
   - pymdownx.tabbed:
       alternate_style: true
 
@@ -129,11 +131,11 @@ nav:
   - Introduction: exosphere/index.md
   - Getting Started: exosphere/getting-started.md
   - State Manager Setup: exosphere/state-manager-setup.md
-  - Concepts: exosphere/concepts.md
+  - Register Node: exosphere/register-node.md 
   - Create Runtime: exosphere/create-runtime.md
-  - Register Node: exosphere/register-node.md    
   - Create Graph: exosphere/create-graph.md
   - Trigger Graph: exosphere/trigger-graph.md
+  - Concepts: exosphere/concepts.md
   - Dashboard: exosphere/dashboard.md    
   - Examples:
     - Overview: exosphere/examples.md      

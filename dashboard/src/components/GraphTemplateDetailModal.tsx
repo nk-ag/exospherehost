@@ -139,7 +139,7 @@ export const GraphTemplateDetailModal: React.FC<GraphTemplateDetailModalProps> =
     <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-500 to-[#031035] p-6 text-white">
+        <div className="bg-[#031035] p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">Graph Template</h2>

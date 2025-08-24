@@ -2,8 +2,6 @@
 
 ## Installation
 
-### Quick Install
-
 ```bash
 uv add exospherehost
 ```
@@ -24,6 +22,7 @@ Set up your environment variables for authentication:
     export EXOSPHERE_KEY="your-api-key"
     ```
 
+Refer: [Getting State Manager URI](./state-manager-setup.md)
 
 ## Overview
 
@@ -35,7 +34,7 @@ Nodes are the building blocks of your workflows. Each node:
 
 - Defines input/output schemas using Pydantic models
 - Implements an `execute` method for processing logic
-- Can be connected to other nodes to form workflows
+- Can be connected to other nodes to form **workflows**
 - Automatically handles state persistence
 
 ### 2. Runtime
