@@ -23,11 +23,10 @@ The Exosphere state manager is the core backend service that handles workflow ex
        docker run -d \
          --name exosphere-state-manager \
          -p 8000:8000 \
-         -e MONGODB_URI="mongodb://localhost:27017/exosphere" \
-         -e DATABASE_NAME="exosphere" \
-         -e API_KEY="your-secret-api-key" \
-         -e NAMESPACE="your-namespace" \
-         -e ENCRYPTION_KEY="your-32-character-encryption-key" \
+         -e MONGO_URI="mongodb://admin:password@mongodb:27017/exosphere?authSource=admin" \
+         -e MONGO_DATABASE_NAME="exosphere" \
+         -e STATE_MANAGER_SECRET="exosphere@123" \
+         -e SECRETS_ENCRYPTION_KEY="YTzpUlBGLSwm-3yKJRJTZnb0_aQuQQHyz64s8qAERVU=" \
          ghcr.io/exospherehost/state-manager:latest
        ```
 
@@ -49,11 +48,10 @@ The Exosphere state manager is the core backend service that handles workflow ex
 
     | Variable | Description | Required |
     |----------|-------------|----------|
-    | `MONGODB_URI` | MongoDB connection string | Yes |
-    | `DATABASE_NAME` | Database name | Yes |
-    | `API_KEY` | Secret API key for authentication | Yes |
-    | `NAMESPACE` | Default namespace for operations | Yes |
-    | `ENCRYPTION_KEY` | 32-character key for data encryption | Yes |
+    | `MONGO_URI` | MongoDB connection string | Yes |
+    | `MONGO_DATABASE_NAME` | Database name | Yes |
+    | `STATE_MANAGER_SECRET` | Secret API key for authentication | Yes |
+    | `SECRETS_ENCRYPTION_KEY` | Base64-encoded key for data encryption | Yes |
 
 === "Local Development"
 
@@ -80,11 +78,10 @@ The Exosphere state manager is the core backend service that handles workflow ex
 
     3. **Set up environment variables**:
        ```bash
-       export MONGODB_URI="mongodb://localhost:27017/exosphere"
-       export DATABASE_NAME="exosphere"
-       export API_KEY="your-secret-api-key"
-       export NAMESPACE="your-namespace"
-       export ENCRYPTION_KEY="your-32-character-encryption-key"
+               export MONGO_URI="your-mongodb-connection-string"
+        export MONGO_DATABASE_NAME="your-database-name"
+        export STATE_MANAGER_SECRET="your-secret-key"
+        export SECRETS_ENCRYPTION_KEY="your-base64-encoded-encryption-key"
        ```
 
     4. **Run the state manager**:
@@ -145,12 +142,11 @@ The Exosphere state manager is the core backend service that handles workflow ex
            image: ghcr.io/exospherehost/state-manager:latest
            ports:
              - "8000:8000"
-           environment:
-             - MONGODB_URI=mongodb://your-mongodb-cluster:27017/exosphere
-             - DATABASE_NAME=exosphere
-             - API_KEY=${API_KEY}
-             - NAMESPACE=${NAMESPACE}
-             - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+                       environment:
+              - MONGO_URI=${MONGO_URI}
+              - MONGO_DATABASE_NAME=${MONGO_DATABASE_NAME}
+              - STATE_MANAGER_SECRET=${STATE_MANAGER_SECRET}
+              - SECRETS_ENCRYPTION_KEY=${SECRETS_ENCRYPTION_KEY}
            deploy:
              replicas: 3
              update_config:
@@ -167,12 +163,12 @@ The Exosphere state manager is the core backend service that handles workflow ex
 
     ### Kubernetes Deployment
 
-    1. **Create namespace**:
+    3. **Create namespace**:
        ```bash
        kubectl create namespace exosphere
        ```
 
-    2. **Create ConfigMap for configuration**:
+    4. **Create ConfigMap for configuration**:
        ```yaml
        apiVersion: v1
        kind: ConfigMap
@@ -180,13 +176,12 @@ The Exosphere state manager is the core backend service that handles workflow ex
          name: state-manager-config
          namespace: exosphere
        data:
-         MONGODB_URI: "mongodb://your-mongodb-cluster:27017/exosphere"
-         DATABASE_NAME: "exosphere"
-         NAMESPACE: "your-namespace"
+                   MONGO_URI: "your-mongodb-connection-string"
+          MONGO_DATABASE_NAME: "your-database-name"
          LOG_LEVEL: "INFO"
        ```
 
-    3. **Create Secret for sensitive data**:
+    5. **Create Secret for sensitive data**:
        ```yaml
        apiVersion: v1
        kind: Secret
@@ -195,11 +190,11 @@ The Exosphere state manager is the core backend service that handles workflow ex
          namespace: exosphere
        type: Opaque
        data:
-         API_KEY: <base64-encoded-api-key>
-         ENCRYPTION_KEY: <base64-encoded-encryption-key>
+         STATE_MANAGER_SECRET: <base64-encoded-state-manager-secret>
+         SECRETS_ENCRYPTION_KEY: <base64-encoded-secrets-encryption-key>
        ```
 
-    4. **Deploy the state manager**:
+    6. **Deploy the state manager**:
        ```bash
        kubectl apply -f k8s/state-manager-deployment.yaml
        kubectl apply -f k8s/state-manager-service.yaml
@@ -212,15 +207,11 @@ The Exosphere state manager is the core backend service that handles workflow ex
 
 | Variable | Description | Required | Default |
 |----------|-------------|----------|---------|
-| `MONGODB_URI` | MongoDB connection string | Yes | - |
-| `DATABASE_NAME` | Database name | Yes | `exosphere` |
-| `API_KEY` | Secret API key for authentication | Yes | - |
-| `NAMESPACE` | Default namespace for operations | Yes | - |
-| `ENCRYPTION_KEY` | 32-character key for data encryption | Yes | - |
+| `MONGO_URI` | MongoDB connection string | Yes | - |
+| `MONGO_DATABASE_NAME` | Database name | Yes | `exosphere` |
+| `STATE_MANAGER_SECRET` | Secret API key for authentication | Yes | - |
+| `SECRETS_ENCRYPTION_KEY` | Base64-encoded key for data encryption | Yes | - |
 | `LOG_LEVEL` | Logging level (DEBUG, INFO, WARNING, ERROR) | No | `INFO` |
-| `WORKERS` | Number of worker processes | No | CPU count |
-| `HOST` | Host to bind to | No | `0.0.0.0` |
-| `PORT` | Port to bind to | No | `8000` |
 
 ## Monitoring and Health Checks
 
