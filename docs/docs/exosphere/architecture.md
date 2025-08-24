@@ -18,15 +18,14 @@ Exosphere is built around a **state-based execution model** where workflows are 
 Each state in Exosphere follows a well-defined lifecycle:
 
 ```
-CREATED → QUEUED → EXECUTING → EXECUTED/ERRORED → SUCCESS
+CREATED → QUEUED → EXECUTED/ERRORED → SUCCESS
 ```
 
 1. **CREATED**: State is initialized with inputs and dependencies
 2. **QUEUED**: State is ready for execution and waiting for a runtime
-3. **EXECUTING**: State is currently being processed by a runtime
-4. **EXECUTED**: State completed successfully with outputs
-5. **ERRORED**: State failed during execution
-6. **SUCCESS**: State and all its dependencies are complete
+3. **EXECUTED**: State completed successfully with outputs
+4. **ERRORED**: State failed during execution
+5. **SUCCESS**: State and all its dependencies are complete
 
 
 ## Fanout Mechanism

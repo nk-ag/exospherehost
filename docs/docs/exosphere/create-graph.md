@@ -134,12 +134,12 @@ The recommended way to create graph templates is using the Exosphere Python SDK,
 ```python hl_lines="5-9 23-27"
 from exospherehost import StateManager
 
-async def create_flow_template():
+async def create_graph_template():
     # Initialize the State Manager
     state_manager = StateManager(
         namespace="MyProject",
-        state_manager_uri=STATE_MANAGER_URI,
-        key=STATE_MANAGER_SECRET
+        state_manager_uri=EXOSPHERE_STATE_MANAGER_URI,
+        key=EXOSPHERE_API_KEY
     )
     
     # Define the graph nodes
@@ -168,7 +168,7 @@ async def create_flow_template():
 
 # Run the function
 import asyncio
-asyncio.run(create_flow_template())
+asyncio.run(create_graph_template())
 ```
 ## Input Mapping Patterns
 
@@ -225,8 +225,8 @@ The state manager validates your graph template:
     async def get_graph_template():
         state_manager = StateManager(
             namespace="MyProject",
-            state_manager_uri=STATE_MANAGER_URI,
-            key=STATE_MANAGER_SECRET
+            state_manager_uri=EXOSPHERE_STATE_MANAGER_URI,
+            key=EXOSPHERE_API_KEY
         )
         
         try:
@@ -249,8 +249,8 @@ The state manager validates your graph template:
     async def update_graph_template():
         state_manager = StateManager(
             namespace="MyProject",
-            state_manager_uri=STATE_MANAGER_URI,
-            key=STATE_MANAGER_SECRET
+            state_manager_uri=EXOSPHERE_STATE_MANAGER_URI,
+            key=EXOSPHERE_API_KEY
         )
         
         # Updated graph nodes

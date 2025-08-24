@@ -141,7 +141,7 @@ The state manager uri and key would be configured accordingly while setting up n
        
        services:
          state-manager:
-           image: ghcr.io/exospherehost/state-manager:latest
+           image: ghcr.io/exospherehost/exosphere-state-manager:latest
            ports:
              - "8000:8000"
                        environment:

@@ -56,8 +56,8 @@ The `Runtime` class is the core component that manages the execution environment
         namespace="MyProject",
         name="MyRuntime",
         nodes=[MyNode],
-        state_manager_uri=STATE_MANAGER_URI,
-        key=STATE_MANAGER_SECRET,
+        state_manager_uri=EXOSPHERE_STATE_MANAGER_URI,
+        key=EXOSPHERE_API_KEY,
         batch_size=32,
         workers=8,
         poll_interval=2
@@ -81,7 +81,7 @@ The `Runtime` class is the core component that manages the execution environment
 - **`state_manager_uri`** (str | None): URI of the state manager service. If not provided, uses `EXOSPHERE_URI` environment variable.
 - **`key`** (str | None): API key for authentication. If not provided, uses `EXOSPHERE_KEY` environment variable.
 - **`batch_size`** (int): Number of states to fetch per poll. Defaults to 16.
-- **`workers`** (int): Number of concurrent worker tasks. Defaults to 4.
+- **`workers`** (int): Number of concurrent worker threads. Defaults to 4.
 - **`state_manager_version`** (str): State manager API version. Defaults to "v0".
 - **`poll_interval`** (int): Seconds between polling for new states. Defaults to 1.
 
@@ -90,8 +90,8 @@ The `Runtime` class is the core component that manages the execution environment
 Create a `.env` file in your project root:
 
 ```bash
-STATE_MANAGER_URI=https://your-state-manager.exosphere.host
-STATE_MANAGER_SECRET=your-api-key
+EXOSPHERE_STATE_MANAGER_URI=https://your-state-manager.exosphere.host
+EXOSPHERE_API_KEY=your-api-key
 ```
 
 Then load it in your code:
@@ -119,16 +119,7 @@ runtime = Runtime(
 )
 ```
 
-### 2. Registration
-
-Nodes are automatically registered with the state manager when the runtime starts:
-
-```python
-# This happens automatically when you call start()
-await runtime._register()
-```
-
-### 3. Execution
+### 2. Execution
 
 The runtime starts polling for states and executing nodes:
 
@@ -260,9 +251,9 @@ spec:
       - name: runtime
         image: your-registry/exosphere-runtime:latest
         env:
-        - name: STATE_MANAGER_URI
+        - name: EXOSPHERE_STATE_MANAGER_URI
           value: "https://your-state-manager.exosphere.host"
-        - name: STATE_MANAGER_SECRET
+        - name: EXOSPHERE_API_KEY
           valueFrom:
             secretKeyRef:
               name: exosphere-secrets
