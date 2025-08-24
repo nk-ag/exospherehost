@@ -68,6 +68,9 @@ class Secrets(BaseModel):
 The runtime automatically validates your nodes:
 
 ```python hl_lines="19"
+from exospherehost import BaseNode
+from pydantic import BaseModel
+
 # ✅ Valid node
 class ValidNode(BaseNode):
     class Inputs(BaseModel):
@@ -103,7 +106,7 @@ class InvalidNode(BaseNode):
 Nodes are automatically registered when you start your runtime:
 
 ```python hl_lines="14"
-from exospherehost import Runtime
+from exospherehost import Runtime, BaseNode
 
 # Create your nodes
 class Node1(BaseNode):

@@ -78,8 +78,8 @@ The `Runtime` class is the core component that manages the execution environment
 
 ### Optional Parameters
 
-- **`state_manager_uri`** (str | None): URI of the state manager service. If not provided, uses `EXOSPHERE_URI` environment variable.
-- **`key`** (str | None): API key for authentication. If not provided, uses `EXOSPHERE_KEY` environment variable.
+- **`state_manager_uri`** (str | None): URI of the state manager service. If not provided, uses `EXOSPHERE_STATE_MANAGER_URI` environment variable.
+- **`key`** (str | None): API key for authentication. If not provided, uses `EXOSPHERE_API_KEY` environment variable.
 - **`batch_size`** (int): Number of states to fetch per poll. Defaults to 16.
 - **`workers`** (int): Number of concurrent worker threads. Defaults to 4.
 - **`state_manager_version`** (str): State manager API version. Defaults to "v0".

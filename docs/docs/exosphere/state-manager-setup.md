@@ -118,7 +118,7 @@ The state manager uri and key would be configured accordingly while setting up n
            name="YourWorkflow",
            nodes=[YourNodes],
            state_manager_uri="https://api.exosphere.host",
-           api_key="your-production-api-key"
+           key="your-production-api-key"
        ).start()
        ```
 

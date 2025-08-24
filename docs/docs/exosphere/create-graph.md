@@ -103,7 +103,7 @@ Define the nodes in your workflow with their inputs and next nodes:
 
 - **`node_name`**: The class name of the node (must be registered)
 - **`namespace`**: The namespace where the node is registered
-- **`identifier`**: Unique identifier for the node in this flow
+- **`identifier`**: Unique identifier for the node in this graph
 - **`inputs`**: Input values for the node
 - **`next_nodes`**: Array of node identifiers that this node connects to
 
@@ -124,7 +124,7 @@ Use the `${{ ... }}` syntax to map outputs from previous nodes:
 **Mapping Syntax:**
 
 - **`${{ node_identifier.outputs.field_name }}`**: Maps output from a specific node
-- **`initial`**: Static value provided when the flow is triggered
+- **`initial`**: Static value provided when the graph is triggered
 - **Direct values**: String values. In v1, numbers/booleans must be string-encoded (e.g., "42", "true").
 ## Creating Graph Templates
 
