@@ -97,8 +97,6 @@ plugins:
           - index.md
           - getting-started.md
         Exosphere:
-          - exosphere/index.md
-          - exosphere/getting-started.md
           - exosphere/state-manager-setup.md
           - exosphere/register-node.md
           - exosphere/create-runtime.md
@@ -116,7 +114,7 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - admonition
-  - pymdownx.details
+  - pymdownx.details  
   - pymdownx.tabbed:
       alternate_style: true
 
@@ -124,8 +122,8 @@ extra_css:
   - stylesheets/extra.css
 
 nav:
-  - Introduction: exosphere/index.md  
-  - Getting Started: exosphere/getting-started.md
+  - Introduction: index.md  
+  - Getting Started: getting-started.md
   - State Manager Setup: exosphere/state-manager-setup.md
   - Register Node: exosphere/register-node.md 
   - Create Runtime: exosphere/create-runtime.md

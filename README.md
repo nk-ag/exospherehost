@@ -106,8 +106,30 @@ You can also visit the [official documentation site](https://docs.exosphere.host
 
 
 
+
+## Open Source Commitment
+
+We believe that humanity would not have been able to achieve the level of innovation and progress we have today without the support of open source and community, we want to be a part of this movement and support the open source community. In following ways: 
+
+1. We will be open sourcing majority of our codebase for exosphere.host and making it available to the community. We welcome all sort of contributions and feedback from the community and will be happy to collaborate with you.
+2. For whatever the profits which we generate from exosphere.host, we will be donating a portion of it to open source projects and communities. If you have any questions, suggestions or ideas.
+3. We would be further collaborating with various open source student programs to provide with the support and encourage and mentor the next generation of open source contributors.
+
+Please feel free to reach out to us at [nivedit@exosphere.host](mailto:nivedit@exosphere.host). Lets push the boundaries of possibilities for humanity together!
+
 ## Contributing
 
-We welcome community contributions. For guidelines, refer to our [CONTRIBUTING.md](/CONTRIBUTING.md). Further we are thankful to all the contributors helping us to simplify infrastructure starting with the process of building and deploying AI workflows and agents.
+We welcome community contributions. For guidelines, refer to our [CONTRIBUTING.md](https://github.com/exospherehost/exospherehost/blob/main/CONTRIBUTING.md).
 
-Join our Discord: https://discord.gg/msUHahrp for active community discussions. We have weekly community huddle to talk up feature discussions, feel free to become a part of the conversation.
+![exosphere.host Contributors](https://contrib.rocks/image?repo=exospherehost/exospherehost)
+
+## Star History
+
+<a href="https://www.star-history.com/#exospherehost/exospherehost&Date" target="_blank">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=exospherehost/exospherehost&type=Date" />
+ </picture>
+</a>
+
