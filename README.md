@@ -62,7 +62,7 @@ This allows developers to deploy production agents that can scale beautifully to
 
 - ### Define your first flow
   
-  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Flow defintions](docs.exosphere.host) to see more examples.
+  Flows are then described connecting nodes with relationships in json objects. Exosphere runs flows as per defined trigger conditions. See [Flow defintions](https://docs.exosphere.host) to see more examples.
   ```json
   {
     "secrets": {},
