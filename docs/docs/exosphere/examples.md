@@ -294,6 +294,7 @@ from nodes.list_s3_files import ListS3FilesNode
 from nodes.download_s3_file import DownloadS3FileNode
 
 # Initialize the cloud storage runtime
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     name="cloud-storage-runtime",
     namespace="exospherehost",

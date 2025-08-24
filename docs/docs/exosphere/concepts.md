@@ -555,6 +555,7 @@ Add more runtime instances to handle increased load:
 
 ```python
 # Multiple runtime instances can process the same workflow
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(namespace="MyProject", name="Runtime-1", nodes=[MyNode]).start()
 Runtime(namespace="MyProject", name="Runtime-2", nodes=[MyNode]).start()
 ```

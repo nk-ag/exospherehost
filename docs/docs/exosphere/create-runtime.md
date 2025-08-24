@@ -24,6 +24,7 @@ The `Runtime` class is the core component that manages the execution environment
             return self.Outputs(result=f"Processed: {self.inputs.data}")
 
     # Create and start the runtime
+    # Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
     Runtime(
         namespace="MyProject",
         name="MyRuntime",
@@ -52,6 +53,7 @@ The `Runtime` class is the core component that manages the execution environment
             return self.Outputs(result=f"Processed: {self.inputs.data}")
 
     # Create runtime with custom configuration
+    # Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
     runtime = Runtime(
         namespace="MyProject",
         name="MyRuntime",
@@ -112,6 +114,7 @@ from exospherehost import Runtime, BaseNode
 The runtime validates configuration and node classes:
 
 ```python
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 runtime = Runtime(
     namespace="MyProject",
     name="MyRuntime",
@@ -151,6 +154,7 @@ class DataValidatorNode(BaseNode):
    ...
 
 # Register both nodes
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="DataPipeline",
@@ -167,6 +171,7 @@ Choose appropriate values based on your workload:
 
 ```python hl_lines="4 13"
 # For CPU-intensive tasks
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="CPU",
@@ -176,6 +181,7 @@ Runtime(
 ).start()
 
 # For GPU-intensive tasks
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="GPU",
@@ -191,6 +197,7 @@ Adjust based on your latency requirements:
 
 ```python hl_lines="6 14"
 # For real-time processing
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="RealTime",
@@ -199,6 +206,7 @@ Runtime(
 ).start()
 
 # For batch processing
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="Batch",

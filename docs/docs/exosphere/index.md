@@ -46,6 +46,7 @@ class HelloWorldNode(BaseNode):
         )
 
 # Initialize the runtime
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="HelloWorld",
@@ -118,6 +119,7 @@ class DataProcessorNode(BaseNode):
         )
 
 # Initialize the runtime
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="DataProcessor",

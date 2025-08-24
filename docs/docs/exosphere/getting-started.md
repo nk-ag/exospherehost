@@ -12,14 +12,14 @@ Set up your environment variables for authentication:
 === ".env File"
 
     ```bash
-    EXOSPHERE_URI=your-state-manager-uri
-    EXOSPHERE_KEY=your-api-key
+    EXOSPHERE_STATE_MANAGER_URI=your-state-manager-uri
+    EXOSPHERE_API_KEY=your-api-key
     ```
 === "Environment Variables"
 
     ```bash
-    export EXOSPHERE_URI="your-state-manager-uri"
-    export EXOSPHERE_KEY="your-api-key"
+    export EXOSPHERE_STATE_MANAGER_URI="your-state-manager-uri"
+    export EXOSPHERE_API_KEY="your-api-key"
     ```
 
 Refer: [Getting State Manager URI](./state-manager-setup.md)
@@ -79,6 +79,7 @@ class SampleNode(BaseNode):
         )
 
 # Initialize the runtime
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="DataProcessor",
@@ -108,13 +109,13 @@ Now that you have the basics, explore:
 ## Architecture
 
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Your Nodes    │    │     Runtime      │    │ State Manager   │
-│                 │◄──►│                  │◄──►│                 │
-│ - Inputs        │    │ - Registration   │    │ - Orchestration │
-│ - Outputs       │    │ - Execution      │    │ - State Mgmt    │
-│ - Secrets       │    │ - Error Handling │    │ - Dashboard     │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+-------------------     --------------------     --------------------
+│   Your Nodes    │ <-> │     Runtime      │ <-> │  State Manager   │
+│                 │     │                  │     │                  │
+│ - Inputs        │     │ - Registration   │     │ - Orchestration  │
+│ - Outputs       │     │ - Execution      │     │ - State Mgmt     │
+│ - Secrets       │     │ - Error Handling │     │ - Dashboard      │
+-------------------     --------------------     --------------------
 ```
 
 ## Data Model (v1)

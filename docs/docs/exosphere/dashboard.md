@@ -41,7 +41,7 @@ Before setting up the dashboard, ensure you have:
        docker run -d \
          --name exosphere-dashboard \
          -p 3000:3000 \
-         -e NEXT_PUBLIC_STATE_MANAGER_URL="http://localhost:8000" \
+         -e NEXT_PUBLIC_EXOSPHERE_STATE_MANAGER_URL="http://localhost:8000" \
          -e NEXT_PUBLIC_API_KEY="your-api-key" \
          -e NEXT_PUBLIC_NAMESPACE="your-namespace" \
          ghcr.io/exospherehost/exosphere-dashboard:latest
@@ -65,7 +65,7 @@ Before setting up the dashboard, ensure you have:
 
     | Variable | Description | Required | Default |
     |----------|-------------|----------|---------|
-    | `NEXT_PUBLIC_STATE_MANAGER_URL` | State manager API endpoint | Yes | - |
+    | `NEXT_PUBLIC_EXOSPHERE_STATE_MANAGER_URL` | State manager API endpoint | Yes | - |
     | `NEXT_PUBLIC_API_KEY` | API key for authentication | Yes | - |
     | `NEXT_PUBLIC_NAMESPACE` | Default namespace | Yes | - |
     
@@ -111,7 +111,7 @@ Before setting up the dashboard, ensure you have:
 
     ```bash
     # State manager API endpoint
-    NEXT_PUBLIC_STATE_MANAGER_URL=http://localhost:8000
+    NEXT_PUBLIC_EXOSPHERE_STATE_MANAGER_URL=http://localhost:8000
 
     # API key for authentication
     NEXT_PUBLIC_API_KEY=your-api-key

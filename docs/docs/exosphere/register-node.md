@@ -122,6 +122,7 @@ class Node2(BaseNode):
     # ... node implementation
 
 # Register nodes with runtime
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="MyProject",
     name="MyRuntime",
@@ -137,6 +138,7 @@ Organise nodes to a namespace to re-use them across flows in that namespace
 
 ```python hl_lines="3 10"
 # Development namespace
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="dev",
     name="MyRuntime",
@@ -144,6 +146,7 @@ Runtime(
 ).start()
 
 # Production namespace
+# Note: Ensure EXOSPHERE_STATE_MANAGER_URI and EXOSPHERE_API_KEY environment variables are set
 Runtime(
     namespace="prod",
     name="MyRuntime",
