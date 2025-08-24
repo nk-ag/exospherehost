@@ -125,8 +125,7 @@ Use the `${{ ... }}` syntax to map outputs from previous nodes:
 
 - **`${{ node_identifier.outputs.field_name }}`**: Maps output from a specific node
 - **`initial`**: Static value provided when the flow is triggered
-- **Direct values**: String, number, or boolean values
-
+- **Direct values**: String values. In v1, numbers/booleans must be string-encoded (e.g., "42", "true").
 ## Creating Graph Templates
 
 The recommended way to create graph templates is using the Exosphere Python SDK, which provides a clean interface to the State Manager API.
