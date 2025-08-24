@@ -105,11 +105,7 @@ plugins:
           - exosphere/create-graph.md
           - exosphere/trigger-graph.md
           - exosphere/dashboard.md
-          - exosphere/concepts.md 
-          - exosphere/examples.md
-          - exosphere/examples/node-examples/index.md
-          - exosphere/examples/node-examples/basic-nodes.md              
-       
+          - exosphere/architecture.md       
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -128,18 +124,12 @@ extra_css:
   - stylesheets/extra.css
 
 nav:
-  - Introduction: exosphere/index.md
+  - Introduction: exosphere/index.md  
   - Getting Started: exosphere/getting-started.md
   - State Manager Setup: exosphere/state-manager-setup.md
   - Register Node: exosphere/register-node.md 
   - Create Runtime: exosphere/create-runtime.md
   - Create Graph: exosphere/create-graph.md
-  - Trigger Graph: exosphere/trigger-graph.md
-  - Concepts: exosphere/concepts.md
-  - Dashboard: exosphere/dashboard.md    
-  - Examples:
-    - Overview: exosphere/examples.md      
-    - Node Examples:
-      - Overview: exosphere/examples/node-examples/index.md
-      - Basic Nodes: exosphere/examples/node-examples/basic-nodes.md        
-    - Workflow Examples: exosphere/examples/workflow-examples/index.md    
+  - Trigger Graph: exosphere/trigger-graph.md  
+  - Dashboard: exosphere/dashboard.md
+  - Architecture: exosphere/architecture.md
