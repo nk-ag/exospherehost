@@ -234,7 +234,7 @@ Response: 200
 
 - **Documentation**: [docs.exosphere.host](https://docs.exosphere.host)
 - **GitHub Issues**: [github.com/exospherehost/exospherehost/issues](https://github.com/exospherehost/exospherehost/issues)
-- **Discord Community**: [discord.gg/exosphere](https://discord.gg/exosphere)
+- **Discord Community**: [discord.gg/exosphere](https://discord.com/invite/zT92CAgvkj)
 - **Email Support**: [support@exosphere.host](mailto:support@exosphere.host)
 
 ## Next Steps
