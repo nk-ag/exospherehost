@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { darkerGrotesque, pattanakarn } from '../lib/fonts';
 import "./globals.css";
 import { GoogleAnalytics } from '@next/third-parties/google'
-import RB2BLoader from '../components/RB2BLoader';
 
 export const metadata: Metadata = {
   title: "Exosphere | Async AI Workflows at Scale",
@@ -74,7 +73,6 @@ export default function RootLayout({
       >
         {children}
         <GoogleAnalytics gaId="G-XY9H2PN0ZX" />
-        <RB2BLoader />
       </body>
     </html>
   );
