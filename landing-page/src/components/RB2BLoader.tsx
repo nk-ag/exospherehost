@@ -12,7 +12,7 @@ export default function RB2BLoader() {
 
     const script = document.createElement('script');
     script.id = 'rb2b-script';
-    script.src = `https://ddwl4m2hdecbv.cloudfront.net/b/${process.env.NEXT_PUBLIC_RB2B_ID}/${process.env.NEXT_PUBLIC_RB2B_ID}.js.gz`;
+    script.src = `https://ddwl4m2hdecbv.cloudfront.net/b/0OV0VHMQGM6Z/0OV0VHMQGM6Z.js.gz`;
     script.async = true;
     document.body.appendChild(script);
   }, [pathname]);
