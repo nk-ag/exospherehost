@@ -27,7 +27,7 @@ The Exosphere state manager is the core backend service that handles workflow ex
          -e MONGO_DATABASE_NAME="your-database-name" \
          -e STATE_MANAGER_SECRET="your-secret-key" \
          -e SECRETS_ENCRYPTION_KEY="your-base64-encoded-encryption-key" \
-         ghcr.io/exospherehost/state-manager:latest
+         ghcr.io/exospherehost/exosphere-state-manager:latest
        ```
 
     2. **Verify the service is running**:
