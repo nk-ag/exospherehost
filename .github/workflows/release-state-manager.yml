@@ -1,13 +1,8 @@
 name: Release State Manager Image
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'state-manager/**'
   release:
     types: [published]
-  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
