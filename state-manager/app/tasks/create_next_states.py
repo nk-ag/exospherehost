@@ -8,6 +8,7 @@ from app.models.state_status_enum import StateStatusEnum
 from app.models.node_template_model import NodeTemplate
 from app.models.db.registered_node import RegisteredNode
 from app.models.dependent_string import DependentString
+from app.models.node_template_model import UnitesStrategyEnum
 from json_schema_to_pydantic import create_model
 from pydantic import BaseModel
 from typing import Type
@@ -30,15 +31,30 @@ async def check_unites_satisfied(namespace: str, graph_name: str, node_template:
     if not unites_id:
         raise ValueError(f"Unit identifier not found in parents: {node_template.unites.identifier}")
     else:
-        if await State.find(
+        if node_template.unites.strategy == UnitesStrategyEnum.ALL_SUCCESS:
+            any_one_pending = await State.find_one(
                 State.namespace_name == namespace,
                 State.graph_name == graph_name,
                 NE(State.status, StateStatusEnum.SUCCESS),
                 {
                     f"parents.{node_template.unites.identifier}": unites_id
                 }
-            ).count() > 0:
+            )
+            if any_one_pending:
                 return False
+        
+        if node_template.unites.strategy == UnitesStrategyEnum.ALL_DONE:
+            any_one_pending = await State.find_one(
+                State.namespace_name == namespace,
+                State.graph_name == graph_name,
+                In(State.status, [StateStatusEnum.CREATED, StateStatusEnum.QUEUED, StateStatusEnum.EXECUTED]),
+                {
+                    f"parents.{node_template.unites.identifier}": unites_id
+                }
+            )
+            if any_one_pending:
+                return False
+        
     return True
 
 
