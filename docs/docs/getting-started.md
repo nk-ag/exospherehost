@@ -86,6 +86,74 @@ Runtime(
 ).start()
 ```
 
+## Important: Blocking Behavior
+
+**Note**: `Runtime.start()` is a blocking operation that will run indefinitely until stopped. This can be problematic in interactive environments like Jupyter notebooks or Python REPLs.
+
+### For Interactive Environments
+
+If you're working in a Jupyter notebook or Python REPL, consider these alternatives:
+
+=== "Background Thread"
+
+    ```python
+    import threading
+    
+    # Create the runtime
+    runtime = Runtime(
+        namespace="MyProject",
+        name="DataProcessor",
+        nodes=[SampleNode]
+    )
+    
+    # Run in a background thread
+    def run_runtime():
+        runtime.start()
+    
+    thread = threading.Thread(target=run_runtime, daemon=True)
+    thread.start()
+    
+    # Your interactive session continues here
+    print("Runtime is running in the background!")
+    ```
+
+=== "Asyncio Task"
+
+    ```python
+import asyncio
+
+# Create the runtime
+runtime = Runtime(
+    namespace="MyProject",
+    name="DataProcessor",
+    nodes=[SampleNode]
+)
+
+# In an async context (like a Jupyter notebook),
+# runtime.start() returns a task that runs in the background.
+runtime_task = runtime.start()
+
+# Your interactive session can continue.
+print("Runtime is running in the background!")
+
+# You can now do other async work while the runtime runs.
+# For example:
+# await asyncio.sleep(10)
+# print("Finished waiting.")
+    ```
+
+=== "Production Script"
+
+    ```python
+    # For production scripts, the blocking behavior is usually desired
+    if __name__ == "__main__":
+        Runtime(
+            namespace="MyProject",
+            name="DataProcessor",
+            nodes=[SampleNode]
+        ).start()  # Blocks and runs forever
+    ```
+
 ## Next Steps
 
 Now that you have the basics, explore:
@@ -107,14 +175,10 @@ Now that you have the basics, explore:
 
 ## Architecture
 
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Your Nodes    │    │     Runtime      │    │ State Manager   │
-│                 │◄──►│                  │◄──►│                 │
-│ - Inputs        │    │ - Registration   │    │ - Orchestration │
-│ - Outputs       │    │ - Execution      │    │ - State Mgmt    │
-│ - Secrets       │    │ - Error Handling │    │ - Dashboard     │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+```mermaid
+graph LR
+    A["Your Nodes<br/>- Inputs<br/>- Outputs<br/>- Secrets"] <--> B["Runtime<br/>- Registration<br/>- Execution<br/>- Error Handling"]
+    B <--> C["State Manager<br/>- Orchestration<br/>- State Mgmt<br/>- Dashboard"]
 ```
 
 ## Data Model (v1)
