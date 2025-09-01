@@ -117,29 +117,32 @@ If you're working in a Jupyter notebook or Python REPL, consider these alternati
     print("Runtime is running in the background!")
     ```
 
-=== "Asyncio Task"
+=== "Asyncio Task (Jupyter/Async Context)"
 
     ```python
-import asyncio
-
-# Create the runtime
-runtime = Runtime(
-    namespace="MyProject",
-    name="DataProcessor",
-    nodes=[SampleNode]
-)
-
-# In an async context (like a Jupyter notebook),
-# runtime.start() returns a task that runs in the background.
-runtime_task = runtime.start()
-
-# Your interactive session can continue.
-print("Runtime is running in the background!")
-
-# You can now do other async work while the runtime runs.
-# For example:
-# await asyncio.sleep(10)
-# print("Finished waiting.")
+    import asyncio
+    
+    # Create the runtime
+    runtime = Runtime(
+        namespace="MyProject",
+        name="DataProcessor",
+        nodes=[SampleNode]
+    )
+    
+    # In Jupyter notebooks or async contexts, use asyncio.create_task
+    # to run the runtime in the background
+    runtime_task = asyncio.create_task(runtime._start())
+    
+    # Your interactive session can continue
+    print("Runtime is running in the background!")
+    
+    # You can now do other async work while the runtime runs
+    # For example:
+    await asyncio.sleep(1)
+    print("Runtime is still running...")
+    
+    # To stop the runtime later:
+    # runtime_task.cancel()
     ```
 
 === "Production Script"
@@ -175,10 +178,14 @@ Now that you have the basics, explore:
 
 ## Architecture
 
-```mermaid
-graph LR
-    A["Your Nodes<br/>- Inputs<br/>- Outputs<br/>- Secrets"] <--> B["Runtime<br/>- Registration<br/>- Execution<br/>- Error Handling"]
-    B <--> C["State Manager<br/>- Orchestration<br/>- State Mgmt<br/>- Dashboard"]
+```
++-------------------+    +--------------------+    +-------------------+
+|   Your Nodes      |    |      Runtime       |    |  State Manager    |
+|                   |<-->|                    |<-->|                   |
+| • Inputs          |    | • Registration     |    | • Orchestration   |
+| • Outputs         |    | • Execution        |    | • State Mgmt      |
+| • Secrets         |    | • Error Handling   |    | • Dashboard       |
++-------------------+    +--------------------+    +-------------------+
 ```
 
 ## Data Model (v1)
