@@ -1,15 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { GraphTemplateBuilder } from '@/components/GraphTemplateBuilder';
 import { NamespaceOverview } from '@/components/NamespaceOverview';
-import { StatesByRunId } from '@/components/StatesByRunId';
+import { RunsTable } from '@/components/RunsTable';
 import { NodeDetailModal } from '@/components/NodeDetailModal';
 import { GraphTemplateDetailModal } from '@/components/GraphTemplateDetailModal';
-import { apiService } from '@/services/api';
+import { clientApiService } from '@/services/clientApi';
 import {
   NodeRegistration, 
-  ResponseState, 
   UpsertGraphTemplateRequest,
   UpsertGraphTemplateResponse,
 } from '@/types/state-manager';
@@ -21,17 +20,11 @@ import {
 } from 'lucide-react';
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState< 'overview' | 'graph' |'run-states'>('overview');
-  const [namespace, setNamespace] = useState('testnamespace');
-  const [apiKey, setApiKey] = useState('');
-  const [runtimeName, setRuntimeName] = useState('test-runtime');
+  const [activeTab, setActiveTab] = useState< 'overview' | 'graph' |'runs'>('overview');
+  const [namespace, setNamespace] = useState(process.env.NEXT_PUBLIC_DEFAULT_NAMESPACE || 'testnamespace');
   const [graphName, setGraphName] = useState('test-graph');
-  
-  
-  const [currentStep, setCurrentStep] = useState(0);
-  const [registeredNodes, setRegisteredNodes] = useState<NodeRegistration[]>([]);
   const [graphTemplate, setGraphTemplate] = useState<UpsertGraphTemplateRequest | null>(null);
-  const [states, setStates] = useState<ResponseState[]>([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -43,7 +36,7 @@ export default function Dashboard() {
 
   const handleSaveGraphTemplate = async (template: UpsertGraphTemplateRequest) => {
     try {
-      await apiService.upsertGraphTemplate(namespace, graphName, template, apiKey);
+      await clientApiService.upsertGraphTemplate(namespace, graphName, template);
       setGraphTemplate(template);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save graph template');
@@ -64,7 +57,7 @@ export default function Dashboard() {
   const handleOpenGraphModal = async (graphName: string) => {
     try {
       setIsLoading(true);
-      const graphTemplate = await apiService.getGraphTemplate(namespace, graphName, apiKey);
+      const graphTemplate = await clientApiService.getGraphTemplate(namespace, graphName);
       setSelectedGraphTemplate(graphTemplate);
       setIsGraphModalOpen(true);
     } catch (err) {
@@ -82,7 +75,7 @@ export default function Dashboard() {
   const tabs = [    
     { id: 'overview', label: 'Overview', icon: BarChart3 },    
     { id: 'graph', label: 'Graph Template', icon: GitBranch },    
-    { id: 'run-states', label: 'Run States', icon: Filter }
+    { id: 'runs', label: 'Runs', icon: Filter }
   ] as const;
 
   return (
@@ -105,15 +98,6 @@ export default function Dashboard() {
                   type="text"
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
-                  className="px-2 py-1 text-sm text-white border border-gray-300 rounded"
-                />
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-white">API Key:</span>
-                <input
-                  type="password"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
                   className="px-2 py-1 text-sm text-white border border-gray-300 rounded"
                 />
               </div>
@@ -197,16 +181,14 @@ export default function Dashboard() {
         {activeTab === 'overview' && (
           <NamespaceOverview
             namespace={namespace}
-            apiKey={apiKey}
             onOpenNode={handleOpenNodeModal}
             onOpenGraphTemplate={handleOpenGraphModal}
           />
         )}
 
-        {activeTab === 'run-states' && (
-          <StatesByRunId
+        {activeTab === 'runs' && (
+          <RunsTable
             namespace={namespace}
-            apiKey={apiKey}
           />
         )}
       </main>
