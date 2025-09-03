@@ -404,18 +404,33 @@ class TestCreateNextStates:
 
     @pytest.mark.asyncio
     async def test_create_next_states_empty_state_ids(self):
-        """Test with empty state ids"""
-        # Create a mock class that has the id attribute
-        mock_state_class = MagicMock()
-        mock_state_class.id = "id"
-        mock_find = AsyncMock()
-        mock_set = AsyncMock()
-        mock_find.set.return_value = mock_set
-        mock_state_class.find.return_value = mock_find
-        
-        with patch('app.tasks.create_next_states.State', mock_state_class):
+        """Test create_next_states with empty state_ids list"""
+        state_ids = []
+        identifier = "test_node"
+        namespace = "test_namespace"
+        graph_name = "test_graph"
+        parents_ids = {}
+
+        # Mock the State class to have an 'id' attribute
+        with patch('app.tasks.create_next_states.State') as mock_state_cls:
+            # Create a mock class that has the id attribute
+            mock_state_cls.id = "id"
+            
+            # Mock the find().set() call that happens in the exception handler
+            mock_find_result = MagicMock()
+            mock_find_result.set = AsyncMock()
+            mock_state_cls.find.return_value = mock_find_result
+
+            # This should raise a ValueError about empty state ids
             with pytest.raises(ValueError, match="State ids is empty"):
-                await create_next_states([], "test_id", "test_namespace", "test_graph", {})
+                await create_next_states(state_ids, identifier, namespace, graph_name, parents_ids)
+
+            # Verify that the exception handler was called to update state status
+            mock_state_cls.find.assert_called_once()
+            mock_find_result.set.assert_called_once_with({
+                "status": StateStatusEnum.NEXT_CREATED_ERROR,
+                "error": "State ids is empty"
+            })
 
     @pytest.mark.asyncio
     async def test_create_next_states_no_next_nodes(self):

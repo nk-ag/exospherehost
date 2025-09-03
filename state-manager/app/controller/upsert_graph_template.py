@@ -15,7 +15,7 @@ async def upsert_graph_template(namespace_name: str, graph_name: str, body: Upse
             GraphTemplate.name == graph_name,
             GraphTemplate.namespace == namespace_name
         )
-
+               
         try:
             if graph_template:
                 logger.info(
@@ -28,7 +28,8 @@ async def upsert_graph_template(namespace_name: str, graph_name: str, body: Upse
                         GraphTemplate.nodes: body.nodes, # type: ignore
                         GraphTemplate.validation_status: GraphTemplateValidationStatus.PENDING, # type: ignore
                         GraphTemplate.validation_errors: [], # type: ignore
-                        GraphTemplate.retry_policy: body.retry_policy # type: ignore
+                        GraphTemplate.retry_policy: body.retry_policy, # type: ignore
+                        GraphTemplate.store_config: body.store_config # type: ignore
                     })
                 )
                 
@@ -46,7 +47,8 @@ async def upsert_graph_template(namespace_name: str, graph_name: str, body: Upse
                         nodes=body.nodes,
                         validation_status=GraphTemplateValidationStatus.PENDING,
                         validation_errors=[],
-                        retry_policy=body.retry_policy
+                        retry_policy=body.retry_policy,
+                        store_config=body.store_config
                     ).set_secrets(body.secrets)
                 )
         except ValueError as e:

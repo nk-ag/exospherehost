@@ -1,0 +1,3 @@
+# Ignore temp directory and temp files at repository root
+/temp*
+!/temp/.gitkeep
