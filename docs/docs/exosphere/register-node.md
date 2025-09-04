@@ -2,6 +2,8 @@
 
 Nodes are the building blocks of Exosphere workflows. Each node defines a specific piece of processing logic with typed inputs, outputs, and secrets. This guide shows you how to create and register custom nodes.
 
+> **📚 Getting Started**: For a complete local setup guide covering both the state manager and dashboard, see our [Local Setup Guide](./local-setup.md).
+
 ## Node Structure
 
 Every node inherits from `BaseNode` and defines three key components:
@@ -26,6 +28,32 @@ class MyNode(BaseNode):
     async def execute(self) -> Outputs:
         # Implement your processing logic here
         pass
+```
+
+
+### Node Lifecycle Architecture
+
+```mermaid
+stateDiagram-v2
+    [*] --> Registered
+    Registered --> Ready
+    Ready --> Executing
+    Executing --> Completed
+    Executing --> Failed
+    Failed --> Ready
+    Completed --> Ready
+    
+    state Executing {
+        [*] --> ValidateInputs
+        ValidateInputs --> ProcessData
+        ProcessData --> ValidateOutputs
+        ValidateOutputs --> [*]
+    }
+    
+    note right of Failed
+        Automatic retry with
+        exponential backoff
+    end note
 ```
 
 ### Inputs
