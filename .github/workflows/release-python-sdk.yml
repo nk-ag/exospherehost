@@ -130,7 +130,11 @@ jobs:
       - name: Install SBOM generation tools
         run: |
           uv tool install cyclonedx-bom
+          echo "Installed cyclonedx-bom version:"
+          uv tool run cyclonedx-py --version
           uv tool install pip-audit
+          echo "Installed pip-audit version:"
+          uv tool run pip-audit --version
 
       - name: Generate SBOM with CycloneDX
         run: |
