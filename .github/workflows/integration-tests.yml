@@ -1,4 +1,4 @@
-name: Integration Tests for Exosphere
+name: Integration Tests
 
 on:
     push:
@@ -8,9 +8,21 @@ on:
           - 'state-manager/**'
           - 'python-sdk/**'
           - '.github/workflows/integration-tests.yml'
+    pull_request:
+        branches: [main]
+        paths:
+          - 'integration-tests/**' 
+          - 'state-manager/**'
+          - 'python-sdk/**'
+          - '.github/workflows/integration-tests.yml'
+
 
 jobs:
     test:
+        defaults:
+          run:
+            working-directory: integration-tests
+        if: github.repository == 'exospherehost/exospherehost'
         runs-on: ubuntu-latest
         services:
             mongodb:
