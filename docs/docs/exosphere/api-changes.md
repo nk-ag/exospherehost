@@ -75,6 +75,7 @@ retry_policy = RetryPolicyModel(
 ### Available Models
 
 #### GraphNodeModel
+
 - **node_name** (str): Class name of the node
 - **namespace** (str): Namespace where node is registered  
 - **identifier** (str): Unique identifier in the graph
@@ -83,6 +84,7 @@ retry_policy = RetryPolicyModel(
 - **unites** (Optional[UnitesModel]): Unite configuration for parallel execution
 
 #### RetryPolicyModel (Beta)
+
 - **max_retries** (int): Maximum number of retry attempts (default: 3)
 - **strategy** (RetryStrategyEnum): Retry strategy using enum values (default: EXPONENTIAL)
 - **backoff_factor** (int): Base delay in milliseconds (default: 2000)
@@ -90,6 +92,7 @@ retry_policy = RetryPolicyModel(
 - **max_delay** (int | None): Maximum delay cap in milliseconds (optional)
 
 #### StoreConfigModel (Beta)
+
 - **required_keys** (list[str]): Keys that must be present in the store
 - **default_values** (dict[str, str]): Default values for store keys
 

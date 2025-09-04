@@ -284,6 +284,7 @@ retry_policy = RetryPolicyModel(
 ```
 
 **Available Retry Strategies:**
+
 - `RetryStrategyEnum.EXPONENTIAL`
 - `RetryStrategyEnum.EXPONENTIAL_FULL_JITTER`
 - `RetryStrategyEnum.EXPONENTIAL_EQUAL_JITTER`

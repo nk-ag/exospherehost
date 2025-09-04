@@ -146,7 +146,7 @@ The state manager uri and key would be configured accordingly while setting up n
            image: ghcr.io/exospherehost/exosphere-state-manager:latest
            ports:
              - "8000:8000"
-                       environment:
+           environment:
              - MONGO_URI=${MONGO_URI}
              - MONGO_DATABASE_NAME=${MONGO_DATABASE_NAME}
              - STATE_MANAGER_SECRET=${STATE_MANAGER_SECRET}

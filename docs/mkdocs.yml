@@ -108,6 +108,7 @@ plugins:
         Introduction:
           - index.md
           - getting-started.md
+          - exosphere/api-changes.md
           - exosphere/local-setup.md
           - docker-compose-setup.md
           - exosphere/state-manager-setup.md
@@ -149,6 +150,7 @@ nav:
   - Register Node: exosphere/register-node.md
   - Create Runtime: exosphere/create-runtime.md
   - Create Graph: exosphere/create-graph.md
+  - API Changes: exosphere/api-changes.md
   - Retry Policy: exosphere/retry-policy.md
   - Trigger Graph: exosphere/trigger-graph.md
   - Dashboard: exosphere/dashboard.md
