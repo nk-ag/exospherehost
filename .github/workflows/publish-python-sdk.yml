@@ -146,10 +146,10 @@ jobs:
             exit 0
           elif [ "$HTTP_STATUS" = "404" ]; then
             echo "Version $VERSION not found on PyPI. Proceeding with publish."
-            uv publish --provenance
+            uv publish
           else
             echo "Unexpected HTTP status $HTTP_STATUS when checking PyPI. Proceeding with publish."
-            uv publish --provenance
+            uv publish
           fi
 
       - name: Upload SBOM artifacts

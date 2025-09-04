@@ -175,13 +175,13 @@ jobs:
           echo "You can verify this package's provenance on PyPI using:" >> sbom-summary.md
           echo '```bash' >> sbom-summary.md
           echo 'pip install sigstore' >> sbom-summary.md
-          echo 'python -m sigstore verify --bundle <bundle-file> exospherehost==${{ startsWith(github.ref_name, 'v') && substring(github.ref_name, 1) || github.ref_name }}' >> sbom-summary.md
+          echo 'python -m sigstore verify --bundle <bundle-file> exospherehost==${{ github.ref_name }}' >> sbom-summary.md
           echo '```' >> sbom-summary.md
 
       - run: uv build
 
       - name: Publish to PyPI with provenance
-        run: uv publish --provenance
+        run: uv publish
 
       - name: Upload SBOM artifacts
         uses: actions/upload-artifact@v4
