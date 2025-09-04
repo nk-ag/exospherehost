@@ -124,22 +124,32 @@ jobs:
 
       - name: Generate requirements file for SBOM
         run: |
-          uv export --locked --format=requirements-txt --output-file=requirements.txt
-          echo "Generated requirements.txt for SBOM creation from lockfile"
+          # Try to use uv to export only production dependencies without the current package
+          # Use --no-dev to exclude dev dependencies and generate a clean requirements file
+          uv export --locked --no-dev --format=requirements-txt --output-file=requirements-full.txt
+          # Debug: Show what's in the requirements file
+          echo "Contents of requirements-full.txt:"
+          cat requirements-full.txt
+          # Filter out any editable local package references
+          # This handles: -e ., -e ./, -e ../, -e file://..., file://... etc.
+          grep -v -E '^-e\s+\.$|^-e\s+\.\/$|^-e\s+\.\.\/$|^-e\s+file:|^file:' requirements-full.txt > requirements.txt || echo "# No dependencies after filtering" > requirements.txt
+          echo "Contents of filtered requirements.txt:"
+          cat requirements.txt
+          echo "Generated requirements.txt for SBOM creation from lockfile (excluding editable local package)"
 
       - name: Install SBOM generation tools
         run: |
           uv tool install cyclonedx-bom
           echo "Installed cyclonedx-bom version:"
-          uv tool run cyclonedx-py --version
+          uv tool run --from cyclonedx-bom cyclonedx-py --version
           uv tool install pip-audit
           echo "Installed pip-audit version:"
           uv tool run pip-audit --version
 
       - name: Generate SBOM with CycloneDX
         run: |
-          uv tool run cyclonedx-py requirements --format json --output-file sbom-cyclonedx.json requirements.txt
-          uv tool run cyclonedx-py requirements --format xml --output-file sbom-cyclonedx.xml requirements.txt
+          uv tool run --from cyclonedx-bom cyclonedx-py requirements --of json --output-file sbom-cyclonedx.json requirements.txt
+          uv tool run --from cyclonedx-bom cyclonedx-py requirements --of xml --output-file sbom-cyclonedx.xml requirements.txt
           echo "Generated CycloneDX SBOM in JSON and XML formats"
 
       - name: Generate vulnerability report with pip-audit
